@@ -1,0 +1,215 @@
+\chapter{Finite Volume Solvers}\label{ChapAppendFVSolvers}
+\section{Grid Geometry}
+Volume:
+\begin{equation}\label{EqCellVolLL}
+\kappa_{i,j,k} = \int_{r_K}^{r_{K+1}} \int_{\theta_J}^{\theta_{J+1}} \int_{\lambda_I}^{\lambda_{I+1}}
+\, r \sin{\theta} \mathrm{d}\lambda \, r \mathrm{d}\theta \, \mathrm{d}r
+= \left( \lambda_{I+1} - \lambda_{I} \right) \frac{1}{3} \left( r_{K+1}^3 - r_{K}^3 \right)
+\left( \cos{\theta_{J}} - \cos{\theta_{J+1}}\right)
+\end{equation}
+
+Surface area:
+
+\begin{equation}\label{EqCellSurfILL}
+\sigma_x=\sigma_{I,j,k} = \int_{r_K}^{r_{K+1}} \int_{\theta_J}^{\theta_{J+1}}
+\, r \mathrm{d}\theta \, \mathrm{d}r
+= \left( \theta_{J+1} - \theta_{J} \right) \frac{1}{2} \left( r_{K+1}^2 - r_{K}^2 \right)
+\end{equation}
+
+\begin{equation}\label{EqCellSurfJLL}
+\sigma_y=\sigma_{i,J,k} = \int_{r_K}^{r_{K+1}} \int_{\lambda_I}^{\lambda_{I+1}}
+\, r \sin{\theta} \mathrm{d}\lambda \, \mathrm{d}r
+= \sin{\theta}\left( \lambda_{I+1} - \lambda_{I} \right) \frac{1}{2} \left( r_{K+1}^2 - r_{K}^2 \right)
+\end{equation}
+
+\begin{equation}\label{EqCellSurfKLL}
+\sigma_z=\sigma_{i,j,K} = \int_{\lambda_I}^{\lambda_{I+1}} \int_{\theta_J}^{\theta_{J+1}}
+\, r \sin{\theta} \mathrm{d}\lambda \, r\mathrm{d}\theta
+= r_{K}^2 \left( \lambda_{I+1} - \lambda_{I} \right) \left( \cos{\theta_{J}} - \cos{\theta_{J+1}}  \right)
+\end{equation}
+
+
+
+\section{Advection Routines}
+Ash3d has been written to accommodate different advection routines such as
+Donor-Cell-Update (DCU), Corner Transport Update (CTU), and Semi-Lagrange (SL).
+In this public version of the software, only DCU is included.
+
+The implimentation of DCU follows closely with the equations presented in
+\cite{LeVeque03}.
+
+Start with the fluctuation form (Eq. 6.59 from \cite{LeVeque03}) of the update in $Q$ to
+a cell $i$ given below.
+\begin{equation}\label{EqQupdate}
+Q^{n+1}_i = Q^{n}_i - \frac{\Delta t}{\Delta x} 
+\left( \mathcal{A}^{-} \Delta Q_{i+\frac{1}{2}} + \mathcal{A}^{+} Q_{i-\frac{1}{2}}\right) -
+\frac{\Delta t}{\Delta x}
+\left( \widetilde{F}_{i+\frac{1}{2}} - \widetilde{F}_{i-\frac{1}{2}}\right)
+\end{equation}
+Note that this is analogous to the flux form with
+$(A^{-}\Delta Q_{i+\frac{1}{2}} + A^{+}\Delta Q_{i-\frac{1}{2}})$ with the left and
+right fluctuations at an interface satisfying Eq. 6.57 
+\begin{equation}\label{Eqflucdef}
+(\mathcal{A}^{-}\Delta Q_{i-\frac{1}{2}} + \mathcal{A}^{+}\Delta Q_{i-\frac{1}{2}})=
+f(Q_i)-f(Q_{i-1})= A \Delta Q_{i-\frac{1}{2}}
+\end{equation}
+We define $\mathcal{A}^{-}$ and $\mathcal{A}^{+}$ according to Eq. 9.38 for the
+conservative variable coefficient case.
+\begin{eqnarray}
+\mathcal{A}^{+} \Delta Q_{i-\frac{1}{2}} &=& F_i - F_{i-\frac{1}{2}} \\
+\mathcal{A}^{-} \Delta Q_{i-\frac{1}{2}} &=& F_{i-\frac{1}{2}} - F_{i-1}
+\end{eqnarray}
+where $F_{i-\frac{1}{2}}$ are the interface fluxes and $F_i$ are the cell-centered
+representations.  These cell-centered values are somewhat arbitrary since they cancel
+each other in Eq. \ref{EqQupdate}, but we use
+$F_i = (u^{+}_{i-\frac{1}{2}} + u^{-}_{i+\frac{1}{2}})Q_i$ as suggested by
+Eq 9.39 of \cite{LeVeque03}.  Interface fluxes are given by (the un-numbered
+equation of \cite{LeVeque03} between 9.35 and 9.36)
+\begin{equation}\label{Eqfluxdef}
+F_{i-\frac{1}{2}} = u^{+}_{i-\frac{1}{2}} Q_{i-1} + u^{-}_{i-\frac{1}{2}} Q_{i}
+\end{equation}
+So
+\begin{eqnarray}
+\mathcal{A}^{+} Q_{i-\frac{1}{2}} &=&  
+  \left( u^{+}_{i-\frac{1}{2}} Q_{i}   + u^{-}_{i+\frac{1}{2}} Q_{i} \right) -
+  \left( u^{+}_{i-\frac{1}{2}} Q_{i-1} + u^{-}_{i-\frac{1}{2}} Q_{i} \right) \\
+                                  &=& 
+ u^{+}_{i-\frac{1}{2}} \left( Q_{i} - Q_{i-1} \right) +
+                 Q_{i} \left( u^{-}_{i+\frac{1}{2}} - u^{-}_{i-\frac{1}{2}}  \right)
+\end{eqnarray}
+\begin{eqnarray}
+\mathcal{A}^{-} Q_{i-\frac{1}{2}} &=&  
+  \left( u^{+}_{i-\frac{1}{2}} Q_{i-1} + u^{-}_{i-\frac{1}{2}} Q_{i}   \right) -
+  \left( u^{+}_{i-\frac{3}{2}} Q_{i-1} - u^{-}_{i-\frac{1}{2}} Q_{i-1} \right) \\
+                                  &=& 
+  u^{-}_{i-\frac{1}{2}} \left( Q_{i} - Q_{i-1} \right) +
+                Q_{i-1} \left( u^{+}_{i-\frac{1}{2}} - u^{+}_{i-\frac{3}{2}}  \right)
+\end{eqnarray}
+
+The higher order terms of Eq \ref{EqQupdate} above are given by Eq. 6.60 of \cite{LeVeque03}.
+\begin{equation}\label{EqHOTLeVeque}
+\widetilde{F}_{i-\frac{1}{2}} = \frac{1}{2}\sum_{p=1}^{m} \left| s^p_{i-\frac{1}{2}}  \right|
+\left( 1 - \frac{\Delta t}{\Delta x} \left| s^p_{i-\frac{1}{2}}  \right|  \right)
+\widetilde{W}^p_{i-\frac{1}{2}}
+\end{equation}
+where $\widetilde{W}^p_{i-\frac{1}{2}}$ are the limited $p$-waves from an interface
+and $s^p_{i-\frac{1}{2}}$ are their speeds.  In our case, we have $p=1$, 
+$s^p_{i-\frac{1}{2}}=u_{i-\frac{1}{2}}$ and $\widetilde{W}_{i-\frac{1}{2}}$ is the limited version of
+the wave, .i.e $\widetilde{\Delta Q}$.
+Eq. \ref{EqHOTLeVeque} reduces to
+\begin{equation}\label{EqHOTAsh3d}
+\widetilde{F}_{i-\frac{1}{2}} = \frac{1}{2} \left| u_{i-\frac{1}{2}}  \right|
+\left( 1 - \frac{\Delta t}{\Delta x} \left| u_{i-\frac{1}{2}}  \right|  \right)
+\widetilde{\Delta Q}_{i-\frac{1}{2}}
+\end{equation}
+The limited wave, $\widetilde{\Delta Q}$, can be set by first determining the
+function
+\begin{equation}
+\theta = \frac{\Delta Q_{\mathrm{upwind}}}{\Delta Q_{i-\frac{1}{2}}}
+\end{equation}
+then setting
+$\widetilde{\Delta Q} = \phi\left( \theta_{i-\frac{1}{2}} \right) \Delta Q_{i-\frac{1}{2}}$
+(Eq. 6.34 of \cite{LeVeque03}):
+\begin{itemize}
+ \item No limiter: $\phi\left( \theta \right) = 0  \Rightarrow \widetilde{\Delta Q}_{i-\frac{1}{2}} = 0$
+       (Note: this sets $\widetilde{F}_{i-\frac{1}{2}} = 0$)
+ \item Lax-Wendrof: $\phi\left( \theta \right) = 1 \Rightarrow \widetilde{\Delta Q}_{i-\frac{1}{2}} = ( Q_i - Q_{i-1})$
+ \item Beam-Warming:  $\phi\left( \theta \right) = \theta \Rightarrow \widetilde{\Delta Q}_{i-\frac{1}{2}} = \Delta Q_{\mathrm{upwind}}$
+ \item Fromm: $\phi\left( \theta \right) = \frac{1}{2}\left( 1 + \theta\right) $
+ \item MinMod: $\phi\left( \theta \right) = \mathrm{minmod}\left( 1,\theta \right)$
+ \item SuperBee: $\phi\left( \theta \right) = \mathrm{max}\left(0, \mathrm{min \left( 1,2\theta\right),\mathrm{min}\left(2,\theta \right)} \right )$
+ \item MC: $\phi\left( \theta \right) = \mathrm{max}\left(0,  \mathrm{min} \left( \frac{\left( 1+\theta \right)}{2} ,2,2\theta \right) \right) $
+\end{itemize}
+
+To allow curvilinear coordinates, we replace the $\Delta x$ in the above equations with $\kappa_i$
+and scale velocities by the interface 
+area $\sigma_{i-\frac{1}{2}}$, since these velocities are only needed at the interfaces.
+
+\subsection{Numerical implimentation}
+
+Variables are generally associated with cell-centers and are indexed by $i$.  These include
+$Q$, $u$, and $\kappa$.  In the equations above, several variables are needed on interfaces.
+We use the following indexing for interface $I=i-\frac{1}{2}$ and define
+\begin{align*}
+\sigma_I &= \text{area of interface} &  \\
+\bar{u}_I &= u_{i-\frac{1}{2}} &= \frac{1}{2}\left( u_i + u_{i-1} \right)\\
+\Delta Q_I &= \Delta Q_{i-\frac{1}{2}} &= Q_i - Q_{i-1} 
+\end{align*}
+On the first loop over $I$, the following are calculated:
+\begin{eqnarray*}
+ \texttt{ubar\_I(1:ncells+1)} &=& \bar{u}_I \\
+ \texttt{usig\_I(1:ncells+1)} &=& (\bar{u} \sigma)_I \\
+ \texttt{dqi\_I(1:ncells+1)} &=& \Delta Q_I \\
+ \texttt{ldq} &=& \widetilde{\Delta Q}_I \\
+ \texttt{fss\_I(1:ncells+1)} &=& \widetilde{F}_I 
+\end{eqnarray*}
+where
+\begin{equation}
+\widetilde{F}_I = \frac{1}{2} \left| \bar{u}_I \right| 
+\left( 1 - \left| (\bar{u} \sigma)_I \right| \frac{\Delta t}{\kappa_i}\right)
+\widetilde{\Delta Q}_I
+\end{equation}
+On the second pass over $I$, $\mathcal{A}^{\pm} \Delta Q_I$ are calculated according to
+\begin{eqnarray*}
+\texttt{fs\_I(1:ncells+1,1)} = \mathcal{A}^{-} Q_I &=& \bar{u}_I^{-} \Delta Q_I  + 
+Q_{i-1} (\bar{u}_I^{+} - \bar{u}_{I-1}^{+}) \\
+\texttt{fs\_I(1:ncells+1,2)} = \mathcal{A}^{+} Q_I &=& \bar{u}_I^{+} \Delta Q_I  + 
+Q_{i} (\bar{u}_{I+1}^{-} - \bar{u}_{I}^{-})
+\end{eqnarray*}
+Note that the first term of these equations uses the interface concentration
+jump and left/right interface concentration while the second terms using cell-centered
+concentrations multiplied by the differences in interface velocities across that
+cell-centered value.  Therefore, calculating \texttt{fs\_I} at interface $I$ requires
+cell-centered velocities at $i-2,i-1,i,i+1,i+2$.  Similarly, some limiters also require
+concentrations on these cells.
+
+Lastly, we loop of the cell index $i$ and build the four components of the update:
+\begin{itemize}
+ \item Rightward fluctuation at left boundary = \texttt{RFluct\_Lbound} = $\mathcal{A}^{+} \Delta Q_I$
+ \item Leftward fluctuation at right boundary = \texttt{LFluct\_Rbound} = $\mathcal{A}^{-} \Delta Q_{I+1}$
+ \item Limited-q at left boundary = \texttt{LimFlux\_Lbound} = $\widetilde{F}_I$
+ \item Limited-q at right boundary = \texttt{LimFlux\_Rbound} = $\widetilde{F}_{I+1} $
+\end{itemize}
+
+
+\section{Diffusion Routines}
+Ash3d uses two implementations of the diffusion term: the explicit finite difference
+discretization and the implicit Crank-Nicolson method.  
+
+\subsection{Explicit finite difference}
+Using Eq. 4.11 of \cite{LeVeque03}:
+\begin{equation}\label{EqDiffFD_LV}
+Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{\Delta x^2} \left[ k_{i+\frac{1}{2}}\left( Q^{n}_{i+1}-Q^{n}_{i}\right) -
+k_{i-\frac{1}{2}}\left( Q^{n}_{i}-Q^{n}_{i-1}\right) \right]
+\end{equation}
+Again, we use the following indexing for interface $I=i-\frac{1}{2}$ and define
+\begin{align*}
+\sigma_I &= \text{area of interface} &  \\
+\bar{k}_I &= k_{i-\frac{1}{2}} &= \frac{1}{2}\left( k_i + k_{i-1} \right)\\
+\Delta Q_I &= \Delta Q_{i-\frac{1}{2}} &= Q_i - Q_{i-1} 
+\end{align*}
+Similar to the advection routines, we generalize Eq. \ref{EqDiffFD_LV} to curvilinear coordinates by replacing
+$\Delta x$ with $\kappa$ and scaling the interface $\Delta Q_I$ by the square of the
+interface area $\sigma_I^2$ leading to
+\begin{equation}\label{EqDiffFD}
+Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{\kappa_i^2} \left[ 
+\left( k \sigma^2 \Delta Q^n \right)_{I+1} - 
+\left( k \sigma^2 \Delta Q^n \right)_I  \right]
+\end{equation}
+Note that this method is stable when $\Delta t = \mathcal{O}(\Delta x^2)$
+
+\subsection{Implicit Crank-Nicolson}
+Using Eq. 4.13 of \cite{LeVeque03}:
+\begin{equation}\label{EqDiffCN_LV}
+Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{2\Delta x^2} \left[ 
+k_{I+1}\Delta Q^{n}_{I+1} - k_{I}\Delta Q^{n}_{I} +
+k_{I+1}\Delta Q^{n+1}_{I+1} - k_{I}\Delta Q^{n+1}_{I} \right]
+\end{equation}
+or after modifying for curvilinear coordinates
+\begin{equation}\label{EqDiffCN_LV}
+Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{2\kappa_i^2} \left[ 
+\left( k \sigma^2 \Delta Q^{n}  \right)_{I+1} - \left( k \sigma^2 \Delta Q^{n}  \right)_{I} +
+\left( k \sigma^2 \Delta Q^{n+1}\right)_{I+1} - \left( k \sigma^2 \Delta Q^{n+1}\right)_{I} \right]
+\end{equation}
+
+\subsection{Numerical implimentation}

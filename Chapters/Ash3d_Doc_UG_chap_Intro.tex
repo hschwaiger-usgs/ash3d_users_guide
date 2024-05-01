@@ -1,0 +1,103 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction}\label{ChapIntro}
+In 2012, we introduced Ash3d, a volcanic ash transport and dispersion model used to forecast ash-cloud movement and ash deposition during eruptions. \cite{Schwaiger12}  This was followed in 2013 by the introduction of a web interface that allowed any user with an account to simulate ash-cloud transport and deposition \cite{Mastin13}.  Subsequently, we have used Ash3d to study ash transport during recent eruptions \cite{Mastin13b} \cite{Mastin20}, to evaluate the sensitivity of model inputs to outcomes \cite{Mastin16}, examine effects of umbrella-cloud growth on eruption dynamics \cite{Mastin16},  study whether and how ash from New Zealand supereruptions could be deposited in Antarctica \cite{Dunbar17}, develop probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin20b} and Taupo, New Zealand \cite{Barker19}, and examine Bayesian ensemble techniques to improve ash-cloud forecast accuracy \cite{Denlinger12}.
+
+Development of a web interface allowed users all over the world to use the model without downloading and compiling the software or downloading large amounts of numerical weather prediction (NWP) model data used to run the model.  The web interface however provides only a small subset of functions available in Ash3d.  Specifying a grain-size distribution, or a time series of erupted pulses and plume heights and eruption rates, or allowing for the growth of umbrella clouds, has not been available due to our desire to keep things simple.  The software has also not been available for download, meaning that only model developers and their close collaborators have had access the the full suite of features.
+
+With this release of Ash3d source code, users can take advantage of Ash3d's full functionality.  Users with particular skill or interest may also advance the source code to consider physical processes or numerical advances not yet envisioned.  The complexity of this model requires that it be installed by users who are versed in Linux and comfortable running models at the command line.  Users who wish to use current or forecast meteorological data may also have to have a Linux system that can run scheduled NWP data downloads (tens of Gb daily) and other updates.  If you have these skills and resources, and a desire to simulate tephra transport in a 3D wind field, this code may be for you. Users need have no special knowledge in numerical methods or modeling.
+
+We begin with a brief overview of Ash3d, describe simulations using an ASCII input file, and provide some guidance on post-processing the results. Use of Ash3d through the USGS web-based interface is briefly summarized, but is more formally presented in a companion document \cite{Mastin20}. Ash3d is still in development, hence its capabilities and documentation are likely to be revised in coming years.
+
+\section{Model Overview}\label{ChapIntroSecModelOverview}
+Ash3d calculates the transport of volcanic ash by dividing the atmosphere into a
+three-dimensional grid of cells (Figure \ref{FigAsh3dGrid}) and calculating the flow of mass through cell walls. During the eruption, tephra is injected at a constant
+rate into the column of cells above the volcano (Figure \ref{FigAsh3dGrid}).
+Using a 3-D time-dependent wind field imported from a numerical weather prediction model, downwind advection and diffusion of ash is numerically calculated with a
+diffusion rate determined by a user-specified diffusivity. Individual ash
+particles fall at a rate determined by their settling velocity in air, and
+deposit when they reach the ground surface.
+\begin{figure}[htbp]
+%\includegraphics[angle=90,scale=0.9]{asharrivaltimesairports_p1.pdf}
+\parbox{15cm}{\caption{\label{FigAsh3dGrid}
+Example model grids}}
+\end{figure}
+
+\subsection{Initial conditions}\label{ChapIntroSecInitCond}
+Ash3d does not calculate the dynamics of a rising plume. Instead, it injects
+tephra into a column of nodes above the volcano (Figure \ref{FigAsh3dGrid}).
+Users may specify
+that the ash be concentrated in a single cell, distributed evenly throughout
+the column, or distributed vertically following the Suzuki equation
+(Figure \ref{FigAsh3dGrid}) \cite{Carey96,Suzuki83}.
+\begin{equation}
+ \frac{\mathrm{d}S}{\mathrm{d}z} = S\frac{k^2\left( 1-z/H \right)\exp\left[k\left(z/H-1 \right) \right]}
+ {H \left[1-\left(1+k \right)\exp \left( -k\right) \right]} \label{EqSuz}
+\end{equation}
+where $S$ is the total mass of erupted material in a given time step at a
+given particle size, $H$ is the total plume height, $z$ is a given elevation
+in the plume, and the shape factor $k$ is an adjustable constant that controls
+ash distribution with height. A low value of $k$ gives a roughly uniform
+distribution of mass with elevation, while higher values concentrate mass
+near the plume top (See Figure \ref{FigSourceExample}).
+
+\begin{figure}[htbp]
+%\includegraphics[angle=90,scale=0.9]{asharrivaltimesairports_p1.pdf}
+\parbox{15cm}{\caption{\label{FigSourceExample}
+Source examples}}
+\end{figure}
+
+During an eruption, Ash3d injects tephra into these nodes at a constant
+rate. The grain-size distribution inserted into each node in the column
+is the same at each elevation and for each eruptive pulse. Default values
+are described under the Web Interface section.
+
+\subsection{Transport}\label{ChapIntroSecTrans}
+Ash3d solves for the conservation of mass in each cell by tracking the mass
+concentration $q$ with time $t$,
+\begin{equation}\label{EqGovEqVect}
+ \frac{\partial q}{\partial t} +
+   \nabla \cdot \left[ \left(\mathbf{u} + \mathbf{v_s} \right) q \right]
+ - \nabla \cdot \left( \mathbf{K} \nabla q\right) = S
+\end{equation}
+where $\mathbf{u}$ is the 3-D wind vector,
+$\mathbf{v_s}$ the settling velocity, $K$ is the
+diffusivity, and $S$ is a source term.  For most source types, $S$
+is non-zero only in the column of nodes above the volcano.  The
+exception is the umbrella cloud source term which includes a
+$3 \times 3$ group of cells centered over the vent.
+The settling velocity is determinted via \cite[p.182]{Bird60}
+\begin{equation}
+v_s=\sqrt{\frac{4d\rho g}{3C_d\rho_a}}\label{EqFallVel}
+\end{equation}
+where $d$ is the particle diamter, $\rho$ is the particle density, $g$ is
+the acceleration of gravity, $C_d$ is the drag coefficient, and $\rho_a$
+is the density of air.
+Ash3d can use different models of $C_d$ to account for non-spherical particles.
+By default, Ash3d calculates the settling
+velocity of each particle size using equations of Wilson and Huang \cite{Wilson79}
+for non-spherical particles.
+\begin{equation}
+C_d = \frac{24}{\mathrm{Re}}F^{-0.828}+2 \sqrt{1.07-F}\label{EqDragWH}
+\end{equation}
+$\mathrm{Re}$ is the Reynold's number and $F$ is a shape factor (see
+App. \ref{ChapAppendFallDynamics} for more details.).
+Alternative models that can be used include an
+optional Cunningham slip correction factor \cite[p.407]{Seinfeld06},
+which can increase the fall rate for small ($<30 \,\mathrm{\mu m}$)
+particles at high elevation;
+Stokes flow; and modifications to Wilson and Huang by \cite{Ganser93} and
+\cite{Pfeiffer05}.
+
+The advection term of Eq. \ref{EqGovEqVect} (the second term on the left-hand side
+(LHS)) is calculated explicitly using the Donor Cell Upwind method of
+solution (see \cite{Schwaiger12} for details). The diffusion term (third
+LHS term) is calculated implicitly at the end of each time step. The diffusivity,
+$K$, can be spatially variable and can be a function of the local meteorological
+conditions. We have found that modeled clouds match well with observed ones
+when $K=0$, and have set it to this value for simulations using the web interface.
+
+\subsection{Deposition}\label{ChapIntroSecDepo}
+Ash3d tracks the mass flux of each grain size across cell boundaries and
+accumulates a deposit once tephra falls through the cell boundary that
+represents the ground surface at a particular location.
+
