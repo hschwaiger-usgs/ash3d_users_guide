@@ -1,24 +1,32 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Installation}\label{ChapInstall}
-Ash3d was developed to run on a linux system and has been successfully been installed
-on Ubuntu and CentOS on x86\_64, Power8 and ARM systems (Pi3/4).
-It has been successfully built on Mac OS 10 and Window 10, though implementing the
-full functionality is on-going.
+Ash3d was developed to run on a Linux system and has been tested on several
+popular Debian and Redhat-based distributions, running on hardware as light
+as Intel Atom processors or 32-bit ARM systems (Raspberry Pi 3), common
+personal computer hardware, as well as modern high-performance computing
+environments.
+It has been successfully built on other Unix varieties such as OpenBSD
+and Darwin (MacOS).  Experimental limited installations on Window 10/11 have been
+successful, though implementing the full functionality is on-going.
 
 \paragraph{Library dependancies}
 Ash3d requires three auxillary libraries:
 \begin{itemize}
-\item libMetReader.a  (\url{https://github.com/usgs/volcano-ash3d-metreader}) \\
-This library is an interface between a calling program and a wide variety of
-numerical weather prediction (NWP) models as well as radiosonde data.
-
-\item libprojection.a (\url{https://github.com/usgs/volcano-ash3d-projection}) \\
+\item libprojection.a (\url{https://code.usgs.gov/vsc/ash3d/volcano-ash3d-projection}) \\
 This library converts between longitude/latitude coordinates and several projections
 commonly used in NWP files.
+This repository is mirrored at \url{https://github.com/DOI-USGS/volcano-ash3d-projection}.
 
-\item libHoursSince.a (\url{https://github.com/usgs/volcano-ash3d-hourssince}) \\
+\item libHoursSince.a (\url{https://code.usgs.gov/vsc/ash3d/volcano-ash3d-hourssince}) \\
 This library converts dates and time values to the number of hours since a
 reference year.
+This repository is mirrored at \url{https://github.com/DOI-USGS/volcano-ash3d-hourssince}.
+
+\item libmetreader.a  (\url{https://code.usgs.gov/vsc/ash3d/volcano-ash3d-metreader}) \\
+This library is an interface between a calling program and a wide variety of
+numerical weather prediction (NWP) models as well as radiosonde data.
+This repository is mirrored at \url{https://github.com/DOI-USGS/volcano-ash3d-metreader}.
+
 \end{itemize}
 
 Each of these libraries were developed as a part of Ash3d, but were split into
@@ -26,15 +34,16 @@ separate libraries so as to support other software projects requiring an
 interface to NWP models.  Instructions for building and installing these
 libraries are given in the respective repositories.  The default installation
 location for these libraries is \texttt{/opt/USGS}.  This could be changed to suit
-your system by editing the makefile (\texttt{INSTALLDIR=\~/USGS} for example),
-but should be consistent since the Ash3d makefile expects
-a single location.  A minimal installation of these libraries only requires
-a fortran compiler, however only ASCII windfiles (radiosonde or other profiles)
-would be available.  To read NWP files from NCEP, NASA, WRF or otherwise, 
-MetReader must be compiled with either NetCDF (preferably v4) or a GRIB
-library (eccodes or the deprecated grib-api).
+your system by editing the \texttt{makefile}
+(\texttt{INSTALLDIR=}$\sim$\texttt{/USGS} for example),
+but should be consistent since the Ash3d \texttt{makefile} expects
+a consistent location.  A minimal installation of these libraries only requires
+a Fortran compiler, however only ASCII windfiles (radiosonde or other profiles)
+would be available.  To read NWP files from NCEP, NASA, ECMWF, WRF or otherwise, 
+MetReader must be compiled with either NetCDF (preferably v4) or the GRIB
+library ecCodes.
 
-This can be installed for a CentOS (RHEL, Fedora) system by
+This can be installed for a RedHat-based system (RHEL, CentOS, Rocky, Fedora) by
 \begin{verbatim}
      sudo yum install netcdf netcdf-devel eccodes eccodes-devel
 \end{verbatim}
@@ -44,47 +53,51 @@ or for Ubuntu (Mint, Rasperian)
 \end{verbatim}
 
 In the MetReader library, it is encouraged to also download and install 
-netcdf-java which is used to convert GRIB files to NetCDF
-\url{http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/netcdfAll/5.2.0/netcdfAll-5.2.0.jar}
+\texttt{netcdf-java} which is used to convert GRIB files to NetCDF
+\url{https://www.unidata.ucar.edu/software/netcdf-java}
 To use this utility, you will need a java installation:
 \begin{verbatim}
 sudo yum install java-openjdk
 \end{verbatim}
+or for Ubuntu (Mint, Rasperian)
 \begin{verbatim}
 sudo apt-get install default-jdk
 \end{verbatim}
 
-Although not needed for a minimal Ash3d installation, the lapack and blas
+Although not needed for a minimal Ash3d installation, the \texttt{lapack} and \texttt{blas}
 libraries are required if the Crank-Nicolson scheme is selected for calculating
 diffusion.\\
 
 So to build the needed libraries, run:
 \begin{verbatim}
 cd /to/build/directory/
-git clone https://github.com/usgs/volcano-ash3d-hourssince
+git clone https://github.com/DOI-USGS/volcano-ash3d-hourssince
 cd volcano-ash3d-hourssince
-vi makefile (only if you want to change INSTALLDIR=/opt/USGS)
+  For local changes; vi makefile
 make all
+make check
 [sudo] make install
 
 cd /to/build/directory/
-git clone https://github.com/usgs/volcano-ash3d-projection
+git clone https://github.com/DOI-USGS/volcano-ash3d-projection
 cd volcano-ash3d-projection
-vi makefile (only if you want to change INSTALLDIR=/opt/USGS)
+  For local changes; vi makefile
 make all
+make check
 [sudo] make install
 
 cd /to/build/directory/
-git clone https://github.com/usgs/volcano-ash3d-metreader
+git clone https://github.com/DOI-USGS/volcano-ash3d-metreader
 cd volcano-ash3d-metreader
-vi makefile (only if you changed INSTALLDIR for the other libraries or disabled GRIB/NETCDF)
+  For local changes; vi makefile
 make all
+make check
 [sudo] make install
 \end{verbatim}
 
 \paragraph{Building Ash3d}
 Once the dependent libraries have been installed, Ash3d can be downloaded from
-\url{https://github.com/usgs/volcano-ash3d}.
+\url{https://code.usgs.gov/vsc/ash3d/volcano-ash3d}.
 
 An autoconf installation process is in development, but currently,
 compilation is controled through a manual editing of 
@@ -94,41 +107,44 @@ The top block of makefile contains all the variables that the user should
 need to set:
 \begin{itemize}
  \item \texttt{SYSTEM = gfortran}\\
-If you want to add blocks for differenct compiler flags, you can control
-the paths through this variable.  Tested compilers include gfortran, ifort,
-and g95.
+If you want to add blocks for different compiler flags, you can control
+the paths through this variable.  Tested compilers include \texttt{gfortran},
+\texttt{ifort}, and \texttt{aocc}. Compiler paths, flags, options are all
+specified in include files with names \texttt{make\_[SYSTEM].inc}
  \item \texttt{RUN = OPT}\\
-This variable allows easy switching among different compiler flags for debugging (DEBUG),
-profiling (PROF), and optimized (OPT).  Additionally, OPTOMP can be used to include
-openMP directives.
+This variable allows easy switching among different compiler flags for debugging
+(\texttt{DEBUG}),
+profiling (\texttt{PROF}), and optimized (\texttt{OPT}).  Additionally, \texttt{OPTOMP}
+can be used to include openMP directives.
+ \item \texttt{OS=LINUX}\\
+This variable specifies the operating system class used.  Default is \texttt{LINUX},but
+can also be \texttt{MACOS} or \texttt{WINDOWS}. This is mainly used to direct the
+software on how to build local paths and execute commands.
  \item \texttt{USGSROOT=/opt/USGS}\\
-This is the path to where libhoursince, libprojection, and libMetReader are installed.
+This is the path to where libhoursince, libprojection, and libmetreader are installed.
  \item \texttt{ASH3dCCSRC=./}\\
 This is the location of the \texttt{src} directory.  The build directory can be
 elsewhere.
  \item \texttt{INSTALLDIR=/opt/USGS/Ash3d}\\
 This is the install path.
  \item \texttt{USENETCDF = T}\\
-This variable is used to toggle (\texttt{T} or \texttt{F}) inclusion of netCDF
-functionality.  MetReader would also need to be compiled with a consistant flag.
+This variable is used to toggle (\texttt{T} or \texttt{F}) inclusion of NetCDF
+functionality.  Metreader would also need to be compiled with a consistent flag.
  \item \texttt{USEGRIB   = T}\\
 This variable is used to toggle (\texttt{T} or \texttt{F}) inclusion of GRIB
-functionality.  MetReader would also need to be compiled with a consistant flag.
- \item \texttt{VERB = 1}\\
-This variable sets the level of debug information that is written to stdout.  Higher
-numbers include more verbose output.
+functionality.  Metreader would also need to be compiled with a consistent flag.
  \item \texttt{USEPOINTERS = F}\\
 This variable allows some variables to be declared as allocatable pointers instead
 of allocatable arrays.  Declaring variables as allocatable pointers allows an easier
-interface with C programs (such as forestclaw).  The option to keep variables as
+interface with C programs (such as ForestClaw).  The option to keep variables as
 allocatable arrays is primarily for compatibility with some older compilers.  The
 current implementation of OpenMP seems to require that pointers not be used.
 This variable
 will likely be deprecated in favor of exclusive allocatable pointer variables.
  \item \texttt{USEEXTDATA = F}\\
-This variable allow (if \texttt{T}) some external data files to be used at run-time.
+This variable allows (if \texttt{T}) some external data files to be read at run-time.
 The default behavior is that a global airport list and a global list of volcanoes with
-default eruption source parameters is read as a data variable at compile-time
+default eruption source parameters are read as data variables at compile-time
 to minimize the external files the executable needs at run-time.  Compiling
 some subroutines with several thousand lines in which these data are stored can add
 significantly to the compilation time and memory requirements, sometimes exceeding
@@ -136,6 +152,20 @@ the availble resources (such as on the Raspberry Pi 3).  If this variable is set
 \texttt{T}, the data files in \texttt{Ash3d/share} will be copied to the installtion
 directory.  This path can be supplanted with another location using the optional
 environment variable \texttt{ASH3DHOME}.
+ \item \texttt{FASTFPPFLAG = }\\
+This variable allow activating some limits on Ash3d computations which can significantly
+speed-up calculations.  If \texttt{-DFAST\_DT} is used, the determination of the
+maximum allowed time-step is limited to the time-steps of the NWP files, which are
+generally at 1,3 or 6 hours.  Without this flag set, the maximum \texttt{dt} is
+calculated each time-step.  This might be necessary for some processes such as
+the radial spreading of umbrella clouds.  A second flag that can be used is
+\texttt{-DFAST\_SUBGRID} which limits the flux calculations to just the bounding
+box of the current ariborne ash cloud.
+ \item \texttt{USEPLPLOT = F}\\
+ \texttt{USEDISLIN = F}\\
+ \texttt{USEGMT = F}\\
+ These allow the inclusion of various plotting libraries to be build into the Ash3d
+post-processing tools, allowing the direct creation of plots from \texttt{Ash3d\_PostProc}
  \item \texttt{LIMITER = LIM\_SUPERBEE}\\
 This variable controls which limiter is used in the advection routines.  The
 Superbee limiter performs very well and is the default, however other limiters
@@ -147,8 +177,16 @@ and MC (\texttt{LIM\_MC}).
  \item \texttt{DIFFMETH=CRANKNIC}\\
 This variable controls the integration scheme used for diffusion.  The default
 is \texttt{CRANKNIC} which invokes the Crank-Nicolson semi-implicit scheme, but
-this requires the  system libraries libblas and liblapack to be installed.
+this requires the  system libraries \texttt{libblas} and \texttt{liblapack} to be installed.
 Alternatively, if set to \texttt{EXPLDIFF}, the explicit scheme is used.
+ \item \texttt{PII=ON}\\
+Ash3d does an initial system check to determine the current working directory, location
+of any shared files, tests of compiler (and version) and general computing
+environment, including the user name and host name. If this flag is set to \texttt{ON}, this
+information is collected and included in the output file.  This information
+can be useful as archival metadata on run output, but it may also be considered insecure
+to have usernames, hostnames and complete system paths. Set to \texttt{OFF} to
+disable this logging.
 \end{itemize}
 
 Once these variables are modified to your system and preferences, Ash3d can

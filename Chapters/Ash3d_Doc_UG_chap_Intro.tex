@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}\label{ChapIntro}
-In 2012, we introduced Ash3d, a volcanic ash transport and dispersion model used to forecast ash-cloud movement and ash deposition during eruptions. \cite{Schwaiger12}  This was followed in 2013 by the introduction of a web interface that allowed any user with an account to simulate ash-cloud transport and deposition \cite{Mastin13}.  Subsequently, we have used Ash3d to study ash transport during recent eruptions \cite{Mastin13b} \cite{Mastin20}, to evaluate the sensitivity of model inputs to outcomes \cite{Mastin16}, examine effects of umbrella-cloud growth on eruption dynamics \cite{Mastin16},  study whether and how ash from New Zealand supereruptions could be deposited in Antarctica \cite{Dunbar17}, develop probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin20b} and Taupo, New Zealand \cite{Barker19}, and examine Bayesian ensemble techniques to improve ash-cloud forecast accuracy \cite{Denlinger12}.
+In 2012, we introduced Ash3d, a volcanic ash transport and dispersion model used to forecast ash-cloud movement and ash deposition during eruptions. \cite{Schwaiger12}  This was followed in 2013 by the introduction of a web interface that allowed any user with an account to simulate ash-cloud transport and deposition \cite{Mastin13b}.  Subsequently, we have used Ash3d to study ash transport during recent eruptions \cite{Mastin13a}, to evaluate the sensitivity of model inputs to outcomes \cite{Mastin16}, examine effects of umbrella-cloud growth on eruption dynamics \cite{Mastin14,Mastin20a},  study whether and how ash from New Zealand supereruptions could be deposited in Antarctica \cite{Dunbar17}, develop probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin20b} and Taupo, New Zealand \cite{Barker19}, and examine Bayesian ensemble techniques to improve ash-cloud forecast accuracy \cite{Denlinger12}.
 
 Development of a web interface allowed users all over the world to use the model without downloading and compiling the software or downloading large amounts of numerical weather prediction (NWP) model data used to run the model.  The web interface however provides only a small subset of functions available in Ash3d.  Specifying a grain-size distribution, or a time series of erupted pulses and plume heights and eruption rates, or allowing for the growth of umbrella clouds, has not been available due to our desire to keep things simple.  The software has also not been available for download, meaning that only model developers and their close collaborators have had access the the full suite of features.
 
 With this release of Ash3d source code, users can take advantage of Ash3d's full functionality.  Users with particular skill or interest may also advance the source code to consider physical processes or numerical advances not yet envisioned.  The complexity of this model requires that it be installed by users who are versed in Linux and comfortable running models at the command line.  Users who wish to use current or forecast meteorological data may also have to have a Linux system that can run scheduled NWP data downloads (tens of Gb daily) and other updates.  If you have these skills and resources, and a desire to simulate tephra transport in a 3D wind field, this code may be for you. Users need have no special knowledge in numerical methods or modeling.
 
-We begin with a brief overview of Ash3d, describe simulations using an ASCII input file, and provide some guidance on post-processing the results. Use of Ash3d through the USGS web-based interface is briefly summarized, but is more formally presented in a companion document \cite{Mastin20}. Ash3d is still in development, hence its capabilities and documentation are likely to be revised in coming years.
+We begin with a brief overview of Ash3d, describe simulations using an ASCII input file, and provide some guidance on post-processing the results. Use of Ash3d through the USGS web-based interface is briefly summarized, but is more formally presented in a companion document \cite{Mastin13a}. Ash3d is still in development, hence its capabilities and documentation are likely to be revised in coming years.
 
 \section{Model Overview}\label{ChapIntroSecModelOverview}
 Ash3d calculates the transport of volcanic ash by dividing the atmosphere into a
@@ -48,8 +48,8 @@ Source examples}}
 
 During an eruption, Ash3d injects tephra into these nodes at a constant
 rate. The grain-size distribution inserted into each node in the column
-is the same at each elevation and for each eruptive pulse. Default values
-are described under the Web Interface section.
+is the same at each elevation and for each eruptive pulse.
+Default values are described in Chapter \ref{ChapWebInterface}.
 
 \subsection{Transport}\label{ChapIntroSecTrans}
 Ash3d solves for the conservation of mass in each cell by tracking the mass
@@ -67,9 +67,9 @@ exception is the umbrella cloud source term which includes a
 $3 \times 3$ group of cells centered over the vent.
 The settling velocity is determinted via \cite[p.182]{Bird60}
 \begin{equation}
-v_s=\sqrt{\frac{4d\rho g}{3C_d\rho_a}}\label{EqFallVel}
+v_s=\sqrt{\frac{4d\rho_p g}{3C_d\rho_a}}\label{EqFallVel}
 \end{equation}
-where $d$ is the particle diamter, $\rho$ is the particle density, $g$ is
+where $d$ is the particle diamter, $\rho_p$ is the particle density, $g$ is
 the acceleration of gravity, $C_d$ is the drag coefficient, and $\rho_a$
 is the density of air.
 Ash3d can use different models of $C_d$ to account for non-spherical particles.
@@ -80,7 +80,7 @@ for non-spherical particles.
 C_d = \frac{24}{\mathrm{Re}}F^{-0.828}+2 \sqrt{1.07-F}\label{EqDragWH}
 \end{equation}
 $\mathrm{Re}$ is the Reynold's number and $F$ is a shape factor (see
-App. \ref{ChapAppendFallDynamics} for more details.).
+Appendix \ref{ChapAppendFallDynamics} for more details.).
 Alternative models that can be used include an
 optional Cunningham slip correction factor \cite[p.407]{Seinfeld06},
 which can increase the fall rate for small ($<30 \,\mathrm{\mu m}$)
