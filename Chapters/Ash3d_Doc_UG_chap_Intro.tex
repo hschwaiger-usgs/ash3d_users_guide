@@ -1,18 +1,52 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}\label{ChapIntro}
-In 2012, we introduced Ash3d, a volcanic ash transport and dispersion model used to forecast ash-cloud movement and ash deposition during eruptions. \cite{Schwaiger12}  This was followed in 2013 by the introduction of a web interface that allowed any user with an account to simulate ash-cloud transport and deposition \cite{Mastin13b}.  Subsequently, we have used Ash3d to study ash transport during recent eruptions \cite{Mastin13a}, to evaluate the sensitivity of model inputs to outcomes \cite{Mastin16}, examine effects of umbrella-cloud growth on eruption dynamics \cite{Mastin14,Mastin20a},  study whether and how ash from New Zealand supereruptions could be deposited in Antarctica \cite{Dunbar17}, develop probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin20b} and Taupo, New Zealand \cite{Barker19}, and examine Bayesian ensemble techniques to improve ash-cloud forecast accuracy \cite{Denlinger12}.
+In 2012, we introduced Ash3d, a volcanic ash transport and dispersion model
+used to forecast ash-cloud movement and ash deposition during eruptions \cite{Schwaiger12}.
+This was followed in 2013 by the introduction of a web interface that allowed any user
+with an account to simulate ash-cloud transport and deposition \cite{Mastin13b}.
+Subsequently, we have used Ash3d to study ash transport during recent
+eruptions \cite{Mastin13a}, to evaluate the sensitivity of model inputs to
+outcomes \cite{Mastin16}, examine effects of umbrella-cloud growth on eruption
+dynamics \cite{Mastin14,Mastin20a},  study whether and how ash from New Zealand
+supereruptions could be deposited in Antarctica \cite{Dunbar17}, develop
+probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin20b}
+and Taupo, New Zealand \cite{Barker19}, and examine Bayesian ensemble techniques
+to improve ash-cloud forecast accuracy \cite{Denlinger12}.
 
-Development of a web interface allowed users all over the world to use the model without downloading and compiling the software or downloading large amounts of numerical weather prediction (NWP) model data used to run the model.  The web interface however provides only a small subset of functions available in Ash3d.  Specifying a grain-size distribution, or a time series of erupted pulses and plume heights and eruption rates, or allowing for the growth of umbrella clouds, has not been available due to our desire to keep things simple.  The software has also not been available for download, meaning that only model developers and their close collaborators have had access the the full suite of features.
+Development of a web interface allowed users all over the world to use the model
+without downloading and compiling the software or downloading large amounts of
+numerical weather prediction (NWP) model data used to run the model.  The web
+interface however provides only a small subset of functions available in Ash3d.
+Specifying a grain-size distribution, or a time series of erupted pulses and
+plume heights and eruption rates, or allowing for the growth of umbrella clouds,
+has not been available due to our desire to keep things simple.  The software has
+also not been available for download, meaning that only model developers and their
+close collaborators have had access the the full suite of features.
 
-With this release of Ash3d source code, users can take advantage of Ash3d's full functionality.  Users with particular skill or interest may also advance the source code to consider physical processes or numerical advances not yet envisioned.  The complexity of this model requires that it be installed by users who are versed in Linux and comfortable running models at the command line.  Users who wish to use current or forecast meteorological data may also have to have a Linux system that can run scheduled NWP data downloads (tens of Gb daily) and other updates.  If you have these skills and resources, and a desire to simulate tephra transport in a 3D wind field, this code may be for you. Users need have no special knowledge in numerical methods or modeling.
+With this release of Ash3d source code, users can take advantage of Ash3d's full
+functionality.  Users with particular skill or interest may also advance the
+source code to consider physical processes or numerical advances not yet envisioned.
+The complexity of this model requires that it be installed by users who are versed
+in Linux and comfortable running models at the command line.  Users who wish to use
+current or forecast meteorological data may also have to have a Linux system that
+can run scheduled NWP data downloads (tens of Gb daily) and other updates.  If you
+have these skills and resources, and a desire to simulate tephra transport in a 3D
+wind field, this code may be for you. Users need have no special knowledge in
+numerical methods or modeling.
 
-We begin with a brief overview of Ash3d, describe simulations using an ASCII input file, and provide some guidance on post-processing the results. Use of Ash3d through the USGS web-based interface is briefly summarized, but is more formally presented in a companion document \cite{Mastin13a}. Ash3d is still in development, hence its capabilities and documentation are likely to be revised in coming years.
+We begin with a brief overview of Ash3d, describe simulations using an ASCII input
+file, and provide some guidance on post-processing the results. Use of Ash3d through
+the USGS web-based interface is briefly summarized, but is more formally presented
+in a companion document \cite{Mastin13a}. Ash3d is still in development, hence its
+capabilities and documentation are likely to be revised in coming years.
 
 \section{Model Overview}\label{ChapIntroSecModelOverview}
 Ash3d calculates the transport of volcanic ash by dividing the atmosphere into a
-three-dimensional grid of cells (Figure \ref{FigAsh3dGrid}) and calculating the flow of mass through cell walls. During the eruption, tephra is injected at a constant
+three-dimensional grid of cells (Figure \ref{FigAsh3dGrid}) and calculating the
+flow of mass through cell walls. During the eruption, tephra is injected at a constant
 rate into the column of cells above the volcano (Figure \ref{FigAsh3dGrid}).
-Using a 3-D time-dependent wind field imported from a numerical weather prediction model, downwind advection and diffusion of ash is numerically calculated with a
+Using a 3-D time-dependent wind field imported from a numerical weather
+prediction model, downwind advection and diffusion of ash is numerically calculated with a
 diffusion rate determined by a user-specified diffusivity. Individual ash
 particles fall at a rate determined by their settling velocity in air, and
 deposit when they reach the ground surface.
@@ -27,7 +61,8 @@ Ash3d does not calculate the dynamics of a rising plume. Instead, it injects
 tephra into a column of nodes above the volcano (Figure \ref{FigAsh3dGrid}).
 Users may specify
 that the ash be concentrated in a single cell, distributed evenly throughout
-the column, or distributed vertically following the Suzuki equation
+the column, distributed along a user-specified vertical profile, or distributed
+vertically following the Suzuki equation
 (Figure \ref{FigAsh3dGrid}) \cite{Carey96,Suzuki83}.
 \begin{equation}
  \frac{\mathrm{d}S}{\mathrm{d}z} = S\frac{k^2\left( 1-z/H \right)\exp\left[k\left(z/H-1 \right) \right]}
@@ -39,6 +74,30 @@ in the plume, and the shape factor $k$ is an adjustable constant that controls
 ash distribution with height. A low value of $k$ gives a roughly uniform
 distribution of mass with elevation, while higher values concentrate mass
 near the plume top (See Figure \ref{FigSourceExample}).
+
+For eruptions with a larger mass-eruption rate, limiting these source terms to just
+the column above the vent can be inadaquate and the radial spreading of an
+umbrella cloud must be accounted for. The radius of the umbrella cloud at a
+particular time is given by:
+\begin{equation}
+ R = \left( \frac{3 \lambda N Q}{2 \pi}\right)^{\frac{1}{3}} t^{\frac{2}{3}}  \label{EqUmbRad}
+\end{equation}
+where the volume influx rate, $Q$, is given by:
+\begin{equation}
+ Q = C \sqrt{k_e} \frac{\dot{M}^{\frac{3}{4}}}{N^{\frac{5}{4}}} \label{EqUmbQ}
+\end{equation}
+The radial spreading velocity within the umbrella cloud ($r<R$) can be expressed as
+\begin{equation}
+% Costa formulation
+ u(r) = \dot{R} \left( \frac{3 R}{4 r} + \frac{r}{4R}\right) \label{EqUmbRadVelCost}
+\end{equation}
+%\begin{equation}
+%% Webster formulation
+% u(r) = \dot{R} \sqrt{\frac{R}{r}} \label{EqUmbRadVelWebster}
+%\end{equation}
+
+
+
 
 \begin{figure}[htbp]
 %\includegraphics[angle=90,scale=0.9]{asharrivaltimesairports_p1.pdf}

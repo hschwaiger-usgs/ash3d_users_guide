@@ -93,8 +93,8 @@ to find the portion of the NWP model grid that lies within the
 Ash3d model domain.
 Ash3d uses the MetReader library to read the atmospheric data and to
 interpolate values from the NWP grid onto the computational grid used
-by Ash3d.  MetReader also projects the wind vectors onto the coordinate
-system specified by this line.  
+by Ash3d. MetReader also projects the wind vectors onto the coordinate
+system specified by this line.
 The types of NWP model output that
 Ash3d can read, and their projection parameters, are given in
 Table \ref{tab:ProjOpt}.
@@ -171,12 +171,12 @@ distances, the location of the upper right corner of the model domain is
 adjusted to be an integral number of cell distances from the lower left
 corner.
 
-Line 7 specifies the vertical grid structure to be used.  If a number is
+Line 7 specifies the vertical grid structure to be used. If a number is
 given, it is interpreted to be the constant $\Delta z$ for a regular vertical
 grid spacing.
 The units of this input parameter are always kilometers.
 Alternatively, a text string can be given which specifies
-different options for a variable spacing of the vertical grid.  This text
+different options for a variable spacing of the vertical grid. This text
 string must be one of the following:
 \begin{itemize}
 \item \texttt{dz\_plin}: for piecewise linear
@@ -184,7 +184,7 @@ string must be one of the following:
 \item \texttt{dz\_cust}: for custom
 \end{itemize}
 For each of these variable-$\Delta z$ cases, an additional line must be
-provided in the input file immediately after line 7.  For \texttt{dz\_plin},
+provided in the input file immediately after Line 7. For \texttt{dz\_plin},
 this line must start with the number of linear segments, followed by the
 number of cells and $\Delta z$ in each segments
 ($n_{seg}$ $n_{z_1}$ $\Delta z_1$ $n_{z_2}$ $\Delta z_2$ $\cdots$ $n_{z_n}$ $\Delta z_n$).
@@ -197,8 +197,8 @@ $\Delta z$.
 Line 8 parameters specify the diffusion coefficient ($K$) and the
 vertical distribution of mass in the column, respectively. The diffusion
 coefficient is specified in $\mathrm{m^2/s}$ and is applied to both the
-horizontal and vertical diffusivities.  If $K$=0.0,  Ash3d disables the
-diffusion calculation.  Note that unless Ash3d has been
+horizontal and vertical diffusivities. If $K$=0.0, Ash3d disables the
+diffusion calculation. Note that unless Ash3d has been
 compiled with the Crank-Nicolson scheme invoked (which requires the \texttt{lapack}
 library), including diffusion can significantly increase the computation time
 through the time-step constraints with explicit diffusion solvers.
@@ -206,12 +206,14 @@ through the time-step constraints with explicit diffusion solvers.
 The vertical distribution of mass may be specified either as a number, or as a
 text string: \texttt{point}, \texttt{line},
 \texttt{profile}, \texttt{umbrella}, and \texttt{umbrella\_air}.
-These possibilities are illustrated in Figure \ref{FigVertMassDistFormat}.  If the input is:
+These possibilities are illustrated in Figure \ref{FigVertMassDistFormat}. If the input is:
 
 \begin{figure}[htbp]\vspace*{-5cm}\hspace*{-2cm}
 \includegraphics[angle=0,scale=0.8]{Figures/Scripts/VertMassDist.pdf}
 \parbox{15cm}{\caption{\label{FigVertMassDistFormat}
-Illustration of vertical mass distributions that can be specified in Ash3d, and the association of these inputs with other aspects of model setup, such as plume height and the configuration of source nodes.
+Illustration of vertical mass distributions that can be specified in Ash3d, and
+the association of these inputs with other aspects of model setup, such as plume
+height and the configuration of source nodes.
 }}
 \end{figure}
 
@@ -220,7 +222,7 @@ Illustration of vertical mass distributions that can be specified in Ash3d, and 
 Mass distributions for different $k$ are illustrated in Figure \ref{FigVertMassDistFormat}a.
 \item \texttt{point}: all mass is placed in a single cell at the
 plume top (Figure \ref{FigVertMassDistFormat}a).
-\item \texttt{line}:  mass is distributed evenly from the vent
+\item \texttt{line}: mass is distributed evenly from the vent
 elevation (if provided) or from sea level (if vent elevation is not
 provided) to the plume top (Figure \ref{FigVertMassDistFormat}a)
 \item \texttt{profile}: each eruptive pulse line in Block 2 must be supplemented
@@ -229,13 +231,13 @@ by an additional line specifying the profile, as described below.
 interpreted as the height of the umbrella cloud (ash in the overshooting
 top, above the umbrella cloud, is assumed to collapse gravitationally
 back into the umbrella rather than being advected horizontally by winds at that
-altitude).  This source type is most appropriate for eruptions of VEI=6 and larger,
-and may be appropriate for some VEI 4 or 5 eruptions \cite{Mastin20}.  Source
+altitude). This source type is most appropriate for eruptions of VEI=6 and larger,
+and may be appropriate for some VEI 4 or 5 eruptions \cite{Mastin20}. Source
 nodes for these cases consist of a column of nodes extending from the vent
 elevation (if provided) to 75\% of the umbrella top height, or from sea level
 (if vent elevation is not provided) to 75\% of the umbrella top height. From
 75\% to 100\% of the umbrella top height, source nodes consist of a matrix $3 \times 3$
-in plan view (Figure \ref{FigVertMassDistFormat}b).  Within the height range of
+in plan view (Figure \ref{FigVertMassDistFormat}b). Within the height range of
 the $3 \times 3$ matrix, from the vent outward to the edge of the expanding
 umbrella cloud, radial wind vectors are added to the ambient wind field.
 The magnitude of the radial wind vectors is calculated using corrected
@@ -243,8 +245,8 @@ Equations (2) and (3) of \cite{Costa13}, and is proportional to the mass
 eruption rate.
 The only difference between \texttt{umbrella} and \texttt{umbrella\_air} is that the
 latter is used only for simulations of airborne ash, where a single grain
-size is used, and the volume of ash is assume to equal  5\% of the total
-erupted volume.  Only one eruptive pulse may be specified when the umbrella
+size is used, and the volume of ash is assume to equal 5\% of the total
+erupted volume. Only one eruptive pulse may be specified when the umbrella
 source is used.
 %VelMod\_umb 1=Eq. 3; 2=Eq. 4
 %k_entrainment_umb, lambda_umb, N_BV_umb, SuzK_umb
@@ -339,12 +341,12 @@ have the following values:
 The distinction between \texttt{iwind}=3 and \texttt{iwind}=4 has been
 relaxed and these are now interchangable.
 Ash3d attempts to read two more integer values on Line 1
-of this block: a grid ID, and a format code.  The grid code is the NCEP grid
+of this block: a grid ID, and a format code. The grid code is the NCEP grid
 ID described at \url{http://www.nco.ncep.noaa.gov/pmb/docs/on388/tableb.html}
 and the format code must be either 1 (ASCII), 2 (NetCDF), or 3 (GRIB v1 or v2).
 If these values are not provided, the grid code is assigned if known from the
 NWP product given by \texttt{iwindformat} and the data format code is assumed to
-be 2=NetCDF.  The combinations of \texttt{iwind} and \texttt{iwindformat} are shown in
+be 2=NetCDF. The combinations of \texttt{iwind} and \texttt{iwindformat} are shown in
 Table \ref{tab:MetOptions}.
 
 \small
@@ -411,13 +413,13 @@ This option can be used if no numerical weather prediction
 data are available or if data from radiosonde measurements is deemed more
 reliable than NWP model results.
 If \texttt{iwindformat}=1, then Ash3d expects the user-provided files to have a format
-of 3 header lines, followed by three or more columns of data.  The format specification
+of 3 header lines, followed by three or more columns of data. The format specification
 is documents in the MetReader User's Guide, but also outlined in the
 Appendix \ref{ChapAppendAtmosDataFormat1d}.
 
 If \texttt{iwindformat}=2, then Ash3d expects the 1-D profile to be from the global
 radiosonde data available from \url{https://ruc.noaa.gov/raobs/} or from
-\url{http://weather.uwyo.edu}.  Details on the particular formats Ash3d is able to
+\url{http://weather.uwyo.edu}. Details on the particular formats Ash3d is able to
 read is described in Appendix \ref{ChapAppendAtmosDataFormat1d}.
 
 Since there is no grid for these data, \texttt{igrid}, if provided, is interpreted to
@@ -428,9 +430,9 @@ When \texttt{iwind}=2, Ash3d reads a 3-D atmospheric fields in ASCII format that
 NetCDF format using a Java script that was originally written before Ash3d was
 modified to read NetCDF files directly. This option is no longer used.
 \texttt{iwind}= 3 or 4 indicates that the atmospheric files contain 3-D time-series
-data.  Orginally, \texttt{iwind}=3 was used for indicating that all data were stored in
+data. Orginally, \texttt{iwind}=3 was used for indicating that all data were stored in
 a single file with multiple time steps, and \texttt{iwind}=4 was for multiple NetCDF files,
-each for one time step.  This distinction is deprecated as currently, all data
+each for one time step. This distinction is deprecated as currently, all data
 files provided with \texttt{iwind}= 3 or 4 are evaluated for the time steps available.
 This then can accommodate the occasional NWP products that provide data in a
 multiple-file, multiple-time-step format.
@@ -498,21 +500,21 @@ along with the names of files written out.
 \hline
 Line & Output type&Variable&units & File names\\
 \hline
- 1&ESRI\textsuperscript{\tiny\textregistered} ASCII &final deposit thickness&$\mathrm{mm}$&DepositFile\_\_\_\_\_final.dat\\
+ 1&ASCII &final deposit thickness&$\mathrm{mm}$&DepositFile\_\_\_\_\_final.dat\\
  2&KML&final deposit thickness&$\mathrm{mm}$&deposit\_thickness\_mm.kml\\
   & & &$\mathrm{inches}$&deposit\_thickness\_inches.kml\\
- 3&ESRI\textsuperscript{\tiny\textregistered} ASCII &deposit at specified times&$\mathrm{mm}$&Deposit\_xxx.xxhrs.dat\\
- 4&KML&deposit at specified times&$\mathrm{mm}$&deposit\_thickness\_mm.kml\\
+ 3&ASCII &transient deposit&$\mathrm{mm}$&Deposit\_xxx.xxhrs.dat\\
+ 4&KML&transient deposit&$\mathrm{mm}$&deposit\_thickness\_mm.kml\\
   & & &$\mathrm{inches}$&deposit\_thickness\_inches.kml\\
- 5&ESRI\textsuperscript{\tiny\textregistered} ASCII &ash-cloud concentration&$\mathrm{mg/m^3}$&CloudConcentration\_xxx.xxhrs.dat\\
+ 5&ASCII &ash-cloud concentration&$\mathrm{mg/m^3}$&CloudConcentration\_xxx.xxhrs.dat\\
  6&KML& ash-cloud concentration&$\mathrm{mg/m^3}$&CloudConcentration.kml\\
- 7&ESRI\textsuperscript{\tiny\textregistered} ASCII&ash-cloud height&$\mathrm{km}$&CloudHeight\_xxx.xxhrs.dat\\
+ 7&ASCII&ash-cloud height&$\mathrm{km}$&CloudHeight\_xxx.xxhrs.dat\\
  8&KML&ash-cloud height&$\mathrm{km}$&CloudHeight.kml\\
- 9&ESRI\textsuperscript{\tiny\textregistered} ASCII&ash-cloud load at specified times&$\mathrm{T/km^2}$&CloudLoad\_xxx.xxhrs.dat\\
-10&KML&ash-cloud load at specified times&$\mathrm{T/km^2}$&CloudLoad.kml\\
-11&ESRI\textsuperscript{\tiny\textregistered} ASCII&deposit arrival times&$\mathrm{hours}$&DepositArrivalTime.dat\\
+ 9&ASCII&transient ash-cloud load&$\mathrm{T/km^2}$&CloudLoad\_xxx.xxhrs.dat\\
+10&KML&transient ash-cloud load&$\mathrm{T/km^2}$&CloudLoad.kml\\
+11&ASCII&deposit arrival times&$\mathrm{hours}$&DepositArrivalTime.dat\\
 12&KML&deposit arrival times&$\mathrm{hours}$&ashfall\_arrivaltimes\_hours.kml\\
-13&ESRI\textsuperscript{\tiny\textregistered} ASCII&cloud arrival times&$\mathrm{hours}$&CloudArrivalTime.dat\\
+13&ASCII&cloud arrival times&$\mathrm{hours}$&CloudArrivalTime.dat\\
 14&KML&cloud arrival times&$\mathrm{hours}$&cloud\_arrivaltimes\_hours.kml\\
 15&&consolodated output file&&specified in input file\\
 \hline
@@ -563,17 +565,17 @@ kmz file that can also be opened in Google Earth:
 \texttt{zip -r CloudLoad.kmz CloudLoad.kml}
 
 The consolodated output file option specified in Line 15 of Table \ref{tab:OutputOptions}
-serves several purposes.  It is designed to store the store the full ash concentration
+serves several purposes. It is designed to store the store the full ash concentration
 for each grainsize bin
-of all cells at specified time steps in a format specified in Line 16.  Current options
+of all cells at specified time steps in a format specified in Line 16. Current options
 for this output format is \texttt{ascii}, \texttt{binary}, or \texttt{netcdf}.
 If \texttt{netcdf}
 is specified, this output file can serve as a restart file, allowing a failed or
-suspended job to continue from the last output step.  The NetCDF file contains
+suspended job to continue from the last output step. The NetCDF file contains
 the full contents of the input file used to run the job to facilitate its
 role as a restart file.
 The NetCDF file also contains the various output variables that can be selected
-in Lines 1-14 above.  These include the following 2-D variables listed in
+in Lines 1-14 above. These include the following 2-D variables listed in
 Table \ref{tab:OutputProducts}.
 
 \small
@@ -591,7 +593,7 @@ Variable Name                & Dimensions & units\\
 \texttt{ashcon\_max}         & x,y,t      & $\mathrm{mg/m^3}$ \\
 \texttt{cloud\_height}       & x,y,t      & $\mathrm{km}$     \\
 \texttt{cloud\_load}         & x,y,t      & $\mathrm{T/km^3}$ \\
-\texttt{radar\_reflectivity} & x,y,z,t    & $\mathrm{bDz}$    \\
+\texttt{radar\_reflectivity} & x,y,z,t    & $\mathrm{dB}$     \\
 \texttt{cloud\_bottom}       & x,y,t      & $\mathrm{km}$     \\
 \texttt{depocon}             & x,y,gs,t   & $\mathrm{kg/m^2}$ \\
 \texttt{ashcon}              & x,y,z,gs,t & $\mathrm{kg/km^3}$\\
@@ -610,7 +612,7 @@ If this specifier is either absent or is 1, then the 3-D concentrations are writ
 If it is 2, then only the 2-D output products are written.
 
 Specifying \texttt{netcdf} in Line 16 provides the most general output product for post
-processing.  If Line 16 contains \texttt{asciii}, then data are written in ASCII format
+processing. If Line 16 contains \texttt{asciii}, then data are written in ASCII format
 to files names \texttt{3d\_tephra\_fall\_xxx.dat} where \texttt{xxx} is the output hour marker.
 The output data are in column format in the following order: x (or lon), y (or lat), z,
 total concentration (in $\mathrm{kg/km^3}$).
@@ -632,9 +634,9 @@ write(21,rec=1)((DepositThickness(i,j),i=1,nxmax),j=1,nymax)
 close(21)
 \end{verbatim}
 To read these files, you will need to know the values for \texttt{nxmax},
-\texttt{nymax}, and \texttt{nzmax}.  Although the default precision for
+\texttt{nymax}, and \texttt{nzmax}. Although the default precision for
 calculations in Ash3d is \texttt{real*8}, the default output precision is
-\texttt{real*4} in order to reduce output file size.  This can be changed, if desired
+\texttt{real*4} in order to reduce output file size. This can be changed, if desired
 by editing the code in module \texttt{precis\_param} to set the internal
 precision (\texttt{ip}) and the output precision (\texttt{op}).
 See \ref{ChapSoftwareStructure}
@@ -661,7 +663,7 @@ interval in hours between write times.
 \paragraph{Block 5}: Input wind files\\
 This block should contain a number of lines equal to \texttt{nWindFiles} (Block 3, Line 5).
 For the case of \texttt{iwind}$=5$, \texttt{nWindFiles} shoud be 1 and Block 5 Line 1
-should be the path to the top-level directory of that product.  For example, for the
+should be the path to the top-level directory of that product. For example, for the
 NCEP $2.5^{\circ}$ Reanalysis files stored as:
 \begin{verbatim}
 /data/WindFiles/NCEP
@@ -721,19 +723,19 @@ impacted by ash. If ``yes'' is given, a file named
 that plots each impacted location as a red placemarks as shown in
 Figure \ref{FigAsh3dOutput}.
 Additionally, files for each impacted airport are generated that contain the data
-for the ash accumulation as a function of time.  These files are named
+for the ash accumulation as a function of time. These files are named
 \texttt{depTS\_xxxx.dat} (where \texttt{xxxx} is the airport number in order of
 time of ash arrival) and have two columns containing hour and ashfall thickness
-in $\mathrm{mm}$.  Additionally, a gnuplot script is written for each of these
+in $\mathrm{mm}$. Additionally, a gnuplot script is written for each of these
 airport locations so that time-series plots of ashfall accumulation can be embedded
 in the kml files in post-processing.
 
 Line 4 gives the name and path of the file containing airports or other locations
-of interest.  The format of this file must contain four columns with the location
+of interest. The format of this file must contain four columns with the location
 information (latitude, longitude, x, y), followed by the 3-character IATA airport
-code, then a 42-character descriptive string such as location.  While the IATA
+code, then a 42-character descriptive string such as location. While the IATA
 code is currently not used in any output products, the descriptive
-string is use in ash arrival output products.  An example of the expected format
+string is use in ash arrival output products. An example of the expected format
 for the airport file is given below.
 \small
 \begin{verbatim}
@@ -744,26 +746,26 @@ for the airport file is given below.
 \end{verbatim}
 \normalsize
 In this case, airports with latitude and longitudes are given, but the x and y
-columns are filled with 0.0 as a place-holder.  If the computational grid is
-Lon/Lat, then these airport coordinates will be used.  If the computational 
+columns are filled with 0.0 as a place-holder. If the computational grid is
+Lon/Lat, then these airport coordinates will be used. If the computational 
 grid is projected, then the x and y columns can be filled with the appropriate
-values for the coordinate system used.  Alternatively, the internal projection routines
+values for the coordinate system used. Alternatively, the internal projection routines
 can be used to generate the x and y values from the latitude and longitude columns.
 This would over-write any values read in from the x and y columns of the file.
 To specify that Ash3d should calculate the projected coordinates, Line 5 of
-this block can be set to ``yes''.  Ash3d would then convert the latitude and longitude
-to the projected system specified in Block 1, Line 2.  If this Line is ``no'' and 
+this block can be set to ``yes''. Ash3d would then convert the latitude and longitude
+to the projected system specified in Block 1, Line 2. If this Line is ``no'' and 
 if the computational grid is projected, then the x and y columns of the airport
-file are used and the latitude and longitude columns are ignored.  
+file are used and the latitude and longitude columns are ignored.
 
 Included with Ash3d is an internal list of 6117 global airports with IATA codes,
-locations, and coordinates.  By default, this is a filled variable at compile-time,
+locations, and coordinates. By default, this is a filled variable at compile-time,
 but optionally can be read at run-time from the
-file \texttt{/opt/USGS/Ash3d/share/GlobalAirports\_ewert.txt}.  If Line 4 of this
+file \texttt{/opt/USGS/Ash3d/share/GlobalAirports\_ewert.txt}. If Line 4 of this
 block is empty, or has the word ``internal'', then this built in list of global
-airports is used.  If an airport file name is provided, then this internal list
-is replaced.  Alternatively, if the first character of the file name provided is
-`+', then the contents of the file are appended to the internal global list.  For
+airports is used. If an airport file name is provided, then this internal list
+is replaced. Alternatively, if the first character of the file name provided is
+`+', then the contents of the file are appended to the internal global list. For
 example, if the block had the following form:
 \small
 \begin{verbatim}
@@ -778,14 +780,14 @@ yes              # Have libprojection calculate projected coordinates?
 \normalsize
 then the global airport list would be extended by the contents of PointOfInterest.txt
 with the x and y columns ingnored in favor of the longitude and latitude or
-internally projected mappings.  The maximum number of airports is currently set
+internally projected mappings. The maximum number of airports is currently set
 to 10,000.
 
 \paragraph{Block 7}: Grain size groups\\
 Ash3d can run an unlimited number of grain sizes, although the required run time
 increases roughly in proportion to the number of grain sizes. To reduce model run
 time, Ash3d stops calculations for individual grain sizes once they have left the
-simulation domain, either advected out the sides or deposited.  A grain size bin is
+simulation domain, either advected out the sides or deposited. A grain size bin is
 flagged as having left the simulation domain when $1 \, \mathrm{g}$ or less remains of
 that grain size bin throughout the model domain.
 When simulating ash clouds, one very small grain size ($0.01 \, \mathrm{mm}$ for
@@ -857,7 +859,7 @@ of values measured by Wilson and Huang \cite{Wilson79}. The settling velocity in
 depends on air density and viscosity. Air density is calculated from the pressure
 and temperature at a
 given elevation (obtained from the NWP model data). The viscosity is calculated from
-Sutherland’s Law \cite{Jacobson05}, p. 201.  The example below shows the grain-size
+Sutherland’s Law \cite{Jacobson05}, p. 201. The example below shows the grain-size
 distribution used for the airborne runs on the Ash3d webserver.
 \small
 \begin{verbatim}
@@ -868,7 +870,7 @@ distribution used for the airborne runs on the Ash3d webserver.
 \end{verbatim}
 \normalsize
 If four parameters: Ash3d reads the first three as before, and the last as a
-shape factor.  For the Wilson and Huang class of models (FV\_ID=1,2, or 3)
+shape factor. For the Wilson and Huang class of models (FV\_ID=1,2, or 3)
 the shape factor, $F$, is defined as $F=(b+c)/2a$, where $a$, $b$, and $c$ are the
 semimajor, intermediate, and semiminor diameters of an ellipsoid.
 \small
@@ -894,7 +896,7 @@ semimajor, intermediate, and semiminor diameters of an ellipsoid.
 \normalsize
 For the Ganser model, shape is characterized by the sphericity, $\phi$, defined as the
 ratio of the surface area of a sphere with equivalent volume to the actual surface area
-of the particle.  If four parameters are provided with the Ganser model specified, then
+of the particle. If four parameters are provided with the Ganser model specified, then
 Ash3d interprets the fourth term as the Wilson and Huang shape paramter $F$, but
 additionally assumes $b=c<a$ (i.e. only prolate ellipsoids) so as to calculate area and
 volume of the particles and thereby $\phi$.
@@ -927,7 +929,7 @@ See \ref{ChapAppendFallDynamics} for further discussion on the implementation an
 subtelties of the various fall models.
 
 The grain-size specifications can be used to describe multiple populations of particles
-if desired.  For example, the default grain-size distribution used on the Ash3d
+if desired. For example, the default grain-size distribution used on the Ash3d
 web-server for deposit simulations contains 6 bins
 ($1 \mathrm{mm} \Rightarrow 88 \mathrm{\mu m}$) describing the primary grain-size distribution
 but also includes 4 bins to describe a distribution of aggregates with a lower density
@@ -968,12 +970,12 @@ N=\frac{1}{\sigma_{\phi} \sqrt{2 \pi}}
 \end{equation}
 Note that using the log-normal distribution assumes that all the grain-size bins
 are part of the primary grain-size distribution with no bins representing special
-classes such as aggregates.  Secondly, Ash3d assumes that the bins are listed in
+classes such as aggregates. Secondly, Ash3d assumes that the bins are listed in
 order from smallest to largest and will sort all grain sizes to ensure this order.
 This sorting would interfere with multiple grain populations if an aggregate
-population or a flake/needle distinction is specified.  The example below shows
+population or a flake/needle distinction is specified. The example below shows
 a log-normal grainsize distribution with a mean of $\mu_{\phi}=5.5$ and a standard
-deviation of $\sigma_{\phi}=2$.  Note that this grainsize order will be reversed.
+deviation of $\sigma_{\phi}=2$. Note that this grainsize order will be reversed.
 \small
 \begin{verbatim}
 *******************************************************************************
@@ -1004,7 +1006,7 @@ illustrating how this feature can be used to implement bimodal distributions.
 \begin{center}
 \includegraphics[angle=0,scale=0.7]{Figures/Scripts/InputGSD/FigInputGSD.pdf}
 \parbox{15cm}{\caption{\label{FigInputGSD}
-Example grain-size distributions.  The secondary populations (aggregates for the web
+Example grain-size distributions. The secondary populations (aggregates for the web
 server deposit simulations and the flakes for the Ganser model) are shown with
 crosses}}
 \end{center}
@@ -1048,15 +1050,15 @@ Line 3 gives an optional comment that may be written out to the same NetCDF file
 \subsection{Extensions to the control file: Optional Modules}
 
 After these nine required blocks have been read, Ash3d scans the input file to search
-for the term ``\texttt{OPTMOD=}".  If this is found, then the corresponding optional
-module input block is read.  This is primarily used in the development of
+for the term ``\texttt{OPTMOD=}". If this is found, then the corresponding optional
+module input block is read. This is primarily used in the development of
 research branches of the code, but there are a few that are part of the main
 code.
 
 \paragraph{\texttt{RESETPARAMS}}
 If a block with \texttt{OPTMOD=RESETPARAMS} is found, then a block of the input
 file is read that allows the user to reset the default value of several global
-variables.  For example, the following block would reset the default magma
+variables. For example, the following block would reset the default magma
 density and deposit density.
 \small
 \begin{verbatim}
@@ -1095,7 +1097,7 @@ The full list of parameters that can be reset are given in Table \ref{tab:ResetP
 \texttt{CLOUDLOAD\_THRESH} & 1.0e-2   & $\mathrm{t/km^2}$  &  Threshold value to output cloud load \\
 \texttt{THICKNESS\_THRESH} & 1.0e-3   & $\mathrm{mm}$      &  Threshold value to output deposit \\
 \texttt{DBZ\_THRESH}       & -2.0e+1  & $\mathrm{dB}$      &  Threshold value to output radar reflectivity \\
-\texttt{VelMod\_umb}       & 1        & case ID            &  1 or 2 \\
+\texttt{VelMod\_umb}       & 1        & case ID            &  Umbrella velocity model: 1 \cite{Costa14} or 2 \cite{Webster20} \\
 \texttt{lambda\_umb}       & 0.2      & unitless           &  Suzuki constant for umbrella cloud \\
 \texttt{N\_BV\_umb}        & 0.02     & $\mathrm{s^{-1}}$  &  Brunt-Va\"isala frequency for umbrella cloud \\
 \texttt{k\_entrainment\_umb} & 0.1    & unitless           &  Entrainment coefficient for umbrella cloud \\
@@ -1117,16 +1119,16 @@ The full list of parameters that can be reset are given in Table \ref{tab:ResetP
 
 \subsection{Environment variables}
 Some variables can be set at run-time through the use of environment variables on a unix
-system.  These are not needed, but can be used to change the default values if desired.
+system. These are not needed, but can be used to change the default values if desired.
 There are four environment variables that Ash3d will test at run-time:
 
 
 \paragraph{\texttt{ASH3DHOME}:}
 If the Ash3d executable was compiled to read the
 airport and volcano database files at
-run-time, the path to these external files should be set when compiled.  The default is
+run-time, the path to these external files should be set when compiled. The default is
 \texttt{/opt/USGS/Ash3d}, but this is set in the \texttt{makefile} by the \texttt{INSTALLDIR}
-variable.  If the files were subsequently moved, or if different versions were needed,
+variable. If the files were subsequently moved, or if different versions were needed,
 Ash3d tests for the environment variable 
 
 \paragraph{\texttt{ASH3DCFL}:} The CFL factor
@@ -1135,9 +1137,9 @@ Note that this factor could be subsequently reset if the optional input block
 
 \paragraph{\texttt{ASH3DVERB}:} When Ash3d is executing, it will write to standard output
 various notes about what it is doing, how it has interpreted the control file, information
-on the state of the run and progress as well as any closing notes.  These notes are mirrored
-to a log file (\texttt{Ash3d.lst}).  The user has some control over how verbose this output
-is by setting the verbosity environment variable \texttt{ASH3DVERB}.  There are ten output
+on the state of the run and progress as well as any closing notes. These notes are mirrored
+to a log file (\texttt{Ash3d.lst}). The user has some control over how verbose this output
+is by setting the verbosity environment variable \texttt{ASH3DVERB}. There are ten output
 levels with lower numbers indicating more messages to standard output. Levels are described
 in Table \ref{tab:VerbosityLevels}. The default level is 3. This can be over-ridden, if
 for example, there is an error and you would like further information about the position in
@@ -1226,9 +1228,9 @@ yes
 \end{verbatim}
 
 To run Ash3d non-interactively, simply provide the name of the control file as
-a command-line argument.  This will begin the execution with messages and program
-progress writen to standard output.  All informational messages as well as
-error messages are mirrored to a log file (\texttt{Ash3d.lst}).  As noted above,
+a command-line argument. This will begin the execution with messages and program
+progress writen to standard output. All informational messages as well as
+error messages are mirrored to a log file (\texttt{Ash3d.lst}). As noted above,
 the verbosity of these messages can be adjusted with the environment variable
 \texttt{ASH3DVERB}. Also written during execution is the file \texttt{progress.txt},
 which contains the fractional progress of the time stepping from start to the maximum
@@ -1236,15 +1238,269 @@ anticipated timestep. Simulations might complete prior to reaching 1.0 for a
 variety of reasons (all ash has deposited, anticipated number of time steps is
 greater than necessary, etc.).
 
-%Run-time error checking
-%log file
-%stdout
-%stop conditions evaluation
-%finalization
+In the initial stage of execution, Ash3d evaluates the control file, checks for
+any error in the computational grid layout, grainsize specification, etc.x. It
+also evaluates the files specifying the atmospheric conditions and checks for
+consistency with the computational grid and requested times. Ash3d then
+proceeds with the time integration of Equation \ref{EqGovEqVect}. Stop conditions
+are evaluated each time step including: erupted mass has deposited ($<1\%$ remaining aloft),
+time exceeds alotted time, all individual grain sizes have been flagged as deposited.
+Additional error checks are evaluated such as mass concervation errors greater than
+$0.001$ or for any negative tephra volumes (volume aloft, deposited outflow, source).
+When a stop condition is met, finalizes output files and terminates.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Post-processing}\label{ChapUsageSecPostProc}
-%kml files\\
+There are many output files that Ash3d can generate as it is running; including
+ESRI ASCII files of the deposit accumulation, final deposit thickness, deposit
+arrival time, various
+measures of the airborn ash cloud (height, cloud load, maximum cloud concentraion,
+cloud arrival time).  These ASCII files can be loaded into GIS software such
+as Arc View or QGIS. Additionally, Ash3d can directly write KML files for each of
+the variable listed above which can be viewed interactively with virtual globe
+software such as GoogleEarth. Whether or not to write this output files is specified
+in Block 4 of the control file used for the Ash3d simulation. An example of a kml
+file for a final deposit is shown in Figure \ref{FigAsh3dOutputKMLDep}.
+
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.35]{Figures/Ash3dOutput_KMLDep_GoogleEarth.png}
+\parbox{15cm}{\caption{\label{FigAsh3dOutputKMLDep}
+Viewing deposit KML output with Google-Earth}}
+\end{figure}
+
+In the kml files, the domain of the Ash3d simulation is outlined with a white line
+and the cells are colored according to the cell-average value. The spatial resolution of
+the simulation is apparent, as there is no interpolation. Values of individual cells
+can be seen simply by mousing over the cell. KML files of deposit variables have cells
+clipped to the ground surface.  Cloud variables are pinned to cloud height.
+
+To view the ESRI ASCII files in GIS software, the files can be added as a raster layer
+on top of a basemap. The data might need to be shifted to the same periodic mapping
+of longitude.  For example, the ASCII cloud height data for the example in Figure \ref{FigAsh3dOutputKMLDep}
+has the following header:
+\small
+\begin{verbatim}
+NCOLS    76
+NROWS    40
+XLLCORNER         225.000
+YLLCORNER          33.000
+CELLSIZE           0.500          0.500
+\end{verbatim}
+\normalsize
+indicating a lower-left corner at a longitude of $225^{\circ} \, \mathrm{E}$.
+The world coastline data has a range of $-180 \rightarrow 180$. The raster data must
+be shifted either within the viewing software or by editing the longitude. Figure
+\ref{FigAsh3dOutputQgisCH} shows an example of Cloud Height viewed with QGIS.
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.35]{Figures/Ash3dOutput_ESRICloudHeight_QGIS.png}
+\parbox{15cm}{\caption{\label{FigAsh3dOutputQgisCH}
+Viewing cloud height output with QGIS}}
+\end{figure}
+
+Other output products written at run-time include text or KML files of ash arrival
+time at airports or
+points-of-interest (POI) as specified in Block 6 of the control file.
+This can also be viewed in GoogleEarth with the data appearing as white dots for locations
+that had ashfall and red dots for points only effected by the drifting cloud. Clicking on
+these points will open a descriptive window that gives the time of arrival of the cloud
+as well as duration.  If the point is effected by ashfall, a time-series plot will be
+included showing the accumulation of the deposit at the site. These plots are generated
+by executing \texttt{gnuplot} as a system call within Ash3d, then executing \texttt{gzip}
+to bundle the KML file with the linked deposit plots into a compressed KMZ file. This
+information is summarized in the file \texttt{ash\_arrivaltimes\_airports.txt}
+(Figure \ref{FigAshArrivTimeFormat}).
+
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.35]{Figures/Ash3dOutput_KMLPOIarrival_GoogleEarth.png}
+\parbox{15cm}{\caption{\label{FigAsh3dOutputKMLPOIarrivalTS}
+Viewing Airport arrival time KML output with Google-Earth}}
+\end{figure}
+
+Vertical profiles can be written in ASCII format, if requested in Block 8 and will typically
+require post-processing for visualization.
+
+The most general and complete output is the 3-D ash concentration that can be requested on
+Line 15 of Block 4 of the control file. If \texttt{ASCII} is selected on Line 16, then
+a 3-D ESRI ASCII file of the total ash concentration is written which can be loaded into
+a GIS program (e.g. ArcView or QGIS). If \texttt{binary} is specified, then a binary
+ash concentration file can be read into a more general visualization software such
+as ParaView. The recommended output format is \texttt{netcdf}. If this is selected,
+the full ash concentraion data ($q(x,y,z,gs,t)$) and full deposit-concentraion data is saved at
+the requested time steps. Additionally, all the derived variables listed above, such
+as deposit thickness, cloud height, arrival times, etc. are included. If Airport/POI
+data are requested in Block 4, then these data are also included in the NetCDF output
+file on the time steps requested in Block 4.  If vertical profile data are requested in
+Block 8, then these data are also stored in the NetCDF file on the time-raster of that
+dataset (native time steps of the computation).
+
+In addition to the the ash concentration and derived variables listed above, all the
+information from the control file is included either as additional variables (grainsize
+values or eruptive pulse values) or as global attributes such as the values used for
+all resettable paramters, git commit IDs for Ash3d and MetReader, etc.  This enables
+a complete reconstruction of the simulation from the information in the NetCDF file.
+Since this is such a convienient format and since the full ash concentration data needed
+for restarting simulations is seldom needed, cloud and deposit concentration variables
+can be suppressed if the optional second term on Line 15 of Block 4 is set to 2 (default
+is 1, indicating to write out restart concentrations).
+
+\small
+\begin{verbatim}
+yes 2   #Write out 3-D ash concentration at specified times?                       
+\end{verbatim}
+\normalsize
+
+\subsection{\texttt{Ash3d\_PostProc}}\label{ChapUsageSecPostProc_tool}
+The Ash3d repository includes a post-processing tool (\texttt{Ash3d\_PostProc})
+that can be used to generate simple maps from the NetCDF output file.
+Any of the standard output products (ESRI ASCII, kml/kmz, binanry) can
+be recreated using this tool along with png images of 2d data in mapview
+(or contour plots for vertical prodiles) or shapefiles of 2d data. To
+produce image files, \texttt{Ash3d\_PostProc} can use a variety of geographic
+plotting software. Both DISLIN and PLplot are available as libraries and can
+be linked to \texttt{Ash3d\_PostProc} at compilation time. DISLIN includes
+the feature where contour data can be accessed by \texttt{Ash3d\_PostProc}
+and used to generate shapefiles. This is the preferred means of generating
+shapefiles on a Microsoft Windows system. \texttt{Ash3d\_PostProc} can also
+generate maps using \texttt{gnuplot} and Generic Mapping Tools (GMT) via
+the writing and execution of temporary scripts.
+
+\texttt{Ash3d\_PostProc} is designed to be a quick tool for converting the
+NetCDF output of an Ash3d run to format that can be visualized. This tool
+can be run interactively by just running the executable with no command-line
+arguments. If one argument is provided, it is interpreted to be the name of a
+control file (described below). Minimal instructions for running this tool
+are available by running the program with a -h as the only argument
+\small
+\begin{verbatim}
+[user@ash3d example_problem]$ ./Ash3d_PostProc -h
+ Dislin   T
+ Plplot   T
+ Gnuplot  T
+ GMT      T
+                                                                                
+ Ash3d post-processing tool: Ash3d_PostProc                                     
+                                                                                
+Usage: Ash3d_PostProc control_file [t_index]                                    
+           or                                                                   
+       Ash3d_PostProc infile output_product format                              
+  where: infile   = the netcdf file written by Ash3d                            
+   output_product = 1 full concentration array                                  
+                    2 deposit granularity                                       
+                    3 deposit thickness (mm time-series)                        
+                    4 deposit thickness (inches time-series)                    
+                    5 deposit thickness (mm final)                              
+                    6 deposit thickness (inches final)                          
+                    7 ashfall arrival time (hours)                              
+                    8 ashfall arrival at airports/POI (mm)                      
+                    9 ash-cloud concentration (mg/m3)                           
+                   10 ash-cloud height (km)                                     
+                   11 ash-cloud bottom (km)                                     
+                   12 ash-cloud load (T/km2 or )                                
+                   13 ash-cloud radar reflectivity (dBz)                        
+                   14 ash-cloud arrival time (hours)                            
+                   15 topography                                                
+                   16 profile plots                                             
+           format = 1 ASCII/ArcGIS                                              
+                    2 KML/KMZ                                                   
+                    3 image/png                                                 
+                    4 binary                                                    
+                    5 shape file                                                
+         [t_index] = index of time slice to plot; -1 for final (optional)
+\end{verbatim}
+\normalsize
+For example, to generate a contour plot of the final deposit thickness in $\mathrm{mm}$
+from the output NetCDF file, enter:
+\small
+\begin{verbatim}
+Ash3d_PostProc 3d_tephra_fall.nc 5 3
+\end{verbatim}
+\normalsize
+
+The preferred graphics package is set at the time of compilation depending on the
+system (Linux, Windows, MacOS) and the availability of the libraries. These can
+always be overriden at run-time with the environmet variable \texttt{ASH3DPLOT},
+where: 1=dislin, 2=plplot, 3=gnuplot, and 4=GMT. Examples of these plotting packages
+is shown in Figure \ref{FigAsh3dAsh3dPP_map2x2}.
+
+\small
+\begin{verbatim}
+ASH3DPLOT=3 Ash3d_PostProc 3d_tephra_fall.nc 5 3
+\end{verbatim}
+\normalsize
+
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.25]{Figures/Ash3d_Deposit____final_dislin.png}
+\includegraphics[angle=0,scale=0.25]{Figures/Ash3d_Deposit____final_plplot.png}
+\includegraphics[angle=0,scale=0.25]{Figures/Ash3d_Deposit____final_gnuplot.png}
+\includegraphics[angle=0,scale=1.0]{Figures/Ash3d_Deposit____final_gmt.png}
+\parbox{15cm}{\caption{\label{FigAsh3dAsh3dPP_map2x2}
+Final deposit contour maps using \texttt{Ash3d\_PostProc} with different plotting packages.}}
+\end{figure}
+
+To generate a shapefile of the cloud load at step 3 of the output file, enter:
+\small
+\begin{verbatim}
+Ash3d_PostProc 3d_tephra_fall.nc 12 5 3
+\end{verbatim}
+\normalsize
+
+This will create four files: \texttt{AshCdLod.shx}, \texttt{AshCdLod.shp},
+\texttt{AshCdLod.prj}, \texttt{AshCdLod.dbf}, which are then bundled into
+\texttt{AshCdLod.zip} using a system call to \texttt{gzip}. This shapefile
+can then be loaded as vector layer in a GIS program. Figure \ref{FigAsh3dAsh3dPP_shape} shows
+the shapefile generated above using QGIS and Figure \ref{FigAsh3dAsh3dPP_shapeAtr} shows the
+shapefile attributes.
+
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.35]{Figures/Ash3dOutput_ShpCloudLoad_QGIS.png}
+\parbox{15cm}{\caption{\label{FigAsh3dAsh3dPP_shape}
+Shapefile of cloud load added as a vector layer in QGIS.}}
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.27]{Figures/Ash3dOutput_ShpAtrCloudLoad_QGIS.png}
+\parbox{15cm}{\caption{\label{FigAsh3dAsh3dPP_shapeAtr}
+Shapefile of cloud load shapefile.}}
+\end{figure}
+
+In the attribute table shown in Figure \ref{FigAsh3dAsh3dPP_shapeAtr}, the fields for
+ORG, RUN CLASS and URL are the default values, but these can be changed in the
+optional \texttt{RESETPARAMS} block of the control file.
+
+\small
+\begin{verbatim}
+***********************
+# Reset parameters
+***********************
+OPTMOD=RESETPARAMS
+ cdf_institution      = Volcano Observatory
+ cdf_run_class        = Forecast
+ cdf_url              = https://volcano-observatory/model-forecasts
+*******************************************************************************
+\end{verbatim}
+\normalsize
+
+\texttt{Ash3d\_PostProc} is a convienent tool for plotting the vertical profiles.
+To plot profiles using the gnuplot graphics package, run:
+\small
+\begin{verbatim}
+ASH3DPLOT=3 ./Ash3d_PostProc 3d_tephra_fall.nc 16 3
+\end{verbatim}
+\normalsize
+which in this case will generate two files for the two requested profile locations:
+\texttt{gnupl\_0001.png} and \texttt{gnupl\_0002.png}. Profile 2 is shown in Figur
+\ref{}.
+
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.5]{Figures/gnupl_0002.png}
+\parbox{15cm}{\caption{\label{FigAsh3dAsh3dPP_vertprof}
+Vertical profile of ash concentration at location 2.}}
+\end{figure}
+
+
+
+
+\subsection{Generating maps with GMT}\label{ChapUsageSecPostProcGMT}
 %processing ESRI ASCII files with GMT\\
 %processing NetCDF files with GMT\\
 %scripts from Ash3d\_web\\
@@ -1252,3 +1508,15 @@ greater than necessary, etc.).
 %tecplot
 
 %AFWA GUI
+
+
+
+
+
+
+
+
+
+
+
+

@@ -165,7 +165,15 @@ box of the current ariborne ash cloud.
  \texttt{USEDISLIN = F}\\
  \texttt{USEGMT = F}\\
  These allow the inclusion of various plotting libraries to be build into the Ash3d
-post-processing tools, allowing the direct creation of plots from \texttt{Ash3d\_PostProc}
+post-processing tools, allowing the direct creation of plots from \texttt{Ash3d\_PostProc}.
+PLplot is often available as a distribution package and can be installed via:
+\texttt{yum install plplot plplot-devel plplot-fortran-devel}. Some backward-incompatibilities
+were introduced in version 5.13 so please use this version or newer. DISLIN is another
+graphics package that allow direct creation of plots, but has the added advantage of
+access to contour lines needed for creating shapefiles. Generic Mapping Tools (GMT)
+is typically used through temporary control files and system calls.  Set \texttt{USEGMT}
+to \texttt{T} only to use the GMT Fortran bindings to the API. This currently is not
+fully functional.
  \item \texttt{LIMITER = LIM\_SUPERBEE}\\
 This variable controls which limiter is used in the advection routines.  The
 Superbee limiter performs very well and is the default, however other limiters
