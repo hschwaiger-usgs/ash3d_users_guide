@@ -1022,13 +1022,12 @@ The first line contains an integer indicating the number of locations
 vertical profiles are to be recorded. If \texttt{nlocs}=0 (as in the example input file), no
 lines follow in this block. Otherwise, \texttt{nlocs} lines follow, giving the locations for
 each profile in the coordinate system appropriate for this model run (in this case,
-degrees longitude and latitude, respectively). The blue comment lines give the names
-of these locations.
-Upon execution, Ash3d writes out text files with the names v\texttt{profile01.txt},
-\texttt{vprofile02.txt}, \texttt{vprofile03.txt}, \texttt{vprofile04.txt},
+degrees longitude and latitude, respectively), followed by an optional station name.
+Upon execution, Ash3d writes out text files with the names v\texttt{vprofile0001.txt},
+\texttt{vprofile0002.txt}, \texttt{vprofile0003.txt}, \texttt{vprofile0004.txt},
 containing vertical profiles at each
 of these locations. Below is a truncated illustration of the output contained in
-\texttt{vprofile01.txt}:
+\texttt{vprofile0001.txt}:
 
 The header gives the x and y
 coordinates of this location. The numbers in the first row of the table,
@@ -1349,6 +1348,17 @@ yes 2   #Write out 3-D ash concentration at specified times?
 \end{verbatim}
 \normalsize
 
+To simply inspect the output, the NetCDF file is COARDS-compliant (naming
+convention for dimensions) and can be directly read by many visualization
+programs (e.g. ncview, shown in Figure \ref{FigAsh3dOutputncview}).
+\begin{figure}[htbp]
+\includegraphics[angle=0,scale=0.5]{Figures/Ash3d_Viz_ncview.png}
+\parbox{15cm}{\caption{\label{FigAsh3dOutputncview}
+Displaying NetCDF file using general data viewer}}
+\end{figure}
+These programs display the data over a map and allow an easy visualization
+of the evolution of the cloud or deposit.
+
 \subsection{\texttt{Ash3d\_PostProc}}\label{ChapUsageSecPostProc_tool}
 The Ash3d repository includes a post-processing tool (\texttt{Ash3d\_PostProc})
 that can be used to generate simple maps from the NetCDF output file.
@@ -1497,10 +1507,143 @@ which in this case will generate two files for the two requested profile locatio
 Vertical profile of ash concentration at location 2.}}
 \end{figure}
 
+Using \texttt{Ash3d\_PostProc} with command-line arguments is meant to be a
+quick tool for generating plots from the NetCDF output file. Using a control
+file, however, allows much more flexibility and allows plotting maps
+from 2d ASCII or binary files, or to customize the contour levels and colors.
 
+Below is an example of a control file that can be used to convert a 2d ESRI ASCII
+output file of the deposit thickness to a map image with custom contour levels.
 
+\small
+\begin{verbatim}
+DepositFile_____final.dat       data_filename
+1                       input format code (1=ascii, 2=binary, 3=netcdf)
+test.inp                Ash3d_control_file_name   (skipped if datafile is netcdf)
+5                       invar [outvar]    input variable and output variable, if different
+2 1                     ndims Only needed for format 1 or 2, LatLonFlag
+38 20                   nx ny [nz] Also only needed for format 1 or 2
+1.0 1.0                 dx dy [dz] Needed if not a part of the data file
+225.0 33.0              srtx srty         Start x and y
+3                       output format     (1=ascii, 2=KML 3=image, 4=binary, 5=shapefile)
+4                       plot_pref         (1=dislin, 2=plplot, 3=gnuplot, 4=GMT)
+-1                      time_step         Only needed if input file is multi-timestep (eg netcdf) (-1 for final, -2 for all)
+0                       Filled contour flag (1 for filled, 0 for lines)
+1 5                     custom contour flag (1 for true, 0 for false), number of contours
+1.0 3.0 10.0 50.0 100.0 lev(ncont)  : contour levels
+100 100 100 100 255     R(ncont)    : Red channel of RGB
+100 150 200 150   0     G(ncont)    : Green channel of RGB
+200 150 100  50   0     B(ncont)    : Blue channel of RGB
+\end{verbatim}
+\normalsize
+
+Line 1 contains the data file name, in this case
+\texttt{DepositFile\_\_\_\_\_final.dat}, but it could be
+the output NetCDF file or any 2/3d binary or ASCII output file.
+Line 2 specifies the format code for ASCII, binary or netcdf.
+Line 3 is the name of the Ash3d control file for this run. This is needed to know the geometry
+of the simulation, the time steps, volcano name, eruption source parameters, and
+other information needed for annotating the maps or other output products. If the
+input data file is the Ash3d NetCDF output file, then this Ash3d input control file
+is ignored as all the information required is stored in the NetCDF file.
+Line 4 is the variable code for the input file, which is assumed to be the output
+variable code unless a second code for the output variable is provided. For example, if
+the data file is the Ash3d NetCDF data file, then entering `5` in line 4 will result
+in a plot of the final deposit thickness. If the input data file is a 3d binary
+file of the airborne ash concentration, but cloud load is needed for the output, line
+4 would contain \texttt{1 12}.
+Line 5 contains the number of dimensions of the data file (2 or 3) and a code indicating if
+the data are projected or in lon/lat coordinates (0 or 1). \texttt{Ash3d\_PostProc} currently
+only can plot projected data using GMT.
+Line 6 gives the number of nodes in the x,y, and possibly z directions for the data file.
+Line 7 gives the grid spacing for all the coordinate directions of the file and line 8
+gives the start coordinates.
+Line 8 is the output format code where 1=ascii, 2=KML 3=image, 4=binary, 5=shapefile.
+Line 9 is the plotting package preference code: 1=dislin, 2=plplot, 3=gnuplot, 4=GMT.
+Line 10 is the time step to plot. -1 can be entered to plot the last time step of the
+file.
+Line 11 is a flag to indicate if the plot should have contour lines (0) or filled contours (1).
+This option is not yet fully functional and only contour lines are available.
+Line 12 starts with a flag allowing custom contour levels (1) to override the default
+levels for that variable. If this flag is set, a second value is read, giving the
+number of custom levels (\texttt{nlev}).
+If custom contours are requested, then four additional lines are read in the control file.
+Line 13 contains the \texttt{nlev} floating point values for the contour levels in the
+default units of the output variable.
+Lines 14, 15, and 16 are the \texttt{nlev} integer values of the RGB componets of the colors (0-255).
 
 \subsection{Generating maps with GMT}\label{ChapUsageSecPostProcGMT}
+There are many programs that can be used for generating maps from Ash3d output. We primarily
+use Generic Mapping Tools (GMT) due to its flexibility, customization and ease of use in
+bash scripts. Plots generated on the Ash3d web-servers use scripts that read information
+about the Ash3d run from the NetCDF file, dynamically plot data, select the top most populous
+cities in the domain for annotating, and evaluate legend placement based on deposit location.
+These scripts are described in more detail in Chapter \ref{ChapExtraToolExamples}.
+
+There are many tutorials online for learning GMT. Here we just show an example script
+that can be used to generate a basemap, display shaded topography and overlay
+deposit contours.  The resulting plot is shown in 
+\ref{FigAsh3dAsh3d_NevDeRuizGMT}.
+
+\footnotesize
+\begin{verbatim}
+#!/bin/bash
+
+AREA=-R-80.0/-70.0/2.0/8.0
+PROJ=-JM-75.0/4.0/20
+BASE=-Ba2g2/2g1
+
+gmt makecpt -Cetopo1 -D -V -T-3500/3500/10 > topo.cpt
+
+gmt grdconvert gebco_2023_n20.0_s-10.0_w-100.0_e-50.0.nc?elevation fulltopo.grd
+gmt grdcut fulltopo.grd -Gtopo.grd $AREA
+gmt grdgradient topo.grd -Gtopo.grad -A90/20 -fg
+
+gmt pscoast $BASE $AREA $PROJ -Dh -G -K > temp.ps
+gmt grdimage topo.grd -Itopo.grad $AREA $PROJ -Ctopo.cpt -K -O >> temp.ps
+gmt pscoast -Q $BASE $AREA $PROJ -Dh -K -O >> temp.ps
+
+echo "0.01   C" > dpm_0.01.lev   #deposit (0.01 mm)
+echo "0.03   C" > dpm_0.03.lev   #deposit (0.03 mm)
+echo "0.1    C"  > dpm_0.1.lev   #deposit (0.1 mm)
+echo "0.3    C"  > dpm_0.3.lev   #deposit (0.3 mm)
+echo "1.0    C"  >   dpm_1.lev   #deposit (1 mm)
+echo "3.0    C"  >   dpm_3.lev   #deposit (3 mm)
+echo "10.0   C"  >  dpm_10.lev   #deposit (1 cm)
+echo "30.0   C"  >  dpm_30.lev   #deposit (3 cm)
+echo "100.0  C"  > dpm_100.lev   #deposit (10cm)
+echo "300.0  C"  > dpm_300.lev   #deposit (30cm)
+
+infile="../3d_tephra_fall_ERA5_Topo.nc"
+##get volcano longitude, latitude
+VCLON=`ncdump -h ${infile} | grep b1l5 | cut -d\" -f2 | awk '{print $1}'`
+VCLAT=`ncdump -h ${infile} | grep b1l5 | cut -d\" -f2 | awk '{print $2}'`
+dep_grd="dep_fin.grd"
+gmt grdconvert "$infile?depothickFin" ${dep_grd}
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_0.01.lev -A- -W3,214/222/105   -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_0.03.lev -A- -W3,249/167/113   -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_0.1.lev  -A- -W3,128/0/128   -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_0.3.lev  -A- -W3,0/0/255     -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_1.lev    -A- -W3,0/128/255   -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_3.lev    -A- -W3,0/255/128   -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_10.lev   -A- -W3,195/195/0   -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_30.lev   -A- -W3,255/128/0   -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_100.lev  -A- -W3,255/0/0     -O -K >> temp.ps
+gmt grdcontour ${dep_grd}   $AREA $PROJ $BASE -Cdpm_300.lev  -A- -W3,128/0/0     -O -K >> temp.ps
+
+# Last gmt command is to plot the volcano and close out the ps file
+echo $VCLON $VCLAT '1.0' | gmt psxy $AREA $PROJ -St0.1i -Gblack -Wthinnest -O >> temp.ps
+
+\end{verbatim}
+\normalsize
+
+
+\begin{figure}[htbp]
+\includegraphics[angle=-90,scale=0.6]{Figures/NevadoDelRuiz89.png}
+\parbox{15cm}{\caption{\label{FigAsh3dAsh3d_NevDeRuizGMT}
+GMT map of Ash3d deposit for Nevado del Ruiz}}
+\end{figure}
+
 %processing ESRI ASCII files with GMT\\
 %processing NetCDF files with GMT\\
 %scripts from Ash3d\_web\\
