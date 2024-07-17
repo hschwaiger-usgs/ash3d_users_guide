@@ -43,36 +43,34 @@ The basic flow of the code is as follows:
 \begin{enumerate}
  \item Initialize Run
  \begin{itemize}
-  \item[$-$] Test for runtime environment variables
+  \item[$-$] Test runtime environment (variables, OpenMP, test system configuration)
   \item[$-$] Parse command-line / read control file
-  \item[$-$] read airports
-  \item[$-$] allocate arrays
-  \item[$-$] calculate computational mesh parameters
-  \item[$-$] initialize concentration array (possibly with source)
-  \item[$-$] read meteorological files for starting values
-  \item[$-$] initialize the time step
-  \item[$-$] initialize output files
+  \item[$-$] Read auxilary data: airport/POI and volcano lists
+  \item[$-$] Calculate computational mesh parameters
+  \item[$-$] Allocate memory
+  \item[$-$] Initialize concentration array (possibly with source)
+  \item[$-$] Read meteorological files for starting values
+  \item[$-$] Initialize output files
  \end{itemize}
  \item Solve advection-diffusion equations
  \begin{itemize}
   \item[$-$] Start time loop
-  \item[$-$] Update current wind velocities
-  \item[$-$] update time step
-  \item[$-$] calculate source term
-  \item[$-$] set boundary conditions
-  \item[$-$] advect horizontally
-  \item[$-$] advect vertically
-  \item[$-$] diffuse vertically
-  \item[$-$] diffuse horizontally
-  \item[$-$] test for output criteria
-  \item[$-$] write ouput data if needed
-  \item[$-$] check stop conditions
-  \item[$-$] integrate forward in time
+  \item[$-$] Update atmospheric data for current time
+  \item[$-$] Calculate source term
+  \item[$-$] Set boundary conditions
+  \item[$-$] Advect horizontally
+  \item[$-$] Advect vertically
+  \item[$-$] Diffuse vertically
+  \item[$-$] Diffuse horizontally
+  \item[$-$] Test for output criteria (log-step, output step)
+  \item[$-$] Write ouput data if needed
+  \item[$-$] Check stop conditions (end time reached, no ash aloft, etc.)
+  \item[$-$] Integrate solution forward in time
  \end{itemize}
  \item Closing routines
  \begin{itemize}
-  \item[$-$] finalize output
-  \item[$-$] deallocate all memory
+  \item[$-$] Finalize output
+  \item[$-$] Deallocate all memory
  \end{itemize}
 \end{enumerate}
 
@@ -96,7 +94,7 @@ The makefile in this repository contains the variable
 \texttt{ASH3dCCSRC=/work/USGS/Software\_repos/GIT/Ash3d/src} which points to the
 location of the Ash3d source files.  The optional module included in this repository
 is for running the various test cases to test the convergence properties
-of the code.  The main program file is replaced with
+of the code (see Section \ref{ApxTestSecConv}).  The main program file is replaced with
 \texttt{Ash3d\_TC.F90} which contain all the function calls needed to set up and
 run the test cases.  In this example, the additional code is invoked using
 pre-processor directives, though this is not necessary.
@@ -105,7 +103,12 @@ a call to \texttt{set\_TestCase\_globvars} which sets global variables turing on
 advection and diffusion routines, a call to \texttt{set\_TestCase\_windfield} and
 \texttt{DistSource} to specify the wind field and initialize the source, a disabling
 of \texttt{MassFluxCalculator}, and finally a call to \texttt{Testcase\_CalcErrors}
-which prepares the output data.
+which prepares the output data. The goal is to have all additional subroutine callable
+from the top level file (\texttt{Ash3d\_TC.F90}) with all others linked to
+the core respository of the Ash3d
+code. In this example, \texttt{Set\_BC.f90} needed to be modified for the
+test case using the Method of Manufactured Solution as is replaced with
+\texttt{Set\_BC\_TC.f90}.
 Details of this module along with instructions on running the scripts can be found
 in Appendix \ref{ChapAppendTestCases}.
 
@@ -140,8 +143,14 @@ as \texttt{input\_data\_WetDepo} should be included.
 !------------------------------------------------------------------------------
 \end{verbatim}
 \normalsize
-
-
+The structure of this optional module block can be be designed to the user's needs
+and can have as many lines as necessary to fully characterize all the necessary
+parameters. In this case, for example, we might want have fields to enable or
+disable different removal mechanisms via hyrdometeors (rain scavenging, cloud
+condensation nucleation, etc.). These mechanisms might have parameters associated
+with scavenging rate or a different fall mechanics. Maybe there are specialize
+output variables that might optionally be included in the output file that could
+be toggled on or off via settings in this block.
 
 %\small  
 %\begin{verbatim}
@@ -184,6 +193,9 @@ allocated.
 #endif
 \end{verbatim}
 \normalsize
+In principle, the variables on the meteorological grid and on the computational
+grid could be allocated in the same subroutine, but we generally separate them
+for clarity.
 
 If any of the calculations rely on fields read from the numerical weather
 prediction files, then we need a subroutine to read and interpolate these
@@ -203,7 +215,7 @@ of the MetReader documentation.
 For example, the scavenging of particles from the atmosphere is dependent on
 the precipitation rate (variable code \texttt{44} from the MetReader documentation).
 So to calculate the scavenging coefficient at each time-step, one would read the
-precipitation rate for the braketing NWM time steps, interpolate to the computational
+precipitation rate for the braketing NWP time steps, interpolate to the computational
 grid, then calculate the scavenging coefficients on the computational grid at the
 meterological time steps, then finally interpolating to the current time:
 \small
@@ -230,12 +242,39 @@ in \texttt{Output\_Vars} are sorted by their dimensionality:
 var_User2d_static_XY  ! 2d variable (nx,ny)
 var_User2d_XY         ! 3d varaible (nx,ny,nt)
 var_User3d_XYGs       ! 4d variable (nx,ny,ns,nt)
-var_User3d_XYZ        ! 5d variable (nx,ny,nz,nsnt)
-var_User4d_XYZGs      ! 
+var_User3d_XYZ        ! 4d variable (nx,ny,nz,nt)
+var_User4d_XYZGs      ! 5d variable (nx,ny,nz,ns,nt
 \end{verbatim}
 \normalsize
 A subroutine for preparing the master list of variables, their names, units,
 FillValues, etc. should be called prior to the initialization of the output file.
+For example, if only the 2d surface precipitation and the 4d scavenging coefficients
+are added to the output file, the module should include:
+
+\small
+\begin{verbatim}
+nvar_User2d_XY_WetDepo    = 1
+nvar_User4d_XYZGs_WetDepo = 1
+ivar = 1
+temp_2d_name_WetDepo(ivar)  = "p0"
+temp_2d_lname_WetDepo(ivar) = "Precipitation rate @ surf"
+temp_2d_unit_WetDepo(ivar)  = "kg/m2/s"
+temp_2d_MissVal_WetDepo(ivar) = -9999.0_op
+temp_2d_FillVal_WetDepo(ivar) = -9999.0_op
+
+ivar = 1
+temp_4d_name_WetDepo(ivar)  = "ScavCo_liq"
+temp_4d_lname_WetDepo(ivar) = "Scavenging coefficient"
+temp_4d_unit_WetDepo(ivar)  = "1/hr"
+temp_4d_MissVal_WetDepo(ivar) = -9999.0_op
+temp_4d_FillVal_WetDepo(ivar) = -9999.0_op
+nvar_User2d_XY    = nvar_User2d_XY        + nvar_User2d_XY_WetDepo
+nvar_User4d_XYZGs = nvar_User4d_XYZGs     + nvar_User4d_XYZGs_WetDepo
+\end{verbatim}
+\normalsize
+
+Then to actually update the master list of output variables in \texttt{Output\_Vars.f90},
+use a subroutine such as:
 \small
 \begin{verbatim}
 !------------------------------------------------------------------------------
@@ -245,6 +284,22 @@ FillValues, etc. should be called prior to the initialization of the output file
 #ifdef WETDEPO
       if(USE_WETDEPO) call Prep_output_WetDepo
 #endif
+\end{verbatim}
+\normalsize
+with code to update the master lists:
+\small
+\begin{verbatim}
+do i=1,nvar_User4d_XYZGs_WetDepo
+  indx = indx_User4d_XYZGs_WetDepo+i
+  var_User4d_XYZGs_name(indx)   = temp_4d_name_WetDepo(i)
+  var_User4d_XYZGs_unit(indx)   = temp_4d_unit_WetDepo(i)
+  var_User4d_XYZGs_lname(indx)  = temp_4d_lname_WetDepo(i)
+  var_User4d_XYZGs_MissVal(indx)= temp_4d_MissVal_WetDepo(i)
+  var_User4d_XYZGs_FillVal(indx)= temp_4d_FillVal_WetDepo(i)
+  if(i.eq.1) &
+  var_User4d_XYZGs(1:nxmax,1:nymax,1:nzmax,1:n_gs_max,indx) = &
+  real(scav_coeff_Liq_3d(1:nxmax,1:nymax,1:nzmax,1:n_gs_max),kind=op)
+enddo
 \end{verbatim}
 \normalsize
 
@@ -286,7 +341,8 @@ decay equations) over the full time step.
 \end{verbatim}
 \normalsize
 Then, any output variables can be calculated with the corresponding
-\texttt{var\_User2d\_[---]} variables updated.
+\texttt{var\_User2d\_[---]} variables updated. These will be written to the
+netcdf file, if that output format is specified in the Ash3d control file.
 
 \small
 \begin{verbatim}
@@ -319,4 +375,7 @@ the allocated memory should be called.
 !------------------------------------------------------------------------------
 \end{verbatim}
 \normalsize
+
+Except in unusual circumstances, these subroutine should be called from the
+replaced top-level file, (e.g. \texttt{Ash3d\_WetDepo.F90}).
 
