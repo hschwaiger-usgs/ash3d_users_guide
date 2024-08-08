@@ -1,6 +1,6 @@
 \chapter{Software structure and optional modules}\label{ChapSoftwareStructure}
 Ash3d has been under development since 2009 and has evolved to suit
-the needs of both operational forecasting as well as as a research tool.
+the needs of both operational forecasting as well as a research tool.
 As research ideas were tested and bits of code were altered and inserted
 at various points in the software, this evolution lead to dormant
 branches of the code, inefficiencies, changes in default values that became
@@ -143,10 +143,10 @@ as \texttt{input\_data\_WetDepo} should be included.
 !------------------------------------------------------------------------------
 \end{verbatim}
 \normalsize
-The structure of this optional module block can be be designed to the user's needs
+The structure of this optional module block can be designed to the user's needs
 and can have as many lines as necessary to fully characterize all the necessary
 parameters. In this case, for example, we might want have fields to enable or
-disable different removal mechanisms via hyrdometeors (rain scavenging, cloud
+disable different removal mechanisms via hydrometeors (rain scavenging, cloud
 condensation nucleation, etc.). These mechanisms might have parameters associated
 with scavenging rate or a different fall mechanics. Maybe there are specialize
 output variables that might optionally be included in the output file that could
@@ -217,7 +217,7 @@ the precipitation rate (variable code \texttt{44} from the MetReader documentati
 So to calculate the scavenging coefficient at each time-step, one would read the
 precipitation rate for the bracketing NWP time steps, interpolate to the computational
 grid, then calculate the scavenging coefficients on the computational grid at the
-meterological time steps, then finally interpolating to the current time:
+meteorological time steps, then finally interpolating to the current time:
 \small
 \begin{verbatim}
 ivar = 44 !  Precipitation rate large-scale (liquid)
@@ -248,7 +248,7 @@ var_User4d_XYZGs      ! 5d variable (nx,ny,nz,ns,nt
 \normalsize
 A subroutine for preparing the master list of variables, their names, units,
 FillValues, etc. should be called prior to the initialization of the output file.
-For example, if only the 2d surface precipitation and the 4d scavenging coefficients
+For example, if only the 2-D surface precipitation and the 4-D scavenging coefficients
 are added to the output file, the module should include:
 
 \small

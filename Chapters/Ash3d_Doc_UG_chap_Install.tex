@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Installation}\label{ChapInstall}
 Ash3d was developed to run on a Linux system and has been tested on several
-popular Debian and Redhat-based distributions, running on hardware as light
+popular Debian and Red Hat-based distributions, running on hardware as light
 as Intel Atom processors or 32-bit ARM systems (Raspberry Pi 3), common
 personal computer hardware, as well as modern high-performance computing
 environments.
@@ -38,16 +38,16 @@ your system by editing the \texttt{makefile}
 (\texttt{INSTALLDIR=}$\sim$\texttt{/USGS} for example),
 but should be consistent since the Ash3d \texttt{makefile} expects
 a consistent location.  A minimal installation of these libraries only requires
-a Fortran compiler, however only ASCII windfiles (radiosonde or other profiles)
+a Fortran compiler, however only ASCII files of wind data (radiosonde or other profiles)
 would be available.  To read NWP files from NCEP, NASA, ECMWF, WRF or otherwise, 
 MetReader must be compiled with either NetCDF (preferably v4) or the GRIB
 library ecCodes.
 
-This can be installed for a RedHat-based system (RHEL, CentOS, Rocky, Fedora) by
+This can be installed for a Red Hat-based system (RHEL, CentOS, Rocky, Fedora) by
 \begin{verbatim}
      sudo yum install netcdf netcdf-devel eccodes eccodes-devel
 \end{verbatim}
-or for Ubuntu (Mint, Rasperian)
+or for Debian (Ubuntu, Mint, Rasperian)
 \begin{verbatim}
      sudo apt-get install netcdf netcdf-devel eccodes eccodes-devel
 \end{verbatim}
@@ -59,7 +59,7 @@ To use this utility, you will need a java installation:
 \begin{verbatim}
 sudo yum install java-openjdk
 \end{verbatim}
-or for Ubuntu (Mint, Rasperian)
+or for Debian (Ubuntu, Mint, Rasperian)
 \begin{verbatim}
 sudo apt-get install default-jdk
 \end{verbatim}
@@ -129,10 +129,10 @@ elsewhere.
 This is the install path.
  \item \texttt{USENETCDF = T}\\
 This variable is used to toggle (\texttt{T} or \texttt{F}) inclusion of NetCDF
-functionality.  Metreader would also need to be compiled with a consistent flag.
+functionality.  MetReader would also need to be compiled with a consistent flag.
  \item \texttt{USEGRIB   = T}\\
 This variable is used to toggle (\texttt{T} or \texttt{F}) inclusion of GRIB
-functionality.  Metreader would also need to be compiled with a consistent flag.
+functionality.  MetReader would also need to be compiled with a consistent flag.
  \item \texttt{USEPOINTERS = F}\\
 This variable allows some variables to be declared as allocatable pointers instead
 of allocatable arrays.  Declaring variables as allocatable pointers allows an easier
@@ -176,11 +176,11 @@ to \texttt{T} only to use the GMT Fortran bindings to the API. This currently is
 fully functional.
  \item \texttt{LIMITER = LIM\_SUPERBEE}\\
 This variable controls which limiter is used in the advection routines.  The
-Superbee limiter performs very well and is the default, however other limiters
+superbee limiter performs very well and is the default, however other limiters
 can be used if desired (e.g. if linearity is needed).  Available options are:
-no limiter (\texttt{LIM\_NONE}), Lax-Wendrof (\texttt{LIM\_LAXWEN}),
+no limiter (\texttt{LIM\_NONE}), Lax-Wendroff (\texttt{LIM\_LAXWEN}),
 Beam-Warming (\texttt{LIM\_BW}), Fromm (\texttt{LIN\_FROMM}), 
-MinMod (\texttt{LIM\_MINMOD}), SuperBee (\texttt{LIM\_SUPERBEE}),
+minmod (\texttt{LIM\_MINMOD}), superbee (\texttt{LIM\_SUPERBEE}),
 and MC (\texttt{LIM\_MC}).
  \item \texttt{DIFFMETH=CRANKNIC}\\
 This variable controls the integration scheme used for diffusion.  The default
