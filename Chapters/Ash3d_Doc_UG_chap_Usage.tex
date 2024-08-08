@@ -165,7 +165,7 @@ equal to that of the topography at this location, or zero if topography is
 not used in this model run. For the web interface, topography is not used.
 
 Line 6 gives the horizontal grid spacing in the model, in kilometers if a
-projected grid is used, or degrees iflongitude/latitude are used. If the
+projected grid is used, or degrees if longitude/latitude are used. If the
 width and height of the model domain are not an integral number of cell
 distances, the location of the upper right corner of the model domain is
 adjusted to be an integral number of cell distances from the lower left
@@ -339,7 +339,7 @@ have the following values:
 %\end{center}
 
 The distinction between \texttt{iwind}=3 and \texttt{iwind}=4 has been
-relaxed and these are now interchangable.
+relaxed and these are now interchangeable.
 Ash3d attempts to read two more integer values on Line 1
 of this block: a grid ID, and a format code. The grid code is the NCEP grid
 ID described at \url{http://www.nco.ncep.noaa.gov/pmb/docs/on388/tableb.html}
@@ -430,7 +430,7 @@ When \texttt{iwind}=2, Ash3d reads a 3-D atmospheric fields in ASCII format that
 NetCDF format using a Java script that was originally written before Ash3d was
 modified to read NetCDF files directly. This option is no longer used.
 \texttt{iwind}= 3 or 4 indicates that the atmospheric files contain 3-D time-series
-data. Orginally, \texttt{iwind}=3 was used for indicating that all data were stored in
+data. Originally, \texttt{iwind}=3 was used for indicating that all data were stored in
 a single file with multiple time steps, and \texttt{iwind}=4 was for multiple NetCDF files,
 each for one time step. This distinction is deprecated as currently, all data
 files provided with \texttt{iwind}= 3 or 4 are evaluated for the time steps available.
@@ -439,7 +439,7 @@ multiple-file, multiple-time-step format.
 
 For some reanalysis products that do not store data in the above formats, such as
 the products that store a month or a year of data for only one variable in a single
-file (e.g. NCEP NCAR 50-year reanalsys, \texttt{iwind}=5 can be used. For these cases,
+file (e.g. NCEP NCAR 50-year reanalysis, \texttt{iwind}=5 can be used. For these cases,
 Ash3d expects the NWP files to have specific filenames and to be stored in a
 specific directory structure. Details for these products are described in the MetReader
 documentation and summarized in Chapter \ref{ChapAppendAtmosDataFormat1d}.
@@ -516,7 +516,7 @@ Line & Output type&Variable&units & File names\\
 12&KML&deposit arrival times&$\mathrm{hours}$&ashfall\_arrivaltimes\_hours.kml\\
 13&ASCII&cloud arrival times&$\mathrm{hours}$&CloudArrivalTime.dat\\
 14&KML&cloud arrival times&$\mathrm{hours}$&cloud\_arrivaltimes\_hours.kml\\
-15&&consolodated output file&&specified in input file\\
+15&&consolidated output file&&specified in input file\\
 \hline
 \end{tabular}
 \caption{\label{tab:OutputOptions}Block 4 options for output data}
@@ -564,7 +564,7 @@ following Linux command, which reduces file size by about 90-95\% and creates a
 kmz file that can also be opened in Google Earth:
 \texttt{zip -r CloudLoad.kmz CloudLoad.kml}
 
-The consolodated output file option specified in Line 15 of Table \ref{tab:OutputOptions}
+The consolidated output file option specified in Line 15 of Table \ref{tab:OutputOptions}
 serves several purposes. It is designed to store the store the full ash concentration
 for each grainsize bin
 of all cells at specified time steps in a format specified in Line 16. Current options
@@ -605,14 +605,14 @@ Variable Name                & Dimensions & units\\
 \normalsize
 
 Optionally, an additional integer specifier can be included on
-Line 15 to indicate if this consolodated output file should only contain the
+Line 15 to indicate if this consolidated output file should only contain the
 2-D variables, which dramatically reduces the size of the output file, at the
-expense of losing restart capibilities.
+expense of losing restart capabilities.
 If this specifier is either absent or is 1, then the 3-D concentrations are written.
 If it is 2, then only the 2-D output products are written.
 
 Specifying \texttt{netcdf} in Line 16 provides the most general output product for post
-processing. If Line 16 contains \texttt{asciii}, then data are written in ASCII format
+processing. If Line 16 contains \texttt{ascii}, then data are written in ASCII format
 to files names \texttt{3d\_tephra\_fall\_xxx.dat} where \texttt{xxx} is the output hour marker.
 The output data are in column format in the following order: x (or lon), y (or lat), z,
 total concentration (in $\mathrm{kg/km^3}$).
@@ -1118,7 +1118,7 @@ The full list of parameters that can be reset are given in Table \ref{tab:ResetP
 \normalsize
 
 \subsection{Environment variables}
-Some variables can be set at run-time through the use of environment variables on a unix
+Some variables can be set at run-time through the use of environment variables on a Unix
 system. These are not needed, but can be used to change the default values if desired.
 There are four environment variables that Ash3d will test at run-time:
 
@@ -1394,7 +1394,7 @@ are available by running the program with a -h as the only argument
 Usage: Ash3d_PostProc control_file [t_index]                                    
            or                                                                   
        Ash3d_PostProc infile output_product format                              
-  where: infile   = the netcdf file written by Ash3d                            
+  where: infile   = the NetCDF file written by Ash3d                            
    output_product = 1 full concentration array                                  
                     2 deposit granularity                                       
                     3 deposit thickness (mm time-series)                        
@@ -1519,16 +1519,16 @@ output file of the deposit thickness to a map image with custom contour levels.
 \small
 \begin{verbatim}
 DepositFile_____final.dat       data_filename
-1                       input format code (1=ascii, 2=binary, 3=netcdf)
-test.inp                Ash3d_control_file_name   (skipped if datafile is netcdf)
+1                       input format code (1=ASCII, 2=binary, 3=NetCDF)
+test.inp                Ash3d_control_file_name   (skipped if datafile is NetCDF)
 5                       invar [outvar]    input variable and output variable, if different
 2 1                     ndims Only needed for format 1 or 2, LatLonFlag
 38 20                   nx ny [nz] Also only needed for format 1 or 2
 1.0 1.0                 dx dy [dz] Needed if not a part of the data file
 225.0 33.0              srtx srty         Start x and y
-3                       output format     (1=ascii, 2=KML 3=image, 4=binary, 5=shapefile)
+3                       output format     (1=ASCII, 2=KML 3=image, 4=binary, 5=shapefile)
 4                       plot_pref         (1=dislin, 2=plplot, 3=gnuplot, 4=GMT)
--1                      time_step         Only needed if input file is multi-timestep (eg netcdf) (-1 for final, -2 for all)
+-1                      time_step         Only needed if input file is multi-timestep (eg NetCDF) (-1 for final, -2 for all)
 0                       Filled contour flag (1 for filled, 0 for lines)
 1 5                     custom contour flag (1 for true, 0 for false), number of contours
 1.0 3.0 10.0 50.0 100.0 lev(ncont)  : contour levels
@@ -1541,7 +1541,7 @@ test.inp                Ash3d_control_file_name   (skipped if datafile is netcdf
 Line 1 contains the data file name, in this case
 \texttt{DepositFile\_\_\_\_\_final.dat}, but it could be
 the output NetCDF file or any 2/3d binary or ASCII output file.
-Line 2 specifies the format code for ASCII, binary or netcdf.
+Line 2 specifies the format code for ASCII, binary or NetCDF.
 Line 3 is the name of the Ash3d control file for this run. This is needed to know the geometry
 of the simulation, the time steps, volcano name, eruption source parameters, and
 other information needed for annotating the maps or other output products. If the
@@ -1559,7 +1559,7 @@ only can plot projected data using GMT.
 Line 6 gives the number of nodes in the x,y, and possibly z directions for the data file.
 Line 7 gives the grid spacing for all the coordinate directions of the file and line 8
 gives the start coordinates.
-Line 8 is the output format code where 1=ascii, 2=KML 3=image, 4=binary, 5=shapefile.
+Line 8 is the output format code where 1=ASCII, 2=KML 3=image, 4=binary, 5=shapefile.
 Line 9 is the plotting package preference code: 1=dislin, 2=plplot, 3=gnuplot, 4=GMT.
 Line 10 is the time step to plot. -1 can be entered to plot the last time step of the
 file.

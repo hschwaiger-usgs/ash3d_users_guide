@@ -10,18 +10,18 @@ This formula requires a particle diameter and density ($d$ and $\rho$),
 air density $\rho_a$, and the drag coefficient, $C_d$.
 The various fall models differ in their
 specification of $C_d$, but generally are functions of $\mathrm{Re}$
-and are variations of the Stoke's Law
+and are variations of the Stokes Law
 for spherical particle at low $\mathrm{Re}$.
 \begin{equation}
 C_d = \mathcal{F}(\mathrm{Re}) = \frac{24}{\mathrm{Re}}\label{EqCdStokes}
 \end{equation}
-The particle Reynold's number $\mathrm{Re}$, is given by 
+The particle Reynolds number $\mathrm{Re}$, is given by 
 \begin{equation}
 \mathrm{Re}=\frac{v_s\rho_a d}{\eta_a}\label{EqReyn}
 \end{equation}
 where $\eta_a$ is the viscosity of air.  Given an arbitrary function
 for $C_d$, the three equations \ref{EqFallVel} through \ref{EqReyn}
-require an iteritive approach to solving for $v_s$.  Ash3d implements
+require an iterative approach to solving for $v_s$.  Ash3d implements
 this solver by initializing the fall velocity to $1 \, \mathrm{m/s}$,
 solving for the corresponding $\mathrm{Re}$ via \ref{EqReyn}, then
 calculating $C_d$ via the particular fall model, and then updating
@@ -39,9 +39,9 @@ Sutherland's Law \cite[p.102, Eq.4.54]{Jacobson05}
 
 For conditions where $\rho_a$
 is low and particle size is small, the mean free path of a molecule in the
-atmosphere, $\lambda_a$, can be on the scale of the particle diamter.  For these
+atmosphere, $\lambda_a$, can be on the scale of the particle diameter.  For these
 conditions an additional modification to the expression for $C_d$ can
-be invoked by scaling $C_d$ by the the Cunninghan slip-correction factor
+be invoked by scaling $C_d$ by the the Cunningham slip-correction factor
 \begin{equation}
 C_c = 1+\mathrm{Kn}\left[\alpha+\beta \exp{\left(-\frac{\gamma}{\mathrm{Kn}}\right)} \right]\label{EqCc}
 \end{equation}
@@ -90,14 +90,14 @@ The drag coefficient for the Ganser model is given by
 %size for prolate ellipsoidal particles ($F=0.4$) as well as for more equant
 %particles ($F=0.8$) using atmospheric conditions at a height of $10 \,\mathrm{km}$.
 %The Ganser model is also shown for comparison.  The Wilson and Huang model predicts
-%slightly slower settling velocities than the Ganser model and the Stokes' model
+%slightly slower settling velocities than the Ganser model and the Stokes model
 %(by $53\%$ and $17\%$ for $F=0.4$ and $F=0.8$, respectively).  For $F=0.4$, the
-%slip-flow corections are minor, however for $F=0.8$, it leads to increases in fall
+%slip-flow corrections are minor, however for $F=0.8$, it leads to increases in fall
 %velocities by $2\%$, $21\%$, and $348\%$ for $d=10 \,\mathrm{\mu m}$, $1 \,\mathrm{\mu m}$
 %and $0.1 \,\mathrm{\mu m}$ respectively.
 %\cite{Rose09} calculated that ash in this size range can be a significant component
 %($30\%$ to $>50\%$) of the total grain size distribution and noted that sedimentation
-%rates are observed to be be much faster than that predicted by Stokes' Law.
+%rates are observed to be be much faster than that predicted by Stokes Law.
 \begin{equation}\label{EqFVGansCd}
 C_d = \frac{24}{\mathrm{Re}K_1} \left( 1 + 0.1118 \left(\mathrm{Re} K_1 K_2 \right)^{0.6567}\right)
 + \frac{0.4305 K_2}{1+ \frac{3305}{\mathrm{Re} K_1 K_2}}
@@ -114,11 +114,11 @@ K_2 = 10^{1,8148 \left( -\log \phi \right)^{0.5743}}
 \end{equation}
 
 Both Eq.s \ref{EqDragWH} and \ref{EqFVGansCd} have a first term that is a
-perturbation on the Stoke's flow drag (Eq. \ref{EqCdStokes}) which is the
+perturbation on the Stokes flow drag (Eq. \ref{EqCdStokes}) which is the
 dominant term for low $\mathrm{Re}$ flows 
 The second additive term in these drag models becomes
-dominant for high $\mathrm{Re}$ flows (Stoke's and Newton regimes,
-respectively).  If we normalize the ellipsoid diamters to the major axes,
+dominant for high $\mathrm{Re}$ flows (Stokes and Newton regimes,
+respectively).  If we normalize the ellipsoid diameters to the major axes,
 $A$, as $B=\beta A$ and $C=\gamma A$, then we can
 express these in terms of $F$ and $G$ as
 \begin{eqnarray}\label{EqShapeBetaGamma}
@@ -126,7 +126,7 @@ express these in terms of $F$ and $G$ as
 \gamma&= \frac{2FG}{1+G}
 \end{eqnarray}
 We can then calculate the diameter of
-a sphere of equivalant volume as
+a sphere of equivalent volume as
 \begin{equation}\label{EqDv}
 d_v = \sqrt[3]{ABC} = A \sqrt[3]{\beta \gamma}
 \end{equation}
@@ -141,7 +141,7 @@ $p \approx 1.6075$ \cite{WikiEllipse}.  This results in a sphericity of
 \left[ \frac{\beta^p + \gamma^p + \left( \beta \gamma \right)^p}{3} \right]^{-\frac{1}{p}}
 \end{equation}
 Particle diameter in the Ganser model is based on the equivalent volume sphere which
-is the geometric average of the partical diameters given in Eq. \ref{EqDv}.
+is the geometric average of the particle diameters given in Eq. \ref{EqDv}.
 
 As mentioned, most of these fall models require an iterative approach to solving
 for $v_s$.  The exception is the Wilson and Huang model without the slip-correction,
@@ -178,7 +178,7 @@ with atmospheric conditions at $5\,\mathrm{km}$ height.}}
 %The 'd' that we enter in the input file is the 'd' used in the fall model.
 %Stokes is simply the diameter of the sphere (d0), the Ganser model is based the
 %ratios ellipses to spheres of equivalent volume (dv turns out to be the geometric
-%average of the 3 axies of the ellipsoid), and W/H uses the arithmetic average (da).
+%average of the 3 axes of the ellipsoid), and W/H uses the arithmetic average (da).
 %This means that using the W/H model for a given 'd' with a low F (highly eccentric),
 %the corresponding volume is significantly lower than the equant particle volume.
 %So perturbing F to a lower value means you are both perturbing the shape (leading

@@ -35,7 +35,7 @@ Ash3d has been written to accommodate different advection routines such as
 Donor-Cell-Update (DCU), Corner Transport Update (CTU), and Semi-Lagrange (SL).
 In this public version of the software, only DCU is included.
 
-The implimentation of DCU follows closely with the equations presented in
+The implementation of DCU follows closely with the equations presented in
 \cite{LeVeque03}.
 
 Start with the fluctuation form (Eq. 6.59 from \cite{LeVeque03}) of the update in $Q$ to
@@ -125,7 +125,7 @@ To allow curvilinear coordinates, we replace the $\Delta x$ in the above equatio
 and scale velocities by the interface 
 area $\sigma_{i-\frac{1}{2}}$, since these velocities are only needed at the interfaces.
 
-\subsection{Numerical implimentation}
+\subsection{Numerical implementation}
 
 Variables are generally associated with cell-centers and are indexed by $i$.  These include
 $Q$, $u$, and $\kappa$.  In the equations above, several variables are needed on interfaces.
@@ -212,4 +212,4 @@ Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{2\kappa_i^2} \left[
 \left( k \sigma^2 \Delta Q^{n+1}\right)_{I+1} - \left( k \sigma^2 \Delta Q^{n+1}\right)_{I} \right]
 \end{equation}
 
-\subsection{Numerical implimentation}
+\subsection{Numerical implementation}

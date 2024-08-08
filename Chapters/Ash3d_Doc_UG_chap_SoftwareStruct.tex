@@ -1,6 +1,6 @@
 \chapter{Software structure and optional modules}\label{ChapSoftwareStructure}
 Ash3d has been under development since 2009 and has evolved to suit
-the needs of both operational forecasting as well as as a reseach tool.
+the needs of both operational forecasting as well as as a research tool.
 As research ideas were tested and bits of code were altered and inserted
 at various points in the software, this evolution lead to dormant
 branches of the code, inefficiencies, changes in default values that became
@@ -16,7 +16,7 @@ to isolate essential functionality into a core set of subroutines that
 would require minimal continued development, and
 to move all the essential control structure of the program to 
 the top-level file (\texttt{Ash3d.F90}).
-This software structure would be a minimal `core code' to be availalbe for
+This software structure would be a minimal `core code' to be available for
 operational usage or for research efforts requiring only essential functionality.
 If a non-essential feature were needed to address a question (e.g. predicting
 the resuspension of deposited ash, tracking the advection of fallout with
@@ -27,10 +27,10 @@ to all the core-code files.
 The structure of the core code is outlined in Figure \ref{FigSoftwareDesign}.
 The files are broadly sorted into those needed for setup/initialization,
 calculation of meteorological values, source terms, advection routines, 
-diffusion routines, and output.  Files that define modules are encirled
+diffusion routines, and output.  Files that define modules are encircled
 by bold lines.  Files that need direct access to the main array of concentration
 values (\texttt{concen\_pd}) are colored orange.  The number of files with
-access to \texttt{concen\_pd} is minimized since repeaded access to this
+access to \texttt{concen\_pd} is minimized since repeated access to this
 array can effect performance, particularly on hybrid GPU/CPU systems.
 \begin{figure}[htbp]\begin{center}
  \includegraphics[angle=90,scale=0.35]{Figures/Chap_SoftStruct_FlowChartFiles.pdf}
@@ -45,7 +45,7 @@ The basic flow of the code is as follows:
  \begin{itemize}
   \item[$-$] Test runtime environment (variables, OpenMP, test system configuration)
   \item[$-$] Parse command-line / read control file
-  \item[$-$] Read auxilary data: airport/POI and volcano lists
+  \item[$-$] Read auxiliary data: airport/POI and volcano lists
   \item[$-$] Calculate computational mesh parameters
   \item[$-$] Allocate memory
   \item[$-$] Initialize concentration array (possibly with source)
@@ -63,7 +63,7 @@ The basic flow of the code is as follows:
   \item[$-$] Diffuse vertically
   \item[$-$] Diffuse horizontally
   \item[$-$] Test for output criteria (log-step, output step)
-  \item[$-$] Write ouput data if needed
+  \item[$-$] Write output data if needed
   \item[$-$] Check stop conditions (end time reached, no ash aloft, etc.)
   \item[$-$] Integrate solution forward in time
  \end{itemize}
@@ -99,13 +99,13 @@ of the code (see Section \ref{ApxTestSecConv}).  The main program file is replac
 run the test cases.  In this example, the additional code is invoked using
 pre-processor directives, though this is not necessary.
 This module is not especially invasive and only requires a few subroutine calls:
-a call to \texttt{set\_TestCase\_globvars} which sets global variables turing on/off
+a call to \texttt{set\_TestCase\_globvars} which sets global variables turning on/off
 advection and diffusion routines, a call to \texttt{set\_TestCase\_windfield} and
 \texttt{DistSource} to specify the wind field and initialize the source, a disabling
 of \texttt{MassFluxCalculator}, and finally a call to \texttt{Testcase\_CalcErrors}
 which prepares the output data. The goal is to have all additional subroutine callable
 from the top level file (\texttt{Ash3d\_TC.F90}) with all others linked to
-the core respository of the Ash3d
+the core repository of the Ash3d
 code. In this example, \texttt{Set\_BC.f90} needed to be modified for the
 test case using the Method of Manufactured Solution as is replaced with
 \texttt{Set\_BC\_TC.f90}.
@@ -215,7 +215,7 @@ of the MetReader documentation.
 For example, the scavenging of particles from the atmosphere is dependent on
 the precipitation rate (variable code \texttt{44} from the MetReader documentation).
 So to calculate the scavenging coefficient at each time-step, one would read the
-precipitation rate for the braketing NWP time steps, interpolate to the computational
+precipitation rate for the bracketing NWP time steps, interpolate to the computational
 grid, then calculate the scavenging coefficients on the computational grid at the
 meterological time steps, then finally interpolating to the current time:
 \small
@@ -240,7 +240,7 @@ in \texttt{Output\_Vars} are sorted by their dimensionality:
 \small
 \begin{verbatim}
 var_User2d_static_XY  ! 2d variable (nx,ny)
-var_User2d_XY         ! 3d varaible (nx,ny,nt)
+var_User2d_XY         ! 3d variably (nx,ny,nt)
 var_User3d_XYGs       ! 4d variable (nx,ny,ns,nt)
 var_User3d_XYZ        ! 4d variable (nx,ny,nz,nt)
 var_User4d_XYZGs      ! 5d variable (nx,ny,nz,ns,nt
@@ -342,7 +342,7 @@ decay equations) over the full time step.
 \normalsize
 Then, any output variables can be calculated with the corresponding
 \texttt{var\_User2d\_[---]} variables updated. These will be written to the
-netcdf file, if that output format is specified in the Ash3d control file.
+NetCDF file, if that output format is specified in the Ash3d control file.
 
 \small
 \begin{verbatim}

@@ -76,7 +76,7 @@ distribution of mass with elevation, while higher values concentrate mass
 near the plume top (See Figure \ref{FigSourceExample}).
 
 For eruptions with a larger mass-eruption rate, limiting these source terms to just
-the column above the vent can be inadaquate and the radial spreading of an
+the column above the vent can be inadequate and the radial spreading of an
 umbrella cloud must be accounted for. The radius of the umbrella cloud at a
 particular time is given by:
 \begin{equation}
@@ -124,11 +124,11 @@ diffusivity, and $S$ is a source term.  For most source types, $S$
 is non-zero only in the column of nodes above the volcano.  The
 exception is the umbrella cloud source term which includes a
 $3 \times 3$ group of cells centered over the vent.
-The settling velocity is determinted via \cite[p.182]{Bird60}
+The settling velocity is determined via \cite[p.182]{Bird60}
 \begin{equation}
 v_s=\sqrt{\frac{4d\rho_p g}{3C_d\rho_a}}\label{EqFallVel}
 \end{equation}
-where $d$ is the particle diamter, $\rho_p$ is the particle density, $g$ is
+where $d$ is the particle diameter, $\rho_p$ is the particle density, $g$ is
 the acceleration of gravity, $C_d$ is the drag coefficient, and $\rho_a$
 is the density of air.
 Ash3d can use different models of $C_d$ to account for non-spherical particles.
@@ -138,7 +138,7 @@ for non-spherical particles.
 \begin{equation}
 C_d = \frac{24}{\mathrm{Re}}F^{-0.828}+2 \sqrt{1.07-F}\label{EqDragWH}
 \end{equation}
-$\mathrm{Re}$ is the Reynold's number and $F$ is a shape factor (see
+$\mathrm{Re}$ is the Reynolds number and $F$ is a shape factor (see
 Appendix \ref{ChapAppendFallDynamics} for more details.).
 Alternative models that can be used include an
 optional Cunningham slip correction factor \cite[p.407]{Seinfeld06},
