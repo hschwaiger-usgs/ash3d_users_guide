@@ -1,29 +1,77 @@
 \chapter{Test Cases and convergence tests}\label{ChapAppendTestCases}
 
+We have implemented many different levels of testing for Ash3d. The simplest
+set of tests is the quick runs invoked via \texttt{make check} when building
+the software. These tests are intended to run in just a few minutes with
+pass or fail results. The second set of tests cases are the verification tests
+which ensure that Ash3d is correctly solving the equations that we intend.
+Validation tests are provided in the examples folder of the \texttt{volcano-ash3d}
+repository. Lastly, the windfile testing suite ensures that Ash3d correctly
+interfaces with the variety of NWP data products available through the MetReader
+library, along with the different formats for those products.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Difference tests: make check}
-%\subsection{Test 1: Advection}
-%\clearpage
-%\subsection{Test 2: Diffusion}
-%\clearpage
-%\subsection{Test 3: Source/Fall-model/vertical grid}
-%\subsubsection{3.1 Line source / Wilson-Huang / constant dz}
-%\subsubsection{3.2 point source / No fall (tracer) / constant dz}
-%\subsubsection{3.3 point source / Wilson-Huang / constant dz}
-%\subsubsection{3.4 point source / Ganser / constant dz}
-%\subsubsection{3.5 point source / Stokes+slip / constant dz}
-%\subsubsection{3.6 profile source / Wilson-Huang / constant dz}
-%\subsubsection{3.7 line source / Wilson-Huang / constant dz}
-%\subsubsection{3.8 point source / Wilson-Huang / piecewise linear dz}
-%\subsubsection{3.9 point source / Wilson-Huang / constant log(dz)}
-%\subsubsection{3.10 point source / Wilson-Huang / custom dz}
-%\clearpage
-%\subsection{Test 4: }
-%\subsubsection{4.1 Umbrella\_air}
-%\subsubsection{4.2 Suzuki k=4, GSD with Aggr.}
-%\subsubsection{4.3 Umbrella}
-%\subsubsection{4.4 Suzuki k=4, 1-grain, Global domain}
-%
+\section{Difference tests: make check}
+To test that a build of Ash3d is calculating correctly, a quick check is to
+run \texttt{make check} after compiling the code. This makefile target runs
+the script \texttt{run\_tests.sh} which in turn runs a sequence of four testing
+scripts in directories \texttt{tests/test\_[1-4]}. 
+\subsection{Test 1: Advection}
+This test case uses a simple Cartesian grid with a Suzuki source (k=4) with
+a single tracer grainsize. The wind data used is just an artificial 1-D
+profile with a spriral windfield.
+\small
+\begin{verbatim}
+Hanford
+0    5   5  1 2 3 0 5  #wind time, number of levels, nvar ivars(1:nvar)
+-2062.26 2606.69 0 4 265.0 25.0 25.0 25.0 6371.229 # (-120.0   46.20) in LCC grid 212 coords
+0     -4.0   0.0 1000.0  10.0
+5000   0.0   4.0  560.0 -5.5
+10000  4.0   0.0  262.0 -47.3
+15000  0.0  -4.0  126.0 -58.1
+20000 -4.0   0.0   58.0 -54.9
+\end{verbatim}
+\normalsize
+Output files are ESRI ASCII data files for cloud concentration, cloud height, and
+cloud load (all at 2 and 4 hours), and the cloud arrival time. These output
+files are tested against the version stored in \texttt{test\_01\\output}
+using the tool \texttt{Ash3d\_ASCII\_check}. This tool calculates the L2 norm
+of the difference between two ESRI ASCII files and reports PASS or FAIL based
+on a provided tolerance.
+\begin{figure}[htbp]\vspace*{0cm}\hspace*{0cm}
+\includegraphics[angle=0,scale=0.5]{Figures/Apx_Test/Test_01_CL.png}
+\parbox{15cm}{\caption{\label{FigTest_DiffTC1_CL}
+Cloud Load for simple test case of advection for test 1.
+}}
+\end{figure}
+The output files are not tested for equivalance since there are many reasons
+there might be slight differences in either build-time or run-time values,
+such as: CFL value, minimum/maximum \texttt{dt}, 
+
+\clearpage
+\subsection{Test 2: Diffusion}
+\clearpage
+\subsection{Test 3: Source/Fall-model/vertical grid}
+\subsubsection{3.1 Line source / Wilson-Huang / constant dz}
+\subsubsection{3.2 point source / No fall (tracer) / constant dz}
+\subsubsection{3.3 point source / Wilson-Huang / constant dz}
+\subsubsection{3.4 point source / Ganser / constant dz}
+\subsubsection{3.5 point source / Stokes+slip / constant dz}
+\subsubsection{3.6 profile source / Wilson-Huang / constant dz}
+\subsubsection{3.7 line source / Wilson-Huang / constant dz}
+\subsubsection{3.8 point source / Wilson-Huang / piecewise linear dz}
+\subsubsection{3.9 point source / Wilson-Huang / constant log(dz)}
+\subsubsection{3.10 point source / Wilson-Huang / custom dz}
+\clearpage
+\subsection{Test 4: }
+\subsubsection{4.1 Umbrella\_air}
+\subsubsection{4.2 Suzuki k=4, GSD with Aggr.}
+\subsubsection{4.3 Umbrella}
+\subsubsection{4.4 Suzuki k=4, 1-grain, Global domain}
+\subsubsection{4.5 1-D winds, Topography (Z\_ID=0)}
+\subsubsection{4.6 1-D winds, Topography (Z\_ID=1)}
+\subsubsection{4.7 1-D winds, Topography (Z\_ID=2)}
+
 %\clearpage
 %\section{Unit testing of functions}
 %\subsection{Atmosphere.f90}
