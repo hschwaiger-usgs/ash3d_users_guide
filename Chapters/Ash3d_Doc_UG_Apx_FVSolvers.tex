@@ -1,5 +1,10 @@
 \chapter{Finite Volume Solvers}\label{ChapAppendFVSolvers}
 \section{Grid Geometry}
+%\subsection{Topography}\label{FV_Grid_Topo}
+%https://nilu.brage.unit.no/nilu-xmlui/bitstream/handle/11250/2761899/08-2002-lhs.pdf
+
+
+\subsection{Cell metrics}
 Volume:
 \begin{equation}\label{EqCellVolLL}
 \kappa_{i,j,k} = \int_{r_K}^{r_{K+1}} \int_{\theta_J}^{\theta_{J+1}} \int_{\lambda_I}^{\lambda_{I+1}}
@@ -7,28 +12,24 @@ Volume:
 = \left( \lambda_{I+1} - \lambda_{I} \right) \frac{1}{3} \left( r_{K+1}^3 - r_{K}^3 \right)
 \left( \cos{\theta_{J}} - \cos{\theta_{J+1}}\right)
 \end{equation}
-
 Surface area:
-
 \begin{equation}\label{EqCellSurfILL}
 \sigma_x=\sigma_{I,j,k} = \int_{r_K}^{r_{K+1}} \int_{\theta_J}^{\theta_{J+1}}
 \, r \mathrm{d}\theta \, \mathrm{d}r
 = \left( \theta_{J+1} - \theta_{J} \right) \frac{1}{2} \left( r_{K+1}^2 - r_{K}^2 \right)
 \end{equation}
-
+%
 \begin{equation}\label{EqCellSurfJLL}
 \sigma_y=\sigma_{i,J,k} = \int_{r_K}^{r_{K+1}} \int_{\lambda_I}^{\lambda_{I+1}}
 \, r \sin{\theta} \mathrm{d}\lambda \, \mathrm{d}r
 = \sin{\theta}\left( \lambda_{I+1} - \lambda_{I} \right) \frac{1}{2} \left( r_{K+1}^2 - r_{K}^2 \right)
 \end{equation}
-
+%
 \begin{equation}\label{EqCellSurfKLL}
 \sigma_z=\sigma_{i,j,K} = \int_{\lambda_I}^{\lambda_{I+1}} \int_{\theta_J}^{\theta_{J+1}}
 \, r \sin{\theta} \mathrm{d}\lambda \, r\mathrm{d}\theta
 = r_{K}^2 \left( \lambda_{I+1} - \lambda_{I} \right) \left( \cos{\theta_{J}} - \cos{\theta_{J+1}}  \right)
 \end{equation}
-
-
 
 \section{Advection Routines}
 Ash3d has been written to accommodate different advection routines such as

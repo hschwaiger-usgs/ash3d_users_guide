@@ -1049,7 +1049,7 @@ out to a NetCDF file (as specified in Line 16 of Block 4), this title is include
 in that file.
 Line 3 gives an optional comment that may be written out to the same NetCDF file.
 
-\subsection{Extensions to the control file: Optional Modules}
+\subsection{Extensions to the control file: Optional Modules}\label{ChapUsage_SS_OptMod}
 
 After these nine required blocks have been read, Ash3d scans the input file to search
 for the term ``\texttt{OPTMOD=}". If this is found, then the corresponding optional
@@ -1120,6 +1120,38 @@ The full list of parameters that can be reset are given in Table \ref{tab:ResetP
 \end{center}
 \end{table}
 \normalsize
+
+\paragraph{\texttt{TOPO}}
+To include topography in an Ash3d run, an optional block can be added to the
+input file headed with the tag \texttt{OPTMOD=TOPO}.
+An example block is given below.
+\small
+\begin{verbatim}
+***********************
+# Topography
+***********************
+OPTMOD=TOPO
+yes 2                         # use topography?; z-mod (0=none,1=shift,2=sigma)
+1 1.0                         # Topofile format, smoothing radius
+GEBCO_08.nc                   # topofile name
+*******************************************************************************
+\end{verbatim}
+\normalsize
+In this block, the use of topography can be turned on or off by the
+\texttt{yes}/\texttt{no} option on the first line. The second parameter on that
+line gives the flag for the treatment of topography (\texttt{ZScaling\_ID})
+where the vertical coordinant, $z$, is replaced by $\sigma$ according to the following.
+\begin{itemize}
+ \item 0: Topography read, but no grid modification, $\sigma=z$
+ \item 1: Grid is uniformly shifted by to topography, $\sigma=z-h(x,y)$
+ \item 2: Grid is scaled by topography, $\sigma=z_{top}(z-h(x,y))/(z_{top}-h(x,y))$
+\end{itemize}
+where $h(x,y)$ is the surface elevation in $\mathrm{km}$.
+The second line starts with the topography data format code
+(1=gridded netcdf, 2=gridded binary, 3=ESRI ASCII) followed by the smoothing
+radius (in $\mathrm{km}$.
+The third line is the name of the topography file. The use of topography is
+more thoroughly described in Appendix \ref{ChapAppendTopo}.
 
 \subsection{Environment variables}
 Some variables can be set at run-time through the use of environment variables on a Unix
