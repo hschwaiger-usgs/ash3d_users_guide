@@ -26,12 +26,15 @@ The first specifies whether or not topography will be implemented, and if
 so, how will it affect the computational grid. If \texttt{no} is
 given, all other lines of this block will be ignored, allowing for
 easy toggling on and off of topography. The second value on this first line is
-a code for the vertical grid structure:
+a code for the vertical grid structure where the generalized vertical coordinate,
+$\sigma$, maps to the altitude coordinate, $z$, as follows.
 \begin{eqnarray*}
 0 \Rightarrow  \sigma &=& z \\
 1 \Rightarrow  \sigma &=& z - h(x,y) \\
-2 \Rightarrow  \sigma &=& z_{top} \left( \frac{z-h}{z_top - h} \right)
+2 \Rightarrow  \sigma &=& z_{top} \left( \frac{z-h}{z_{top} - h} \right)
 \end{eqnarray*}
+Where $h(x,y)$ is the topographic surface (in $\mathrm{km}$, and $z_{top}$
+is the altitude of the top of the computational grid.
 Details of these grids are given in Section \ref{ChapAppendTopo_Sec_GridImp} below.
 
 The second line specifies the format of the topographic data followed by
@@ -58,14 +61,14 @@ data which had a different storage structure.
 Some datasets are provided as raw binary files, usually as global datasets but
 provided as tiles. Ash3d has been tested with the binary data from NOAA GLOBE 
 dataset (1-km/30 arcsecond) \cite{NOAAGLOBE} and the USGS GTOPO30 (1-km/30 arcsecond)
-\cite{USGSGTOPO30}. Other public data are avialble, but haven't been tested, such as
+\cite{USGSGTOPO30}. Other public data are availble, but haven't been tested, such as
 GMTED2010, US National Elevation Database (NED), and the Shuttle Radar Topography
 Mission (SRTM) data. To read the raw binary files, Ash3d needs to know the
 structure of the data which must be provided in a header file. The raw binary
 file can have any name, usually with a file extension of \texttt{bin} or
-\texttt{DEM}. Ash3d reads the binary file name, and looks for a header file whice
+\texttt{DEM}. Ash3d reads the binary file name, and looks for a header file which
 has the same root name, but with the extension replaced with either \texttt{hdr}
-or \textt{HDR}. This header file should have the fields given in the following
+or \texttt{HDR}. This header file should have the fields given in the following
 example.
 \small
 \begin{verbatim}
@@ -80,8 +83,8 @@ XDIM          0.00833333333333
 YDIM          0.00833333333333
 \end{verbatim}
 \normalsize
-The \texttt{BYTEORDER} field must be either \texttt{M,B} if the data are stored
-with Motorola (Big-Endian) byte order, or \texttt{I,L} if the data use
+The \texttt{BYTEORDER} field must be either \texttt{M} or \texttt{B} if the data are stored
+with Motorola (Big-Endian) byte order, or \texttt{I} or \texttt{L} if the data use
 the IBM (Little-Endian) byte order. \texttt{NROWS} and \texttt{NCOLS} give the
 number of rows and columns of the binary data respectivley. \texttt{NBITS} must
 be either 16 or 32. If 16, then the data are assumed to be stored as signed
@@ -107,8 +110,8 @@ BANDGAPBYTES         0
 \end{verbatim}
 \normalsize
 \texttt{LAYOUT} is not required since it
-is assumed that \texttt{NBANDS}$=1$ and band interleaved by line (BIL) or not
-is irrelevant.
+is assumed that \texttt{NBANDS}$=1$ and whether the data are stored as band
+interleaved by line (BIL) or not is irrelevant.
 
 \subsection{ESRI ASCII}
 Currently, Ash3d can write the topography used in a simulation to the output NetCDF
@@ -122,7 +125,7 @@ Ash3d_PostProc 3d_tephra_fall.nc 15 1
 Which produces a file named \texttt{Topography.dat}.
 Loading this small ASCII file is beneficial for repeating runs with the same geometry
 (no subsetting, interpolation or smoothing needed). Currently, this reader is
-designed around the \texttt{write\_2D\_ASCII} subrouting and is not general enough to 
+designed around the \texttt{write\_2D\_ASCII} subroutine and is not general enough to 
 read other ASCII data, such as those provided by OpenTopo.
 \subsection{GeoTIFF}
 Many sources of topography data provide data in GeoTIFF format. A GeoTIFF reader for
@@ -153,7 +156,8 @@ value at a point as an integral of the function convolved with a delta function 
 in question. Numerically, the delta function is replaced with a finite-width kernel and
 the function value can be calculated by summing over the values within a
 characteristic width, $s$, weighted by the value of the kernel. This has the effect of
-smoothing the function within a circle of $4s$. A schematic is shown in Figure \ref{FigTopo_kernel}.
+smoothing the function within a circle of diameter $4s$.
+A schematic is shown in Figure \ref{FigTopo_kernel}.
 
 \begin{figure}[htbp]\vspace*{0cm}\hspace*{0cm}
 \includegraphics[angle=0,scale=0.4]{Figures/Apx_Topo/AGU_kernal.pdf}\\
@@ -196,8 +200,8 @@ Note, the smoothing approach outlined above is useful in mesh-free numerical
 methods since gradients of functions can easily be expressed as a summation
 of function values multiplied by the gradient of the kernel, however this can
 lead to noisy gradient values when too few points contribute to the summation
-or near boundaries. With the structured grid that Ash3d used, a finite difference
-approach performs better.
+or near boundaries. With the structured grid that Ash3d uses, a finite difference
+approach performs better for the terms that require derivitives of topography.
 %-> grad h with SPH vs FD
 %(3) Interpolate to Met grid
 
@@ -221,7 +225,7 @@ for Nevado del Ruiz is shown as a magenta triangle.
 \includegraphics[angle=0,scale=0.4]{Figures/Apx_Topo/Topo_Grids.png}\\
 \parbox{15cm}{\caption{\label{FigTopo_grids}
 The standard vertical grid implementation in Ash3d is a uniform grid spacing from $z=0$
-to $z=1.3*\mathrm{PlumeHeight}$, shown in the top plot. The smoothed topography from
+to $z=1.3 \cdot \mathrm{PlumeHeight}$, shown in the top plot. The smoothed topography from
 Fig \ref{FigTopo_profile} is shown in blue. Implementing topography through a vertical
 shifting of the grid is shown in the middle panel. Note that this grid extends above
 $Z_{top}$ by the surface height. This sigma-altitude coordinate system is shown in the
@@ -254,7 +258,7 @@ given by:
    \nabla \cdot \left[ \left(\mathbf{u} + \mathbf{v_s} \right) q \right]
  - \nabla \cdot \left( \mathbf{K} \nabla q\right) = S
 \end{equation}
-We will use a generanlized vertical coordinate, $X,Y,\sigma$, for all topography cases.
+We will use a generalized vertical coordinate, $X,Y,\sigma$, for all topography cases.
 In the case of no grid deformation, this just corresponds to:
 \begin{align*}
 X &= x &  \frac{\partial}{\partial x} &= \frac{\partial}{\partial X}\\
@@ -276,7 +280,8 @@ In this case, the Jacobian remains $J = 1$.
 Following the suggestions in \cite{Slordal02}, if we apply the substitution for the vertical
 velocity in the transformed coordinate
 \begin{equation}\label{v_sub1}
-\omega = w - u \frac{\partial h}{\partial x} - v \frac{\partial h}{\partial y}
+\omega = w - u \frac{\partial h}{\partial x} - v \frac{\partial h}{\partial y} =
+\frac{1}{J}\left[ w - \mathbf{u} \cdot \nabla h \right]
 \end{equation}
 and if we neglect topography terms of the diffusion term, then Eq. \ref{EqGovEqVectApx} can be
 written in the transformed coordinates as:
@@ -298,8 +303,8 @@ by Eq. \ref{v_sub1}.
 \subsection{Case 3: sigma-altitude}
 An issue with the z-shifted coordinate system is that the effects of topography on the grid
 are pervasive through $z$ and that the upper levels of the grid extend above the
-set height of the domain, $Z_{top}$. An alternate systes in which the effects of
-topograph decay with height is the sigma-altitude coordinate in which $Z_{top}$ is
+set height of the domain, $Z_{top}$. An alternate system in which the effects of
+topography decay with height is the sigma-altitude coordinate in which $Z_{top}$ is
 fixed with $\sigma$-layers scaled into the space between $h(x,y)$ and $Z_{top}$.
 \begin{align*}
 X &= x &  \frac{\partial}{\partial x} &= \frac{\partial }{\partial X} + \frac{Z-\sigma}{D}\frac{\partial D}{\partial x}\frac{\partial }{\partial \sigma}\\
@@ -311,8 +316,9 @@ The Jacobian in this case is just $J=\frac{D}{Z}$.
 
 This coordinate system is also outlined in \cite{Slordal02}, with a vertical velocity
 substitution of
-\begin{equation}\label{v_sub1}
+\begin{equation}\label{v_sub2}
 \omega = \frac{Z}{D}w - \frac{Z-\sigma}{D}u \frac{\partial h}{\partial x} - \frac{Z-\sigma}{D} v \frac{\partial h}{\partial y}
+= \frac{1}{J}\left[ w - \mathbf{u} \cdot \nabla h + \frac{\sigma}{Z} \mathbf{u} \cdot \nabla h \right]
 \end{equation}
 and, as in case 2, if we neglect topography terms of the diffusion term, then Eq. \ref{EqGovEqVectApx} can be
 written in the transformed coordinates as:
@@ -320,13 +326,23 @@ written in the transformed coordinates as:
 \frac{\partial q}{\partial t} 
 &+& \frac{1}{D}\frac{\partial }{\partial X} \left(uDq\right)
 + \frac{1}{D}\frac{\partial }{\partial Y} \left(vDq\right)
-+ \frac{1}{D}\frac{\partial }{\partial X} \left(\left( \omega + v_s \right)Dq\right) \\
++ \frac{1}{D}\frac{\partial }{\partial \sigma} \left(\left( \omega + v_s \right)Dq\right) \\
 &-& \frac{\partial }{\partial X} \left( K \frac{\partial q}{\partial X} \right) 
 - \frac{\partial }{\partial Y} \left( K \frac{\partial q}{\partial Y} \right) 
 - \left[\frac{Z}{D}\right]^2 \frac{\partial}{\partial \sigma} \left( K \frac{\partial q}{\partial \sigma} \right)
 = S
 \end{eqnarray}
 
+The advection terms can be expanded to:
+\begin{eqnarray}
+\frac{1}{D}\frac{\partial }{\partial X} \left(uDq\right) &=&
+ u\frac{\partial q}{\partial X} + q\frac{\partial u}{\partial X} + \frac{uq}{D} \frac{\partial D}{\partial X} \\
+\frac{1}{D}\frac{\partial }{\partial Y} \left(vDq\right) &=&
+ v\frac{\partial q}{\partial Y} + q\frac{\partial v}{\partial Y} + \frac{vq}{D} \frac{\partial D}{\partial Y} \\
+\frac{1}{D}\frac{\partial }{\partial \sigma} \left(\left( \omega + v_s \right)Dq\right) &=&
+ \left( \omega + v_s \right)\frac{\partial q}{\partial \sigma} + q\frac{\partial }{\partial \sigma}\left( \omega + v_s \right) + 
+\frac{\left( \omega + v_s \right)q}{D} \frac{\partial D}{\partial \sigma}
+\end{eqnarray}
 
 
 %\subsection{Topography}\label{FV_Grid_Topo}
