@@ -43,7 +43,7 @@ Start with the fluctuation form (Eq. 6.59 from \cite{LeVeque03}) of the update i
 a cell $i$ given below.
 \begin{equation}\label{EqQupdate}
 Q^{n+1}_i = Q^{n}_i - \frac{\Delta t}{\Delta x} 
-\left( \mathcal{A}^{-} \Delta Q_{i+\frac{1}{2}} + \mathcal{A}^{+} Q_{i-\frac{1}{2}}\right) -
+\left( \mathcal{A}^{-} \Delta Q_{i+\frac{1}{2}} + \mathcal{A}^{+} \Delta Q_{i-\frac{1}{2}}\right) -
 \frac{\Delta t}{\Delta x}
 \left( \widetilde{F}_{i+\frac{1}{2}} - \widetilde{F}_{i-\frac{1}{2}}\right)
 \end{equation}
