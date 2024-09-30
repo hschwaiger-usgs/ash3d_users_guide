@@ -2,17 +2,20 @@
 \section{Grid Geometry}
 %\subsection{Topography}\label{FV_Grid_Topo}
 %https://nilu.brage.unit.no/nilu-xmlui/bitstream/handle/11250/2761899/08-2002-lhs.pdf
-
+In Ash3d, the equations are implemented using a generalized coordinate system, using
+spatially variable cell volumes and cell interfaces.
 
 \subsection{Cell metrics}
-Volume:
+For Cartesian grids, the volume ($\kappa$) and cell-interface areas
+($\sigma_x$, $\sigma_y$, $\sigma_z$) are simple products of $\Delta x$,
+$\Delta y$, and $\Delta z$. For spherical coordinates, we calculate cell volume as:
 \begin{equation}\label{EqCellVolLL}
 \kappa_{i,j,k} = \int_{r_K}^{r_{K+1}} \int_{\theta_J}^{\theta_{J+1}} \int_{\lambda_I}^{\lambda_{I+1}}
 \, r \sin{\theta} \mathrm{d}\lambda \, r \mathrm{d}\theta \, \mathrm{d}r
 = \left( \lambda_{I+1} - \lambda_{I} \right) \frac{1}{3} \left( r_{K+1}^3 - r_{K}^3 \right)
 \left( \cos{\theta_{J}} - \cos{\theta_{J+1}}\right)
 \end{equation}
-Surface area:
+The interface surface area is expressed as:
 \begin{equation}\label{EqCellSurfILL}
 \sigma_x=\sigma_{I,j,k} = \int_{r_K}^{r_{K+1}} \int_{\theta_J}^{\theta_{J+1}}
 \, r \mathrm{d}\theta \, \mathrm{d}r
@@ -30,7 +33,11 @@ Surface area:
 \, r \sin{\theta} \mathrm{d}\lambda \, r\mathrm{d}\theta
 = r_{K}^2 \left( \lambda_{I+1} - \lambda_{I} \right) \left( \cos{\theta_{J}} - \cos{\theta_{J+1}}  \right)
 \end{equation}
-
+In both the Cartesian and spherical coordinates, the cell length along an advection
+or diffusion direction is expressed as the ratio of the perpendicular
+surface area to the cell volume (e.g. $\Delta x = \frac{\kappa}{\sigma_z}$).
+When topography is included, these metrics must be scaled by the Jacobian of
+the transformation.
 \section{Advection Routines}
 Ash3d has been written to accommodate different advection routines such as
 Donor-Cell-Update (DCU), Corner Transport Update (CTU), and Semi-Lagrange (SL).
@@ -63,10 +70,14 @@ conservative variable coefficient case.
 where $F_{i-\frac{1}{2}}$ are the interface fluxes and $F_i$ are the cell-centered
 representations.  These cell-centered values are somewhat arbitrary since they cancel
 each other in Eq. \ref{EqQupdate}, but we use
-$F_i = (u^{+}_{i-\frac{1}{2}} + u^{-}_{i+\frac{1}{2}})Q_i$ as suggested by
-Eq 9.39 of \cite{LeVeque03}.  Interface fluxes are given by (the un-numbered
-equation of \cite{LeVeque03} between 9.35 and 9.36)
-\begin{equation}\label{Eqfluxdef}
+\begin{equation}\label{Eqccfluxdef}
+F_i = (u^{+}_{i-\frac{1}{2}} + u^{-}_{i+\frac{1}{2}})Q_i
+\end{equation}
+as suggested by
+Eq 9.39 of \cite{LeVeque03} so that the cell-centered flux values are an approximation of
+the flux in cell $i$.  Interface fluxes are given by (the un-numbered
+equation of \cite{LeVeque03} between 9.35 and 9.36):
+\begin{equation}\label{EqIntfluxdef}
 F_{i-\frac{1}{2}} = u^{+}_{i-\frac{1}{2}} Q_{i-1} + u^{-}_{i-\frac{1}{2}} Q_{i}
 \end{equation}
 So
@@ -86,6 +97,24 @@ So
   u^{-}_{i-\frac{1}{2}} \left( Q_{i} - Q_{i-1} \right) +
                 Q_{i-1} \left( u^{+}_{i-\frac{1}{2}} - u^{+}_{i-\frac{3}{2}}  \right)
 \end{eqnarray}
+Note that the choice of the cell-centered flux given in Eq. \ref{Eqccfluxdef},
+leads to fluctuation forms above that have components that represent the $u q_x$
+as well as the $q u_x$ terms.
+If topography is included, the advection-diffusion equation additionally contains
+spatial derivatives of the topography. As noted in Ap. \ref{ChapAppendTopo}, we neglect spatial
+derivitives of topography in the diffusion term. For the $z$-shifted case, the gradients of
+topography are included only in the redefinition of the vertical velocity (See
+Eq.s \ref{v_sub1} and \ref{AdvDif_topo1}), with horizontal advection and diffusion
+along $s = $ constant and vertical perpendicular to constant $s$ surfaces. For the
+$\sigma$-altitude case, vertical velocity is redefined according to Eq. \ref{v_sub2},
+but the horizontal advection equation does include gradients of topography
+(Eq. \ref{AdvDif_topo2}). For this case, we modify the cell-centered flux (Eq. \ref{Eqccfluxdef})
+to include the third term on the RHS of Eq. \ref{AdvTopo2X}:
+\begin{equation}\label{EqccfluxdefTopo}
+F_i = (u^{+}_{i-\frac{1}{2}} + u^{-}_{i+\frac{1}{2}})Q_i + \frac{u_i q_i}{2D_i}
+\left( D_{i+1}-D_{i-1}\right)
+\end{equation}
+where topography is included via the variable $D_i=z_{top}-z_{surf}$, i.e. the depth of the model.
 
 The higher order terms of Eq \ref{EqQupdate} above are given by Eq. 6.60 of \cite{LeVeque03}.
 \begin{equation}\label{EqHOTLeVeque}

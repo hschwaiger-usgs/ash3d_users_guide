@@ -285,7 +285,7 @@ velocity in the transformed coordinate
 \end{equation}
 and if we neglect topography terms of the diffusion term, then Eq. \ref{EqGovEqVectApx} can be
 written in the transformed coordinates as:
-\begin{equation}
+\begin{equation}\label{AdvDif_topo1}
 \frac{\partial q}{\partial t} 
 + \frac{\partial }{\partial X} \left(uq\right)
 + \frac{\partial }{\partial Y}\left(vq\right)
@@ -322,7 +322,7 @@ substitution of
 \end{equation}
 and, as in case 2, if we neglect topography terms of the diffusion term, then Eq. \ref{EqGovEqVectApx} can be
 written in the transformed coordinates as:
-\begin{eqnarray}
+\begin{eqnarray}\label{AdvDif_topo2}
 \frac{\partial q}{\partial t} 
 &+& \frac{1}{D}\frac{\partial }{\partial X} \left(uDq\right)
 + \frac{1}{D}\frac{\partial }{\partial Y} \left(vDq\right)
@@ -336,7 +336,7 @@ written in the transformed coordinates as:
 The advection terms can be expanded to:
 \begin{eqnarray}
 \frac{1}{D}\frac{\partial }{\partial X} \left(uDq\right) &=&
- u\frac{\partial q}{\partial X} + q\frac{\partial u}{\partial X} + \frac{uq}{D} \frac{\partial D}{\partial X} \\
+ u\frac{\partial q}{\partial X} + q\frac{\partial u}{\partial X} + \frac{uq}{D} \frac{\partial D}{\partial X} \label{AdvTopo2X}\\
 \frac{1}{D}\frac{\partial }{\partial Y} \left(vDq\right) &=&
  v\frac{\partial q}{\partial Y} + q\frac{\partial v}{\partial Y} + \frac{vq}{D} \frac{\partial D}{\partial Y} \\
 \frac{1}{D}\frac{\partial }{\partial \sigma} \left(\left( \omega + v_s \right)Dq\right) &=&
