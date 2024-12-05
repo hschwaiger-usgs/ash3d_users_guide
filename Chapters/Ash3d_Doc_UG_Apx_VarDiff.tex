@@ -3,7 +3,7 @@ The resolution of the weather forecast (or reanalysis) data will not capture sub
 processes due to turbulent mixing in the atmosphere. To approximate this mixing, Ash3d
 uses a diffusion term in the transport equation. A homogeneous and isotropic diffusivity
 can be specified in the Ash3d control file, however it can be more realistic to 
-treat the vertical and horizontal diffusivities separetely and to have the values
+treat the vertical and horizontal diffusivities separately and to have the values
 depend on local atmospheric conditions.
 
 The basic approach is to recognize that atmosphere is stratified and can be divided into
@@ -30,7 +30,7 @@ is effected by the surface. This layer is called the `atmospheric boundary layer
 `planetary boundary layer' and is generally several hundred to a few thousand meters thick.
 The thickness depends on several factors such as the latitude or the solar heating and
 radiative cooling of the surface, as well as the temperature profile.
-The bottom 10\% of this atomospheric boundary layer is called the `surface layer' and 
+The bottom 10\% of this atmospheric boundary layer is called the `surface layer' and 
 is generally well mixed, characterized by nearly homogeneous fluxes of heat and momentum.
 
 Give description here of the diurnal nature of the atmospheric boundary layer, the surface
@@ -112,7 +112,7 @@ $u_{*}$ is the friction velocity, which is a measure of the shear stress of the 
 u_{*} = \sqrt{\frac{|\tau|}{\rho}}
 \end{equation}
 
-Note that the gradient Richardson number given above is an appoximation to the flux
+Note that the gradient Richardson number given above is an approximation to the flux
 Richardson number which is given by
 \begin{equation}\label{VarDiff_Eq_Rf}
 \mathrm{Rf} = \frac{K_h}{K_m}\mathrm{Ri}_g
@@ -142,7 +142,7 @@ only requires values at discrete levels.
 \end{equation}
 
 The virtual potential temperature, $\theta_v$ requires the water mixing ratio, $w_v$,
-through Eq. \ref{VarDiff_Eq_Thetav}. Genreally, this is not provided
+through Eq. \ref{VarDiff_Eq_Thetav}. Generally, this is not provided
 in the NWP files, but can be related to the specific humidity, $q$, through the relation
 $w_v=q/(1-q)$
 
@@ -346,7 +346,7 @@ expression for the vertical diffusivity.
 \begin{equation}\label{VarDiff_Eq_Kz_Surf}
 K_v = \frac{u_{*} \kappa z}{\phi(\zeta)}
 \end{equation}
-where the term $\kappa z / \phi(\zeta)$ is effectivly the mixing length as a function of height from the
+where the term $\kappa z / \phi(\zeta)$ is effectively the mixing length as a function of height from the
 surface. $\phi(\zeta)$ is the dimensionless velocity gradient 
 function from Eq. \ref{VarDiff_Eq_Ugrad} which is unity for neutral conditions ($\zeta=0$),
 $\phi(\zeta)>1$ for stable conditions ($\zeta>0$) and $\phi(\zeta)<0$ for unstable
@@ -355,7 +355,7 @@ Note that this term is essentially $\ell_m$ from Eq. \ref{VarDiff_Eq_MixLen} in 
 $\kappa z << \lambda_m$ for neutral conditions. $\phi(\zeta)$ is strictly positive and
 has the effect of scaling the growth of the mixing length, either minimizing it in
 stable conditions, or magnifying it in unstable conditions. In neutral conditions, the
-mixing length (and $K_v$) grows propotional to the distance from the surface within the
+mixing length (and $K_v$) grows proportional to the distance from the surface within the
 surface layer. 
 
 Several expressions for $\phi(\zeta)$ have been suggested by various authors with a
