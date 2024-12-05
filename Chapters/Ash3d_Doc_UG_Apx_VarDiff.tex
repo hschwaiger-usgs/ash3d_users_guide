@@ -120,7 +120,7 @@ Richardson number which is given by
 
 Since $K_h \sim K_m$ in unstable conditions, we can alternatively express $L$ as
 % Eq. 9.15 from Stull v2
-\begin{equation}
+\begin{equation}\label{VarDiff_Eq_Lalt}
 L = -\frac{\rho c_p T_0 u^3_{*}}{\kappa g z \overline{q_z}} %Eq 16.70 S/P
 \end{equation}
 
@@ -265,7 +265,7 @@ applies a diffusivity to account for the turbulent fluctuations that are smaller
 than the model grid. The diffusivity is related to the vertical gradients in
 horizontal velocities and the cell-size of the velocity model.
 
-\begin{equation}
+\begin{equation}\label{VarDiff_Eq_Smag}
 K_h = C \Delta x \Delta y \sqrt{\left[ \frac{\partial u}{\partial x} -\frac{\partial v}{\partial y} \right]^2
 + \left[ \frac{\partial v}{\partial x} +\frac{\partial u}{\partial y} \right]^2}
 \end{equation}
@@ -279,7 +279,7 @@ corresponding horizontal length scales of the NWP data. Ash3d used the area of t
 for this product. $C$ is a dimensionless scaling parameter.
 
 An alternate model which uses a slightly different ``tension'' term is the Pielke model.
-\begin{equation}
+\begin{equation}\label{VarDiff_Eq_Pielke}
 K_h = C \Delta x \Delta y \sqrt{
 \frac{1}{2}\left[ \left(\frac{\partial u}{\partial x}\right)^2 + \left(\frac{\partial v}{\partial y}\right)^2 \right]
 + \left[ \frac{\partial v}{\partial x} +\frac{\partial u}{\partial y} \right]^2}
@@ -292,22 +292,22 @@ K_h = C \Delta x \Delta y \sqrt{
 \section{Vertical Diffusivity}\label{ChapAppendVarDiff_Sec_Kv}
 The formulation for vertical diffusivity depends on which region of the atmosphere
 we are considering, primarily whether the point is within the atmospheric boundary
-layer (and more specifically, in the surface layer), or in the free atmosphere
-about the boundary layer.
+layer (and more specifically, in either the surface layer or the mixed layer),
+or in the free atmosphere above the boundary layer.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Free Atmosphere}
 In the region of the atmosphere above the boundary layer, the formulation of diffusivity
 from Prantl (1932) relates $K_z$ to shear stresses using the vertical gradient in
-horizontal velocity through a mixing length, $\ell_c$. % Randerson %Eq.5.23, Monin 5.112,Stull 6.4.4f
+horizontal velocity through a mixing length, $\ell_m$. % Randerson %Eq.5.23, Monin 5.112,Stull 6.4.4f
 Typically, this is scaled by a non-dimensional stability function of $\mathrm{Ri}$ so as to
 include the effects of buoyancy.
 % Jacobson Eq.8.70
-\begin{equation}
+\begin{equation}\label{VarDiff_Eq_Kz_FreAtmos}
 K_z = \ell_m^2 \frac{\partial \overline{u}}{\partial z}  \mathcal{F}(\mathrm{Ri})
 \end{equation}
 where the mixing length, $\ell_m$ follows the relation
-\begin{equation}
+\begin{equation}\label{VarDiff_Eq_MixLen}
 \frac{1}{\ell_m} = \frac{1}{\kappa z} + \frac{1}{\lambda_m}
 \end{equation}
 
@@ -320,7 +320,7 @@ but this breaks down as $\mathrm{Ri}$ becomes more negative. In these situations
 is dominated by free convection and the vertical diffusivity model does not apply.
 
 Alternatively, Collins et al \ref{Collin} use the following form for the stability function.
-\begin{eqnarray}\label{EqPhiB}
+\begin{eqnarray}\label{VarDiff_Eq_F_Collins}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
  \left[ 1 -18 \, \mathrm{Ri} \right]^{1/2}                         &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
  \left[ 1+ 10 \, \mathrm{Ri} \, (1+8 \, \mathrm{Ri}) \right]^{-1}  &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{unstable}
@@ -330,7 +330,8 @@ Alternatively, Collins et al \ref{Collin} use the following form for the stabili
 
 
 \begin{figure}[htbp]\vspace*{0cm}\hspace*{0cm}
-\includegraphics[angle=0,scale=0.2]{Figures/Apx_VarDiff/Kz_MixLen.png}\includegraphics[angle=0,scale=0.2]{Figures/Apx_VarDiff/Kz_Fc.png}\\
+\includegraphics[angle=0,scale=0.2]{Figures/Apx_VarDiff/Kz_MixLen.png}
+\includegraphics[angle=0,scale=0.2]{Figures/Apx_VarDiff/Kz_Fc.png}\\
 \parbox{15cm}{\caption{\label{FigVarDiff_Kz_MixLen}
 Mixing Length
 }}
@@ -338,21 +339,29 @@ Mixing Length
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{surface layer}
+\subsection{Surface Layer}
 
-Atmospheric Boundary Layer (diurnal)
-
-Free atmosphere
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Atmospheric Boundary Layer}
-\begin{equation}
-K_z = \frac{u_{*} \kappa z}{\phi} \left( 1-\frac{z}{h_{BL}} \right)
+The Monin-Obukhov similarity description of the surface layer leads to the following
+expression for the vertical diffusivity.
+\begin{equation}\label{VarDiff_Eq_Kz_Surf}
+K_v = \frac{u_{*} \kappa z}{\phi(\zeta)}
 \end{equation}
+where the term $\kappa z / \phi(\zeta)$ is effectivly the mixing length as a function of height from the
+surface. $\phi(\zeta)$ is the dimensionless velocity gradient 
+function from Eq. \ref{VarDiff_Eq_Ugrad} which is unity for neutral conditions ($\zeta=0$),
+$\phi(\zeta)>1$ for stable conditions ($\zeta>0$) and $\phi(\zeta)<0$ for unstable
+conditions $\phi(\zeta)<0$.
+Note that this term is essentially $\ell_m$ from Eq. \ref{VarDiff_Eq_MixLen} in the limit of
+$\kappa z << \lambda_m$ for neutral conditions. $\phi(\zeta)$ is strictly positive and
+has the effect of scaling the growth of the mixing length, either minimizing it in
+stable conditions, or magnifying it in unstable conditions. In neutral conditions, the
+mixing length (and $K_v$) grows propotional to the distance from the surface within the
+surface layer. 
 
-General form for $\phi(\zeta)$ where $\zeta = z/L$
-\begin{eqnarray}\label{EqPhiB}
+Several expressions for $\phi(\zeta)$ have been suggested by various authors with a
+general form given below.
+
+\begin{eqnarray}\label{VarDiff_Eq_PhiB}
 \phi &=& \left\{ \begin{array} {l@{\quad \quad}l}
  \left[ 1+\gamma \zeta\right]^{\alpha}  &:  \mathrm{if}\,\,\, \zeta < 0 \,\,\, \mathrm{unstable} \\
 1                                       &:  \mathrm{if}\,\,\, \zeta = 0 \,\,\, \mathrm{neutral} \\
@@ -361,16 +370,7 @@ General form for $\phi(\zeta)$ where $\zeta = z/L$
 \right.
 \end{eqnarray}
 
-Panofsky reports that an exponent $\alpha=-1/3$ is theoretically preferable
-since $\phi$ follows $(z/L)^{-1/3}$ for large $-z/L$ (free-convection condition) Pan. p134.
-$\beta$ should be from 4.7 to 5.2 (Pan. p136.).
-%The turbulent Prandtl number, which is the
-%ratio of the eddy diffusion coefficient for momentum to that of energy
-%\begin{equation}
-%\mathrm{Pr_t} = \frac{K_{m,zx}}{K_{h,zz}}
-%\end{equation}
-%should be about 0.74 when $\kappa=0.35$ or around 0.95 if $\kappa=0.4$.
-
+Frequently used values are given below.
 \small
 \begin{table}[htbp]
 \begin{center}
@@ -379,9 +379,57 @@ $\beta$ should be from 4.7 to 5.2 (Pan. p136.).
 Author & $\alpha$ & $\beta$ & $\gamma$\\
 \hline
 Businger-Dyer (1971)     & -1/4 & 5.0 & -16.0 \\
-Ulke (2000)                & -1/2 & 9.2 & -13.0 \\
-Carl (1973)                & -1/3 & 5.0 & -15.0 \\
-Troen-Mahrt, (1986)            & -1/3 & 5.0 & -7.0  \\
+Carl (1973)              & -1/3 & 5.0 & -15.0 \\
+\hline
+\end{tabular}
+\caption{\label{Tab_VarDiff_phisurf}Coefficients for $\phi$ in the surface layer}
+\end{center}
+\end{table}
+\normalsize
+
+Panofsky reports that an exponent $\alpha=-1/3$ is theoretically preferable
+since $\phi$ follows $(z/L)^{-1/3}$ for large $-z/L$ (free-convection condition) Pan. p134.
+$\beta$ should be from 4.7 to 5.2 (Pan. p136.).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mixed Layer}
+In the mixed layer above the surface layer, but below the atmospheric boundary layer,
+the logarithmic velocity profile as well as all other implications of the similarity
+solution break down. To extend $K_v$ above the surface layer, a few modifications to
+Eq. \ref{VarDiff_Eq_PhiB} have been proposed to scale back the increase in $K_v$ with
+height to match the free-atmosphere conditions above the ABL.
+
+For neutral and stable conditions, one method is the use a decaying exponential scale
+factor.
+\begin{equation}\label{VarDiff_Eq_Kz_Mixed_Exp}
+K_z = \frac{u_{*} \kappa z}{\phi} \exp \left( -\frac{8 f z}{u_*} \right)
+\end{equation}
+In this equation, $f$ is the Coriolis parameter described above and $f/u_*$ is
+the Ekman layer height. This formula can be used for all heights as the exponential
+term ensures that $K_z$ from the surface layer approximation becomes vanishingly
+small above the ABL.
+
+An alternative formulation is to scale Eq. \ref{VarDiff_Eq_PhiB} by a polynomial taper
+up to the ABL.
+\begin{equation}\label{VarDiff_Eq_Kz_Mixed_Poly}
+K_z = \frac{u_{*} \kappa z}{\phi} \left( 1-\frac{z}{h_{BL}} \right)^p
+\end{equation}
+This equation is not valid above the ABL.
+
+In both forms above, the general expression for $\phi(\zeta)$ given in Eq. \ref{VarDiff_Eq_PhiB}
+can be used, but the coefficients should be modified to account for the deviation in the
+surface layer due to the scaling term.
+
+\small
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{| c | c | c | c | c |}
+\hline
+Author & $\alpha$ & $\beta$ & $\gamma$ & p \\
+\hline
+Businger-Dyer (1971)     & -1/4 & 5.0 & -16.0 & N/A \\
+Troen-Mahrt, (1986)      & -1/3 & 5.0 & -7.0  & 2 \\
+Ulke (2000)              & -1/2 & 9.2 & -13.0 & 1 \\
 \hline
 \end{tabular}
 \caption{\label{tab:ProjOpt}Ash3d projection options}
