@@ -51,7 +51,7 @@ of platforms. Ash3d currently can read topography files provided in one of
 several formats: NetCDF, binary, ASCII and with GeoTIFF planned.
 \subsection{Gridded lon/lat; NetCDF}
 A few global topography/bathymetry datasets are provided in NetCDF format such
-as ETOPO \cite{etopo} or GEBCO \cite{gebco} at a variety of resolutions, typically
+as ETOPO \cite{ETOPO2022} or GEBCO \cite{GEBCO2024} at a variety of resolutions, typically
 60, 30 or 15 arcseconds. The NetCDF reader is not tied to these specific products,
 but assumes that the data is provided as a 2-D array with a name of either
 \texttt{z} or \texttt{elevation} and with dimensions named \texttt{lon} and
@@ -277,7 +277,7 @@ Y &= y &  \frac{\partial}{\partial y} &= \frac{\partial}{\partial Y}-\frac{\part
 \end{align*}
 In this case, the Jacobian remains $J = 1$.
 
-Following the suggestions in \cite{Slordal02}, if we apply the substitution for the vertical
+Following the suggestions in \cite{Slordal2002}, if we apply the substitution for the vertical
 velocity in the transformed coordinate
 \begin{equation}\label{v_sub1}
 \omega = w - u \frac{\partial h}{\partial x} - v \frac{\partial h}{\partial y} =
@@ -314,7 +314,7 @@ Y &= y &  \frac{\partial}{\partial y} &= \frac{\partial }{\partial Y} + \frac{Z-
 where $Z=Z_{top}$ and $D(x,y)=Z-h(x,y)$, i.e. the depth of the computational grid at that $(x,y)$.
 The Jacobian in this case is just $J=\frac{D}{Z}$.
 
-This coordinate system is also outlined in \cite{Slordal02}, with a vertical velocity
+This coordinate system is also outlined in \cite{Slordal2002}, with a vertical velocity
 substitution of
 \begin{equation}\label{v_sub2}
 \omega = \frac{Z}{D}w - \frac{Z-\sigma}{D}u \frac{\partial h}{\partial x} - \frac{Z-\sigma}{D} v \frac{\partial h}{\partial y}

@@ -373,7 +373,7 @@ Initial/final solution for TC5 along with peak deformation.
 
 The initial concentration distribution is deformed into a long strand at $t=2$ (figure c),
 then the deformation reverses back to the initial configuration.  A similar test in
-Cartesian coordinates %\citep[Sec. 5.7.4]{Durran99} 
+Cartesian coordinates %\citep[Sec. 5.7.4]{Durran1999}
 was also conducted.  Versions of the
 test cases for both Cartesian and spherical coordinates are shown.
 
@@ -402,9 +402,9 @@ were conducted along the coordinate axis to verify convergence properties.  Simp
 tests such as these are useful for identifying obvious bugs in the code; however,
 they do not fully test all aspects of the algorithm.  In general, analytic solutions
 are not available for the advection-diffusion-sedimentation equation in a non-trivial
-wind field with realistic pressure and temperature profiles (See \cite{Stockie11} for
+wind field with realistic pressure and temperature profiles (See \cite{Stockie2011} for
 solutions in simplified atmospheric conditions.).  However, the Method of Manufactured
-Solutions (MMS) %\citep{Roache09,Salari00}
+Solutions (MMS) %\citep{Roache2009,Salari2000}
 provides some guidance on how to generate
 analytic solutions for non-trivial atmospheric conditions which will invoke all
 components of the algorithm, all terms of the governing equation and boundary conditions.
@@ -438,7 +438,7 @@ accuracy of the full algorithm.
 We use the following domain for the MMS test.
 $-100<x<100\, \mathrm{km}$, $-100<y<100\, \mathrm{km}$, $0<z<20 \, \mathrm{km}$.
 We use a standard atmosphere for the pressure and temperature profiles given by
-%\citet[chap. 1]{Wallace77}
+%\citet[chap. 1]{Wallace1977}
 :  $P = P_0 \exp (-z/\delta)$ and $T = T_0 + \theta z$.
 For the wind velocity structure, we adopt a horizontal model to mimic wind shear with small
 vertical perturbations:

@@ -67,13 +67,13 @@ Line 1 gives either the volcano name or the volcano’s Smithsonian ID.
 If the number begins with 0 or 1, then the volcano database used is
 the Catalog of Active Volcanoes of the World [Siebert et al., 2010].
 If the number does not begin with 0 or 1, then the Volcanoes of the
-World (VOTW) database is used
-[Global Volcanism Program, 2013. Volcanoes of the World, v. 4.9.4 (17 Mar 2021).
-Venzke, E (ed.). Smithsonian Institution.
-Downloaded 13 Apr 2021. https://doi.org/10.5479/si.GVP.VOTW4-2013. ].
+World (VOTW) database is used \cite{GVP2024}.
+%[Global Volcanism Program, 2013. Volcanoes of the World, v. 4.9.4 (17 Mar 2021).
+%Venzke, E (ed.). Smithsonian Institution.
+%Downloaded 13 Apr 2021. https://doi.org/10.5479/si.GVP.VOTW4-2013. ].
 If the CAVW number is given, Ash3d looks up the eruption source
 parameters (ESP) for this volcano in the ESP spreadsheet of
-\cite{Mastin09a}. In the example file, the volcano name
+\cite{Mastin2009a}. In the example file, the volcano name
 is given.
 
 Line 2 gives the projection parameters for this simulation.
@@ -234,7 +234,7 @@ interpreted as the height of the umbrella cloud (ash in the overshooting
 top, above the umbrella cloud, is assumed to collapse gravitationally
 back into the umbrella rather than being advected horizontally by winds at that
 altitude). This source type is most appropriate for eruptions of VEI=6 and larger,
-and may be appropriate for some VEI 4 or 5 eruptions \cite{Mastin20}. Source
+and may be appropriate for some VEI 4 or 5 eruptions \cite{Mastin2020}. Source
 nodes for these cases consist of a column of nodes extending from the vent
 elevation (if provided) to 75\% of the umbrella top height, or from sea level
 (if vent elevation is not provided) to 75\% of the umbrella top height. From
@@ -243,7 +243,7 @@ in plan view (Figure \ref{FigVertMassDistFormat}b). Within the height range of
 the $3 \times 3$ matrix, from the vent outward to the edge of the expanding
 umbrella cloud, radial wind vectors are added to the ambient wind field.
 The magnitude of the radial wind vectors is calculated using corrected
-Equations (2) and (3) of \cite{Costa13}, and is proportional to the mass
+Equations (2) and (3) of \cite{Costa2013}, and is proportional to the mass
 eruption rate.
 The only difference between \texttt{umbrella} and \texttt{umbrella\_air} is that the
 latter is used only for simulations of airborne ash, where a single grain
@@ -288,7 +288,7 @@ If the year is zero as in the example input file, the model is run in forecast
 mode where the hour is interpreted as the number of hours after the start time
 of the wind files. In addition, if the duration, plume height, or erupted volume
 is negative, it is replaced with the default ESP value for that volcano from the
-spreadsheet of \cite{Mastin09b}.
+spreadsheet of \cite{Mastin2009b}.
 
 If the source type is \texttt{profile}, then the eruption lines are read as
 three integers, five real numbers, and an integer where
@@ -798,7 +798,7 @@ example) with a
 very low settling velocity, is frequently adequate to display general cloud movement.
 When simulating deposits, it is best to use at least a half dozen grain sizes: fewer
 grain sizes tend to produce secondary thickness maxima as an artifact
-\cite{Mastin12}.
+\cite{Mastin2012}.
 
 Line 1 of Block 7 consists first of an integer giving the number of size bins
 (\texttt{nsize}).
@@ -826,11 +826,11 @@ N/A & Wilson/Huang & $F \,[0.44]$ \\
 \end{center}
 \end{table}
 
-If \texttt{FV\_ID} is not given or \texttt{FV\_ID}=1, the Wilson and Huang \cite{Wilson79}
+If \texttt{FV\_ID} is not given or \texttt{FV\_ID}=1, the Wilson and Huang \cite{Wilson1979}
 model is used.
-If \texttt{FV\_ID=2}, the Wilson and Huang model with a slip-flow correction is used \cite{Seinfeld06}.
+If \texttt{FV\_ID=2}, the Wilson and Huang model with a slip-flow correction is used \cite{Seinfeld2006}.
 If \texttt{FV\_ID=3}, the modification to the Wilson and Huang model outlined
-by \cite{Pfeiffer05} is used. If \texttt{FV\_ID}=4, the model of \cite{Ganser93} is used
+by \cite{Pfeiffer2005} is used. If \texttt{FV\_ID}=4, the model of \cite{Ganser1993} is used
 and if 6, then the Ganser model with the slip-flow correction. If
 \texttt{FV\_ID}=6, Stokes flow for spherical particles with a slip-flow correction is used.
 Optionally, fall velocities can be deactivated by setting \texttt{FV\_ID}=0.  In \ref{tab:FallModelOpt},
@@ -858,11 +858,11 @@ If three parameters: Ash3d reads the first as grain size in millimeters, the sec
 as the mass fraction, and the third as the density in $\mathrm{kg/m^3}$.
 Ash3d calculates settling
 velocity of these particles assuming a shape factor ($F$) of $0.44$, which is the average
-of values measured by Wilson and Huang \cite{Wilson79}. The settling velocity in this case
+of values measured by Wilson and Huang \cite{Wilson1979}. The settling velocity in this case
 depends on air density and viscosity. Air density is calculated from the pressure
 and temperature at a
 given elevation (obtained from the NWP model data). The viscosity is calculated from
-Sutherland’s Law \cite{Jacobson05}, p. 201. The example below shows the grain-size
+Sutherland’s Law \cite{Jacobson2005}, p. 201. The example below shows the grain-size
 distribution used for the airborne runs on the Ash3d webserver.
 \small
 \begin{verbatim}
@@ -1101,7 +1101,7 @@ The full list of parameters that can be reset are given in Table \ref{tab:ResetP
 \texttt{THICKNESS\_THRESH} & 1.0e-3   & $\mathrm{mm}$      &  Threshold value to output deposit \\
 \texttt{StopValue\_FracAshDep} & 0.99 & unitless           &  Stop condition for fraction deposited \\
 \texttt{DBZ\_THRESH}       & -2.0e+1  & $\mathrm{dB}$      &  Threshold value to output radar reflectivity \\
-\texttt{VelMod\_umb}       & 1        & case ID            &  Umbrella velocity model: 1 \cite{Costa14} or 2 \cite{Webster20} \\
+\texttt{VelMod\_umb}       & 1        & case ID            &  Umbrella velocity model: 1 \cite{Costa2014} or 2 \cite{Webster2020} \\
 \texttt{lambda\_umb}       & 0.2      & unitless           &  Suzuki constant for umbrella cloud \\
 \texttt{N\_BV\_umb}        & 0.02     & $\mathrm{s^{-1}}$  &  Brunt-Va\"isala frequency for umbrella cloud \\
 \texttt{k\_entrainment\_umb} & 0.1    & unitless           &  Entrainment coefficient for umbrella cloud \\
@@ -1149,7 +1149,7 @@ where the vertical coordinant, $z$, is replaced by $\sigma$ according to the fol
 where $h(x,y)$ is the surface elevation in $\mathrm{km}$.
 The second line starts with the topography data format code
 (1=gridded netcdf, 2=gridded binary, 3=ESRI ASCII) followed by the smoothing
-radius (in $\mathrm{km}$.
+radius (in $\mathrm{km}$).
 The third line is the name of the topography file. The use of topography is
 more thoroughly described in Appendix \ref{ChapAppendTopo}.
 

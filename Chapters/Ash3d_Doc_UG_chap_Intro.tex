@@ -1,17 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}\label{ChapIntro}
 In 2012, we introduced Ash3d, a volcanic ash transport and dispersion model
-used to forecast ash-cloud movement and ash deposition during eruptions \cite{Schwaiger12}.
+used to forecast ash-cloud movement and ash deposition during eruptions \cite{Schwaiger2012}.
 This was followed in 2013 by the introduction of a web interface that allowed any user
-with an account to simulate ash-cloud transport and deposition \cite{Mastin13b}.
+with an account to simulate ash-cloud transport and deposition \cite{Mastin2013b}.
 Subsequently, we have used Ash3d to study ash transport during recent
-eruptions \cite{Mastin13a}, to evaluate the sensitivity of model inputs to
-outcomes \cite{Mastin16}, examine effects of umbrella-cloud growth on eruption
-dynamics \cite{Mastin14,Mastin20a},  study whether and how ash from New Zealand
-supereruptions could be deposited in Antarctica \cite{Dunbar17}, develop
-probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin20b}
-and Taupo, New Zealand \cite{Barker19}, and examine Bayesian ensemble techniques
-to improve ash-cloud forecast accuracy \cite{Denlinger12}.
+eruptions \cite{Mastin2013a}, to evaluate the sensitivity of model inputs to
+outcomes \cite{Mastin2016}, examine effects of umbrella-cloud growth on eruption
+dynamics \cite{Mastin2014,Mastin2020a},  study whether and how ash from New Zealand
+supereruptions could be deposited in Antarctica \cite{Dunbar2017}, develop
+probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin2020b}
+and Taupo, New Zealand \cite{Barker2019}, and examine Bayesian ensemble techniques
+to improve ash-cloud forecast accuracy \cite{Denlinger2012}.
 
 Development of a web interface allowed users all over the world to use the model
 without downloading and compiling the software or downloading large amounts of
@@ -37,7 +37,7 @@ numerical methods or modeling.
 We begin with a brief overview of Ash3d, describe simulations using an ASCII input
 file, and provide some guidance on post-processing the results. Use of Ash3d through
 the USGS web-based interface is briefly summarized, but is more formally presented
-in a companion document \cite{Mastin13a}. Ash3d is still in development, hence its
+in a companion document \cite{Mastin2013a}. Ash3d is still in development, hence its
 capabilities and documentation are likely to be revised in coming years.
 
 \section{Model Overview}\label{ChapIntroSecModelOverview}
@@ -63,7 +63,7 @@ Users may specify
 that the ash be concentrated in a single cell, distributed evenly throughout
 the column, distributed along a user-specified vertical profile, or distributed
 vertically following the Suzuki equation
-(Figure \ref{FigAsh3dGrid}) \cite{Carey96,Suzuki83}.
+(Figure \ref{FigAsh3dGrid}) \cite{Carey1996,Suzuki1983}.
 \begin{equation}
  \frac{\mathrm{d}S}{\mathrm{d}z} = S\frac{k^2\left( 1-z/H \right)\exp\left[k\left(z/H-1 \right) \right]}
  {H \left[1-\left(1+k \right)\exp \left( -k\right) \right]} \label{EqSuz}
@@ -124,7 +124,7 @@ diffusivity, and $S$ is a source term.  For most source types, $S$
 is non-zero only in the column of nodes above the volcano.  The
 exception is the umbrella cloud source term which includes a
 $3 \times 3$ group of cells centered over the vent.
-The settling velocity is determined via \cite[p.182]{Bird60}
+The settling velocity is determined via \cite[p.182]{Bird1960}
 \begin{equation}
 v_s=\sqrt{\frac{4d\rho_p g}{3C_d\rho_a}}\label{EqFallVel}
 \end{equation}
@@ -133,7 +133,7 @@ the acceleration of gravity, $C_d$ is the drag coefficient, and $\rho_a$
 is the density of air.
 Ash3d can use different models of $C_d$ to account for non-spherical particles.
 By default, Ash3d calculates the settling
-velocity of each particle size using equations of Wilson and Huang \cite{Wilson79}
+velocity of each particle size using equations of Wilson and Huang \cite{Wilson1979}
 for non-spherical particles.
 \begin{equation}
 C_d = \frac{24}{\mathrm{Re}}F^{-0.828}+2 \sqrt{1.07-F}\label{EqDragWH}
@@ -141,15 +141,15 @@ C_d = \frac{24}{\mathrm{Re}}F^{-0.828}+2 \sqrt{1.07-F}\label{EqDragWH}
 $\mathrm{Re}$ is the Reynolds number and $F$ is a shape factor (see
 Appendix \ref{ChapAppendFallDynamics} for more details.).
 Alternative models that can be used include an
-optional Cunningham slip correction factor \cite[p.407]{Seinfeld06},
+optional Cunningham slip correction factor \cite[p.407]{Seinfeld2006},
 which can increase the fall rate for small ($<30 \,\mathrm{\mu m}$)
 particles at high elevation;
-Stokes flow; and modifications to Wilson and Huang by \cite{Ganser93} and
-\cite{Pfeiffer05}.
+Stokes flow; and modifications to Wilson and Huang by \cite{Ganser1993} and
+\cite{Pfeiffer2005}.
 
 The advection term of Eq. \ref{EqGovEqVect} (the second term on the left-hand side
 (LHS)) is calculated explicitly using the Donor Cell Upwind method of
-solution (see \cite{Schwaiger12} for details). The diffusion term (third
+solution (see \cite{Schwaiger2012} for details). The diffusion term (third
 LHS term) is calculated implicitly at the end of each time step. The diffusivity,
 $K$, can be spatially variable and can be a function of the local meteorological
 conditions. We have found that modeled clouds match well with observed ones

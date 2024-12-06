@@ -44,9 +44,9 @@ Donor-Cell-Update (DCU), Corner Transport Update (CTU), and Semi-Lagrange (SL).
 In this public version of the software, only DCU is included.
 
 The implementation of DCU follows closely with the equations presented in
-\cite{LeVeque03}.
+\cite{LeVeque2003}.
 
-Start with the fluctuation form (Eq. 6.59 from \cite{LeVeque03}) of the update in $Q$ to
+Start with the fluctuation form (Eq. 6.59 from \cite{LeVeque2003}) of the update in $Q$ to
 a cell $i$ given below.
 \begin{equation}\label{EqQupdate}
 Q^{n+1}_i = Q^{n}_i - \frac{\Delta t}{\Delta x} 
@@ -74,9 +74,9 @@ each other in Eq. \ref{EqQupdate}, but we use
 F_i = (u^{+}_{i-\frac{1}{2}} + u^{-}_{i+\frac{1}{2}})Q_i
 \end{equation}
 as suggested by
-Eq 9.39 of \cite{LeVeque03} so that the cell-centered flux values are an approximation of
+Eq 9.39 of \cite{LeVeque2003} so that the cell-centered flux values are an approximation of
 the flux in cell $i$.  Interface fluxes are given by (the un-numbered
-equation of \cite{LeVeque03} between 9.35 and 9.36):
+equation of \cite{LeVeque2003} between 9.35 and 9.36):
 \begin{equation}\label{EqIntfluxdef}
 F_{i-\frac{1}{2}} = u^{+}_{i-\frac{1}{2}} Q_{i-1} + u^{-}_{i-\frac{1}{2}} Q_{i}
 \end{equation}
@@ -116,7 +116,7 @@ F_i = (u^{+}_{i-\frac{1}{2}} + u^{-}_{i+\frac{1}{2}})Q_i + \frac{u_i q_i}{2D_i}
 \end{equation}
 where topography is included via the variable $D_i=z_{top}-z_{surf}$, i.e. the depth of the model.
 
-The higher order terms of Eq \ref{EqQupdate} above are given by Eq. 6.60 of \cite{LeVeque03}.
+The higher order terms of Eq \ref{EqQupdate} above are given by Eq. 6.60 of \cite{LeVeque2003}.
 \begin{equation}\label{EqHOTLeVeque}
 \widetilde{F}_{i-\frac{1}{2}} = \frac{1}{2}\sum_{p=1}^{m} \left| s^p_{i-\frac{1}{2}}  \right|
 \left( 1 - \frac{\Delta t}{\Delta x} \left| s^p_{i-\frac{1}{2}}  \right|  \right)
@@ -139,7 +139,7 @@ function
 \end{equation}
 then setting
 $\widetilde{\Delta Q} = \phi\left( \theta_{i-\frac{1}{2}} \right) \Delta Q_{i-\frac{1}{2}}$
-(Eq. 6.34 of \cite{LeVeque03}):
+(Eq. 6.34 of \cite{LeVeque2003}):
 \begin{itemize}
  \item No limiter: $\phi\left( \theta \right) = 0  \Rightarrow \widetilde{\Delta Q}_{i-\frac{1}{2}} = 0$
        (Note: this sets $\widetilde{F}_{i-\frac{1}{2}} = 0$)
@@ -207,7 +207,7 @@ Ash3d uses two implementations of the diffusion term: the explicit finite differ
 discretization and the implicit Crank-Nicolson method.  
 
 \subsection{Explicit finite difference}
-Using Eq. 4.11 of \cite{LeVeque03}:
+Using Eq. 4.11 of \cite{LeVeque2003}:
 \begin{equation}\label{EqDiffFD_LV}
 Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{\Delta x^2} \left[ k_{i+\frac{1}{2}}\left( Q^{n}_{i+1}-Q^{n}_{i}\right) -
 k_{i-\frac{1}{2}}\left( Q^{n}_{i}-Q^{n}_{i-1}\right) \right]
@@ -229,7 +229,7 @@ Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{\kappa_i^2} \left[
 Note that this method is stable when $\Delta t = \mathcal{O}(\Delta x^2)$
 
 \subsection{Implicit Crank-Nicolson}
-Using Eq. 4.13 of \cite{LeVeque03}:
+Using Eq. 4.13 of \cite{LeVeque2003}:
 \begin{equation}\label{EqDiffCN_LV}
 Q^{n+1}_i = Q^{n}_i + \frac{\Delta t}{2\Delta x^2} \left[ 
 k_{I+1}\Delta Q^{n}_{I+1} - k_{I}\Delta Q^{n}_{I} +

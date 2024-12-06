@@ -214,7 +214,7 @@ when $\left| \frac{u_*}{f L}\right| < 4$, the ABL height is given by
 \begin{equation}\label{VarDiff_Eq_ABL2_1}
 h_{ABL} = \frac{c_n u_*}{|f|}
 \end{equation}
-Eq. \cite{VarDiff_Eq_ABL2_1} becomes singular with $\phi \rightarrow 0$, so a minumum
+Eq. \ref{VarDiff_Eq_ABL2_1} becomes singular with $\phi \rightarrow 0$, so a minumum
 of $\phi=20^{\circ}$ is used. $c_n$ can be from 0.07 to 0.5, but we use $c_n=0.2$.
 
 For stable conditions, where $\left| \frac{u_*}{f L}\right| \ge 4$, the ABL height is given by
@@ -271,7 +271,7 @@ K_h = C \Delta x \Delta y \sqrt{\left[ \frac{\partial u}{\partial x} -\frac{\par
 \end{equation}
 
 The first term in the radical is the ``horizontal tension'' term and the second is
-the ``horizontal shearing strain'' term %\cite{Griffies00}.
+the ``horizontal shearing strain'' term \cite{Griffies2000}.
 As a whole, the radical has units of $\mathrm{t}^{-1}$.
 The length scale should be proportional to the maximum wavenumber represented by the grid.
 Since this is determined by the grid of the NWP data, the $\Delta x$ and $\Delta y$ are the 
@@ -315,7 +315,7 @@ where the mixing length, $\ell_m$ follows the relation
 %\ell_m = \frac{\kappa z}{1+ \frac{\kappa z}{\lambda_m}}
 %\end{equation}
 For stable or weakly unstable conditions, the stability function can be expressed as
-$\mathcal{F}(\mathrm{Ri}) = (\mathrm{Ri}_c-\mathrm{Ri})/\mathrm{Ri}$ \cite{Jacobson}, %Jacobson Eq.8.70
+$\mathcal{F}(\mathrm{Ri}) = (\mathrm{Ri}_c-\mathrm{Ri})/\mathrm{Ri}$ \cite{Jacobson2005}, %Jacobson Eq.8.70
 but this breaks down as $\mathrm{Ri}$ becomes more negative. In these situations, vertical mixing
 is dominated by free convection and the vertical diffusivity model does not apply.
 
@@ -428,8 +428,8 @@ surface layer due to the scaling term.
 Author & $\alpha$ & $\beta$ & $\gamma$ & p \\
 \hline
 Businger-Dyer (1971)     & -1/4 & 5.0 & -16.0 & N/A \\
-Troen-Mahrt, (1986)      & -1/3 & 5.0 & -7.0  & 2 \\
-Ulke (2000)              & -1/2 & 9.2 & -13.0 & 1 \\
+Troen-Mahrt (1986) \cite{Troen1986}      & -1/3 & 5.0 & -7.0  & 2 \\
+Ulke (2000)        \cite{Ulke2000}      & -1/2 & 9.2 & -13.0 & 1 \\
 \hline
 \end{tabular}
 \caption{\label{tab:ProjOpt}Ash3d projection options}

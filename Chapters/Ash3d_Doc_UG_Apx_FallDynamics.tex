@@ -2,7 +2,7 @@
 
 There are several models of the fall dynamics of ash particles that have
 been implemented in Ash3d.  All calculate the fall velocity of a particle
-according to the following equation \cite[p.182]{Bird60}:
+according to the following equation \cite[p.182]{Bird1960}:
 \begin{equation}
 v_s=\sqrt{\frac{4d\rho g}{3C_d\rho_a}}\label{EqFallVel}
 \end{equation}
@@ -31,7 +31,7 @@ by less than 0.1\%.
 Several atmospheric quantities are needed to calculate the fall velocity,
 primarily the density and viscosity of air.
 The density is calculated via the ideal gas law and the viscosity via
-Sutherland's Law \cite[p.102, Eq.4.54]{Jacobson05}
+Sutherland's Law \cite[p.102, Eq.4.54]{Jacobson2005}
 \begin{equation}
 \eta_a= 1.8325 \times 10^{-5} \left( \frac{416.16}{T+120}\right) 
 \left( \frac{T}{296.16}\right)^{1.5}
@@ -47,7 +47,7 @@ C_c = 1+\mathrm{Kn}\left[\alpha+\beta \exp{\left(-\frac{\gamma}{\mathrm{Kn}}\rig
 \end{equation}
 where the particle Knudsen number is given by $\mathrm{Kn}=2 \lambda_a / d$.
 Ash3d uses values for the empirical coefficients $\alpha$, $\beta$, and
-$\gamma$ given by \cite[p.407, Eq.9.34]{Seinfeld06}.
+$\gamma$ given by \cite[p.407, Eq.9.34]{Seinfeld2006}.
 The air mean free path, $\lambda_a$, is given by \cite[p.399, Eq.9.6]{Seinfeld06}:
 \begin{equation}
 \lambda_a = \frac{2 \eta_a}{P\sqrt{8M_B/\pi R T}}\label{EqLambda}
@@ -69,7 +69,7 @@ the particle:  $(B+C)/2A$.
 
 If using the Cunningham slip-flow correction, for ellipsoidal particles,
 Eq. \ref{EqCc} must be adjusted by scaling
-$\mathrm{Kn}$ according to \cite[Table 1]{Dahneke73c}.
+$\mathrm{Kn}$ according to \cite[Table 1]{Dahneke1973c}.
 
 Equation \ref{EqDragWH} was empirically determined from fall data from volcanic
 particles in the size range $30 \, \mathrm{\mu m} < d < 1500 \, \mathrm{\mu m}$
@@ -95,7 +95,7 @@ The drag coefficient for the Ganser model is given by
 %slip-flow corrections are minor, however for $F=0.8$, it leads to increases in fall
 %velocities by $2\%$, $21\%$, and $348\%$ for $d=10 \,\mathrm{\mu m}$, $1 \,\mathrm{\mu m}$
 %and $0.1 \,\mathrm{\mu m}$ respectively.
-%\cite{Rose09} calculated that ash in this size range can be a significant component
+%\cite{Rose2009} calculated that ash in this size range can be a significant component
 %($30\%$ to $>50\%$) of the total grain size distribution and noted that sedimentation
 %rates are observed to be be much faster than that predicted by Stokes Law.
 \begin{equation}\label{EqFVGansCd}
