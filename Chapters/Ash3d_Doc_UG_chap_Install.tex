@@ -161,8 +161,15 @@ calculated each time-step.  This might be necessary for some processes such as
 the radial spreading of umbrella clouds.  A second flag that can be used is
 \texttt{-DFAST\_SUBGRID} which limits the flux calculations to just the bounding
 box of the current airborne ash cloud.
- \item \texttt{USEPLPLOT = F}\\
- \texttt{USEDISLIN = F}\\
+ \item \texttt{USEZIP = T}\\
+The utility \texttt{zip} is needed for bundling time-series accumulation plots
+at airport/POI sites in the KMZ output file \texttt{.kmz}. It is also used in
+post-processing scripts to compress KML file to KMZ files.
+If \texttt{zip} is not
+installed on your system, you can disable calls to it by setting \texttt{USEZIP = F}.
+ \item \texttt{USEDISLIN = F}\\
+ \texttt{USEPLPLOT = F}\\
+ \texttt{USEGNUPLOT = T}\\
  \texttt{USEGMT = F}\\
  These allow the inclusion of various plotting libraries to be build into the Ash3d
 post-processing tools, allowing the direct creation of plots from \texttt{Ash3d\_PostProc}.
@@ -170,8 +177,11 @@ PLplot is often available as a distribution package and can be installed via:
 \texttt{yum install plplot plplot-devel plplot-fortran-devel}. Some backward-incompatibilities
 were introduced in version 5.13 so please use this version or newer. DISLIN is another
 graphics package that allow direct creation of plots, but has the added advantage of
-access to contour lines needed for creating shapefiles. Generic Mapping Tools (GMT)
-is typically used through temporary control files and system calls.  Set \texttt{USEGMT}
+access to contour lines needed for creating shapefiles. Gnuplot is the default plotting
+package and is run via temporary control files and system calls. If gnuplot is not installed
+on your system, it can be turned off by setting \texttt{USEGNUPLOT = F}.
+Generic Mapping Tools (GMT)
+is also typically used through temporary control files and system calls.  Set \texttt{USEGMT}
 to \texttt{T} only to use the GMT Fortran bindings to the API. This currently is not
 fully functional.
  \item \texttt{LIMITER = LIM\_SUPERBEE}\\

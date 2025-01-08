@@ -9,7 +9,49 @@
 \normalsize
 
 \section{Airport/Point-of-Interest examples}\label{ChapAppendSecPOI}
-GlobalAirports\_ewert.txt
+Ash3d can read an external file that lists Airports and/or points of interest (POI).
+An example of the format for this file can be seen in the global list of
+6117 airports included in the \texttt{volcano-ash3d} repository in
+\texttt{GlobalAirports\_ewert.txt}. This file is copied to the install
+location \texttt{INSTALLDIR/share} where it is read at run-time if Ash3d
+is compiled with \texttt{USEEXTDATA = T} in the makefile. The file has the
+following format. The first line is a header line describing the columns.
+All following lines must contain the coordinates of the point-of-interest in
+the first 50 characters of each line.
+The latitude and longitude values are populated first with the first two columns
+of data, then the x,y projected values if columns 3 and 4 are present.
+Characters 51-53 contain the 3-char ICAO airport code. Characters 55-89 contain
+the station name, which is usually the airport name with the state and/or
+country.
+
+Here is the top few lines of \texttt{GlobalAirports\_ewert.txt} as an example.
+\footnotesize
+\begin{verbatim}
+[volcano-ash3d]$ head share/GlobalAirports_ewert.txt 
+#   Latitude   Longitude           x           y  Code Location
+    41.60833   -88.09417                          II2  Lewis University Airport, IL
+    34.68861   -85.29056                          GA1  Barwick Lafayette Airport, GA
+    44.25083   -90.85528                          WI1  Black River Falls Area Airport, WI
+    50.40000   136.95000                          KXK  Kimsomolsk Na Amure, Russia (European)
+    58.36528  -152.69667                          A33  Hidden Lake, AK
+    57.51139  -152.95278                          A32  Hidden Basin, AK
+    58.36194  -152.31222                          A34  Laura Lake, AK
+    57.64222  -153.02194                          A30  Terror Lake, AK
+    57.32306  -153.14944                          A29  Kiluda Bay, AK
+\end{verbatim}
+\normalsize
+
+\small
+\begin{verbatim}
+#   Latitude   Longitude           x           y  Code Location
+    46.01217  -121.90125                               ASW6_24_1
+    46.05025  -121.91429                               ASW6_24_2
+    46.06452  -121.98259                               ASW6_24_3
+\end{verbatim}
+\normalsize
+
+MAXAIRPORTS = 10000
+6117
 
 \section{Volcano file}
 VotW\_ESP\_v12\_csv.txt
