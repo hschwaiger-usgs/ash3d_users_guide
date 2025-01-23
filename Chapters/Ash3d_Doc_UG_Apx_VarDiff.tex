@@ -2,23 +2,32 @@
 The resolution of the weather forecast (or reanalysis) data will not capture sub-grid
 processes due to turbulent mixing in the atmosphere. To approximate this mixing, Ash3d
 uses a diffusion term in the transport equation. A homogeneous and isotropic diffusivity
-can be specified in the Ash3d control file, however it can be more realistic to 
+can be specified in block 1 of the Ash3d control file, however it can be more realistic to 
 treat the vertical and horizontal diffusivities separately and to have the values
 depend on local atmospheric conditions.
 
-The basic approach is to recognize that atmosphere is stratified and can be divided into
+The basic approach is to recognize that the atmosphere is stratified and can be divided into
 several layers within which the fundamental length-scale of turbulent mixing varies.
 Broadly speaking, the atmosphere can be divided based on the temperature structure,
 with the lowest level (the troposphere) consisting of a temperature profile that
 decreases with altitude. This layer is characterized by strong vertical mixing and
 contains the majority of the mass of the atmosphere and nearly all the atmospheric
-water, essentially all the `weather'. This decrease in temperature with height is
-interupted by the presence of ozone which reacts with solar radiation in a process that
-releases heat, causing the temperature profile to increase with altitude. This layer
-with the increase in temperature with height (stratosphere) is characterized by
-minimal vertical mixing.
-The change in lapse rate of the temperature defines the boundary between these layers
-and is called the `tropopause'. Above the stratosphere, the temperature again decreases with
+water, essentially all the `weather' \ref{WallaceHobbs1977}.
+The increased presence of ozone in altitudes of around 20-30 km results in an
+absorbtion of solar radiation. This input of heat energy causes temperatures to
+increase in height, leading to stable, stratified conditions with minimal vertical
+mixing. The boundary between the troposphere and this layer (the stratosphere) is called
+the tropopause and is located at the altitude where temperatures no longer decrease with
+height.
+%This decrease in temperature with height is
+%interupted by the presence of ozone which reacts with solar radiation in a process that
+%releases heat, causing the temperature profile to increase with altitude.
+%This layer
+%with the increase in temperature with height (stratosphere) is characterized by
+%minimal vertical mixing.
+%The change in lapse rate of the temperature defines the boundary between these layers
+%and is called the `tropopause'.
+Above the region with excess ozone, the temperature again decreases with
 altitude in the mesosphere, then once again increases with height in the thermosphere
 where incoming solar radiation once again plays a significant role.
 
