@@ -446,5 +446,51 @@ Ulke (2000)        \cite{Ulke2000}      & -1/2 & 9.2 & -13.0 & 1 \\
 \end{table}
 \normalsize
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Ash3d control file optional module block format}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\footnotesize
+\begin{verbatim}
+*******************************************************************************
+OPTMOD=VARDIFF
+yes 2 0.2                   # use horizontal variable diffusivity
+yes                         # use vertical variable diffusivity
+5                           # boundary layer model
+3                           # free-air model
+0.4                         # vonKarman
+150.0                       # LambdaC
+0.25                        # RI_CRIT
+\end{verbatim}
+\normalsize
+
+
+
+Line 1: use Kh, if y, then 
+#  yes 1 500.0     # 1=const ; value in m2/s
+#  yes 2 0.2       # 2=Smagorinsky ; C
+#  yes 3 0.2       # 3=Pielke      ; C
+
+Line 2: use Kv, if y, then
+Line 3: #  1 500.0         # BL model 1=const ; value
+        #  2               #          2=none (Use Free-air throughout)
+        #  3               #          3=Troen and Mahrt
+        #  4               #          4=Ulke
+        #  5               #          5=Shir / Businger,Ayer
+Line 4: #  1 500.0         # Free-Air 1=const ; value
+        #  2               #          2=no BL, only free-air throughout
+        #  3               #          3=F(Ri)=Jacobson
+        #  4               #          4=F(Ri)=Collin
+        #  5               #          5=F(Ri)=Piedelievre
+Line 5:
+0.4                         # vonKarman constant
+Line 6:
+#30.0                        # LambdaC (Mixing length)
+Line 7:
+#0.25                        # RI_CRIT
+
 
 
