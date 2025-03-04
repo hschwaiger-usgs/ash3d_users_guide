@@ -1,0 +1,45 @@
+[
+  {
+    "name": "ash3d_users_guide",
+    "organization": "U.S. Geological Survey",
+    "description": "Latex documentation for Ash3d.",
+    "version": "master",
+    "status": "Development",
+
+    "permissions": {
+      "usageType": "openSource",
+      "licenses": [
+        {
+          "name": "Public Domain, CC0-1.0",
+          "URL": "https://code.usgs.gov/vsc/ash3d/ash3d_users_guide/-/raw/master/LICENSE.md"
+        }
+      ]
+    },
+
+    "homepageURL": "https://code.usgs.gov/vsc/ash3d/ash3d_users_guide/",
+    "downloadURL": "https://code.usgs.gov/vsc/ash3d/ash3d_users_guide/-/archive/master/ash3d_users_guide-master.zip",
+    "disclaimerURL": "https://code.usgs.gov/vsc/ash3d/ash3d_users_guide/-/raw/master/DISCLAIMER.md",
+    "repositoryURL": "https://code.usgs.gov/vsc/ash3d/ash3d_users_guide.git",
+    "vcs": "git",
+
+    "laborHours": 0,
+
+    "tags": [
+      "USGS",
+      "Ash3d"
+    ],
+
+    "languages": [
+      "latex"
+    ],
+
+    "contact": {
+      "name": "Hans F. Schwaiger",
+      "email": "hschwaiger@usgs.gov"
+    },
+
+    "date": {
+      "metadataLastUpdated": "2024-10-22"
+    }
+  }
+]
