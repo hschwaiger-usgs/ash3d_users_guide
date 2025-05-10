@@ -7,7 +7,7 @@ with an account to simulate ash-cloud transport and deposition \cite{Mastin2013b
 Subsequently, we have used Ash3d to study ash transport during recent
 eruptions \cite{Mastin2013a}, to evaluate the sensitivity of model inputs to
 outcomes \cite{Mastin2016}, examine effects of umbrella-cloud growth on eruption
-dynamics \cite{Mastin2014,Mastin2020a},  study whether and how ash from New Zealand
+dynamics \cite{Mastin2014,Mastin2020a}, study whether and how ash from New Zealand
 supereruptions could be deposited in Antarctica \cite{Dunbar2017}, develop
 probabilistic tephra-hazard analyses for eruptions from Mount St. Helens \cite{Mastin2020b}
 and Taupo, New Zealand \cite{Barker2019}, and examine Bayesian ensemble techniques
@@ -15,21 +15,22 @@ to improve ash-cloud forecast accuracy \cite{Denlinger2012}.
 
 Development of a web interface allowed users all over the world to use the model
 without downloading and compiling the software or downloading large amounts of
-numerical weather prediction (NWP) model data used to run the model.  The web
+numerical weather prediction (NWP) model data used to run the model. The web
 interface however provides only a small subset of functions available in Ash3d.
 Specifying a grain-size distribution, or a time series of erupted pulses and
 plume heights and eruption rates, or allowing for the growth of umbrella clouds,
-has not been available due to our desire to keep things simple.  The software has
+has not been available due to our desire to keep the web interface simple.
+Until recently, the software has
 also not been available for download, meaning that only model developers and their
 close collaborators have had access the full suite of features.
 
 With this release of Ash3d source code, users can take advantage of Ash3d's full
-functionality.  Users with particular skill or interest may also advance the
+functionality. Users with particular skill or interest may also advance the
 source code to consider physical processes or numerical advances not yet envisioned.
 The complexity of this model requires that it be installed by users who are versed
-in Linux and comfortable running models at the command line.  Users who wish to use
+in Linux and comfortable running models at the command line. Users who wish to use
 current or forecast meteorological data may also have to have a Linux system that
-can run scheduled NWP data downloads (tens of Gb daily) and other updates.  If you
+can run scheduled NWP data downloads (tens of Gb daily) and other updates. If you
 have these skills and resources, and a desire to simulate tephra transport in a 3D
 wind field, this code may be for you. Users need have no special knowledge in
 numerical methods or modeling.
@@ -108,7 +109,7 @@ Source examples}}
 During an eruption, Ash3d injects tephra into these nodes at a constant
 rate. The grain-size distribution inserted into each node in the column
 is the same at each elevation and for each eruptive pulse.
-Default values are described in Chapter \ref{ChapWebInterface}.
+%Default values are described in Chapter \ref{ChapWebInterface}.
 
 \subsection{Transport}\label{ChapIntroSecTrans}
 Ash3d solves for the conservation of mass in each cell by tracking the mass
@@ -120,8 +121,8 @@ concentration $q$ with time $t$,
 \end{equation}
 where $\mathbf{u}$ is the 3-D wind vector,
 $\mathbf{v_s}$ the settling velocity, $K$ is the
-diffusivity, and $S$ is a source term.  For most source types, $S$
-is non-zero only in the column of nodes above the volcano.  The
+diffusivity, and $S$ is a source term. For most source types, $S$
+is non-zero only in the column of nodes above the volcano. The
 exception is the umbrella cloud source term which includes a
 $3 \times 3$ group of cells centered over the vent.
 The settling velocity is determined via \cite[p.182]{Bird1960}
@@ -143,16 +144,18 @@ Appendix \ref{ChapAppendFallDynamics} for more details.).
 Alternative models that can be used include an
 optional Cunningham slip correction factor \cite[p.407]{Seinfeld2006},
 which can increase the fall rate for small ($<30 \,\mathrm{\mu m}$)
-particles at high elevation;
+particles at high altitudes;
 Stokes flow; and modifications to Wilson and Huang by \cite{Ganser1993} and
 \cite{Pfeiffer2005}.
 
 The advection term of Eq. \ref{EqGovEqVect} (the second term on the left-hand side
 (LHS)) is calculated explicitly using the Donor Cell Upwind method of
-solution (see \cite{Schwaiger2012} for details). The diffusion term (third
-LHS term) is calculated implicitly at the end of each time step. The diffusivity,
+solution (see Appendix \ref{ChapAppendFVSolvers} or \cite{Schwaiger2012} for details).
+The diffusion term (third term on
+LHS) is calculated implicitly at the end of each time step. The diffusivity,
 $K$, can be spatially variable and can be a function of the local meteorological
-conditions. We have found that modeled clouds match well with observed ones
+conditions (see Appendix \ref{ChapAppendVarDiff}).
+We have found that modeled clouds match well with observed ones
 when $K=0$, and have set it to this value for simulations using the web interface.
 
 \subsection{Deposition}\label{ChapIntroSecDepo}
