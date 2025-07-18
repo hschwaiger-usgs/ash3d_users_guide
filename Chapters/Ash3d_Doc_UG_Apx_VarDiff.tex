@@ -198,7 +198,7 @@ use in Eq. \ref{VarDiff_Eq_Ustar2}. If these are also not provided, $u$ and $v$ 
 pressure level are used.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+G%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Atmospheric boundary layer height}
 
 There are many methods to determine or approximate the height of the atmospheric boundary
@@ -288,22 +288,32 @@ Since this is determined by the grid of the NWP data, the $\Delta x$ and $\Delta
 corresponding horizontal length scales of the NWP data. Ash3d used the area of the cells
 for this product. $C$ is a dimensionless scaling parameter.
 
-An alternate model which uses a slightly different ``tension'' term is the Pielke model.
+An alternate model which uses a slightly different ``tension'' term is the Pielke model \cite{Pielke1974}.
 \begin{equation}\label{VarDiff_Eq_Pielke}
 K_h = C \Delta x \Delta y \sqrt{
 \frac{1}{2}\left[ \left(\frac{\partial u}{\partial x}\right)^2 + \left(\frac{\partial v}{\partial y}\right)^2 \right]
 + \left[ \frac{\partial v}{\partial x} +\frac{\partial u}{\partial y} \right]^2}
 \end{equation}
-
+In practice, the Pielke model effectively de-emphasizes the ``tension'' term relative to
+the Smagorinski model. If the atmosphere is incompressible then $\nabla \cdot \mathbf{u}=u_{,x}+v_{,y}+w_{,z}=0$.
+If horizontal velocities are much larger that vertical velocities, then 
+$w_{,z}\approx 0$, or $u_{,x} \approx - v_{,y}$ and the Smagorinski tension is
+approximately $4 u_{,x}^2$ while the tension in the Pielke model is approximately $u_{,x}^2$.
+Both the Smagorinsky and Pielke models include the same sensitivity to simple shear, but
+the Pielke model is less sensitive to pure shear. Either of these models, as well as
+a constant $K_h$, can be specified in the Ash3d control file, along with the scaling
+parameter $C$. See section \ref{ChapAppendVarDiff_SecContrlBlock} for details. Ash3d
+applies this scheme for calculating $K_h$ for all model layers, irrespective of the
+corresponding layer of the atmosphere (surface, ABL, free-atmosphere, etc.).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Vertical Diffusivity}\label{ChapAppendVarDiff_Sec_Kv}
-The formulation for vertical diffusivity depends on which region of the atmosphere
+The formulation for vertical diffusivity, in contrast, depends on which region of the atmosphere
 we are considering, primarily whether the point is within the atmospheric boundary
 layer (and more specifically, in either the surface layer or the mixed layer),
-or in the free atmosphere above the boundary layer.
+or in the free-atmosphere above the boundary layer.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Free Atmosphere}
@@ -320,15 +330,17 @@ A widely used expression for the mixing length suggensted by Blackadar, $\ell_m$
 \begin{equation}\label{VarDiff_Eq_MixLen}
 \frac{1}{\ell_m} = \frac{1}{\kappa z} + \frac{1}{\lambda_m}
 \end{equation}
-which reduces $\ell_m$ near the surface from the free atmosphere mixing length, $\lambda_m$.
+which reduces $\ell_m$ near the surface from the free-atmosphere mixing length, $\lambda_m$. Typical
+values for $\lambda_m$ are 30-150 $\mathrm{m}$, which can be specified in the Ash3d control file.
 
 %\begin{equation}
 %\ell_m = \frac{\kappa z}{1+ \frac{\kappa z}{\lambda_m}}
 %\end{equation}
-The stability function, $\mathcal{F}(\mathrm{Ri})$, supresses vertical diffusion for stable and weakly
-unstable conditions, while promoting vertical diffusion in unstable conditions ($\mathrm{Ri}<0$).
+The stability function, $\mathcal{F}(\mathrm{Ri})$, supresses vertical diffusion for stable
+($\mathrm{Ri}>\mathrm{Ri}_c$)and weakly unstable ($0<\mathrm{Ri} < \mathrm{Ri}_c$) conditions,
+while promoting vertical diffusion in unstable conditions ($\mathrm{Ri}<0$).
 However, in unstable conditions, vertical mixing
-can be dominated by free convection, in which case a vertical diffusivity model is a poor approximation.
+can be dominated by free-convection, in which case a vertical diffusivity model is a poor approximation.
 
 %For stable or weakly unstable conditions, the stability function can be expressed as
 %$\mathcal{F}(\mathrm{Ri}) = (\mathrm{Ri}_c-\mathrm{Ri})/\mathrm{Ri}$ \cite{Jacobson2005}, %Jacobson Eq.8.70
@@ -338,28 +350,37 @@ There are many suggested expressions for $\mathcal{F}(\mathrm{Ri})$. An early fo
 by Louis \cite{Louis1979} and is given by:
 \begin{eqnarray}\label{VarDiff_Eq_F_Louis}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
- 1 - \frac{b \mathrm{Ri}}{1+c \sqrt{\left| \mathrm{Ri}\right|}}     &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
- \left[ 1+ \frac{b}{2} \, \mathrm{Ri} \right]^{-2}  &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
+ 1 - \frac{b \mathrm{Ri}}{1+c \sqrt{\left| \mathrm{Ri}\right|}}  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
+ \left[ 1+ \frac{b}{2} \, \mathrm{Ri} \right]^{-2}               &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
 \end{array}
 \right.
 \end{eqnarray}
 with $b =$ 4.7, $c=7.4 a^2b \left( \frac{z}{z_0} \right)^{1/2}$ and $a=\kappa \left(\ln{\frac{z}{z_0}} \right)^{-1}$.
 
-A simplified form given in \cite{Jacobson2005,Stull1988} is given by:
+A simplified form given in \cite{Jacobson2005,Stull1988} which relies on a specified $\mathrm{Ri}_c$, is given by:
 \begin{eqnarray}\label{VarDiff_Eq_F_Stull}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
- 1 - \frac{b \mathrm{Ri}}{1+c \sqrt{\left| \mathrm{Ri}\right|}}     &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
+ \left[ 1 -18 \, \mathrm{Ri} \right]^{1/2}           &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
  \frac{\mathrm{Ri}_c-\mathrm{Ri}}{\mathrm{Ri}_c}     &: \mathrm{if}\,\,\, 0<\mathrm{Ri} < \mathrm{Ri}_c\,\,\, \mathrm{weakly \, unstable} \\
- 0  &: \mathrm{if}\,\,\, \mathrm{Ri} > \mathrm{Ri}_c \,\,\, \mathrm{stable}
+ 0                                                   &: \mathrm{if}\,\,\, \mathrm{Ri} > \mathrm{Ri}_c \,\,\, \mathrm{stable}
 \end{array}
 \right.
 \end{eqnarray}
 
-One proposed by \cite{Betts1996} and used with the NCEP-NCAR models is given by:
+One proposed by \cite{Betts1996} and used with the NCEP-NCAR Reanalysis model is given by:
 \begin{eqnarray}\label{VarDiff_Eq_F_Betts}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
- 1 + 8 \left( \frac{- \mathrm{Ri}}{1+1.286 \, \sqrt{\left| \mathrm{Ri}\right|}} \right)     &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
- \left[ 1+ 5 \, \sqrt{\left| \mathrm{Ri}\right|} \right]^{-1}  &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
+ 1 + 8 \left( \frac{- \mathrm{Ri}}{1+1.286 \, \sqrt{\left| \mathrm{Ri}\right|}} \right)  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
+ \left[ 1+ 5 \, \sqrt{\left| \mathrm{Ri}\right|} \right]^{-1}                            &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
+\end{array}
+\right.
+\end{eqnarray}
+
+Hong and Pan \cite{Hong1996} suggested a formulation which is used in the NCEP-GFS model.
+\begin{eqnarray}\label{VarDiff_Eq_F_Hong}
+\mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
+ \left(1 -1.6 \mathrm{Ri} \right)^{-0.25}                  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
+ e^{-8.5 \mathrm{Ri}} + \frac{0.15}{\mathrm{Ri} + 3}       &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
 \end{array}
 \right.
 \end{eqnarray}
@@ -368,7 +389,7 @@ Lastly, Collins et al \cite{Collins2004} use the following form for the stabilit
 \begin{eqnarray}\label{VarDiff_Eq_F_Collins}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
  \left[ 1 -18 \, \mathrm{Ri} \right]^{1/2}                         &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
- \left[ 1+ 10 \, \mathrm{Ri} \, (1+8 \, \mathrm{Ri}) \right]^{-1}  &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{unstable}
+ \left[ 1+ 10 \, \mathrm{Ri} \, (1+8 \, \mathrm{Ri}) \right]^{-1}  &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
 \end{array}
 \right.
 \end{eqnarray}
@@ -379,8 +400,8 @@ These expressions are plotted in Fig. \ref{FigVarDiff_Kz_MixLen}.
 \includegraphics[angle=0,scale=0.3]{Figures/Apx_VarDiff/Kz_MixLen.png}
 \includegraphics[angle=0,scale=0.3]{Figures/Apx_VarDiff/Kz_Fc.png}\\
 \parbox{15cm}{\caption{\label{FigVarDiff_Kz_MixLen}
-Mixing Length as a function of the free-atmosphere mixing length (left). Function forms of $\mathcal{F}(\mathrm{Ri})$ implemented
-in Ash3d.
+Mixing length ($\ell_m$) as a function of height for several free-atmosphere mixing lengths (left).
+Functional forms of $\mathcal{F}(\mathrm{Ri})$ implemented in Ash3d.
 }}
 \end{figure}
 
@@ -435,8 +456,8 @@ Carl (1973)              & -1/3 & 5.0 & -15.0 \\
 \normalsize
 
 Panofsky reports that an exponent $\alpha=-1/3$ is theoretically preferable
-since $\phi$ follows $(z/L)^{-1/3}$ for large $-z/L$ (free-convection condition) Pan. p134.
-$\beta$ should be from 4.7 to 5.2 (Pan. p136.).
+since $\phi$ follows $(z/L)^{-1/3}$ for large $-z/L$ (free-convection condition) \cite[p.134]{Panofsky1984}.
+$\beta$ should be from 4.7 to 5.2 \cite[p.136]{Panofsky1984}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Mixed Layer}
@@ -451,10 +472,9 @@ factor.
 \begin{equation}\label{VarDiff_Eq_Kz_Mixed_Exp}
 K_z = \frac{u_{*} \kappa z}{\phi} \exp \left( -\frac{z}{h_{BL}} \right)
 \end{equation}
-Businger and Arya (1974) propose this formulation using $h_{BL}=\frac{u_*}{8 f}$, essentially
-usin an ABL from the Ekman layer (\ref{VarDiff_Eq_ABL2_1} with $c_n=0.125$).
-%In this equation, $f$ is the Coriolis parameter described above and $u_*/f$ is
-%the Ekman layer height.
+Businger and Arya (1974) propose (\cite[p.872]{Seinfeld2006})
+this formulation using $h_{BL}=\frac{u_*}{2 f}$, essentially
+using an ABL from the Ekman layer (\ref{VarDiff_Eq_ABL2_1} with $c_n=0.5$).
 This formula can be used for all heights as the exponential
 term ensures that $K_z$ from the surface layer approximation becomes vanishingly
 small above the ABL.
@@ -477,7 +497,7 @@ surface layer due to the scaling term.
 \hline
 Author & $\alpha$ & $\beta$ & $\gamma$ & p \\
 \hline
-Businger-Dyer (1971)     & -1/4 & 5.0 & -16.0 & N/A \\
+Businger-Arya (1974)     & -1/4 & 4.7 & -16.0 & N/A \\
 Troen-Mahrt (1986) \cite{Troen1986}      & -1/3 & 5.0 & -7.0  & 2 \\
 Ulke (2000)        \cite{Ulke2000}      & -1/2 & 9.2 & -13.0 & 1 \\
 \hline
@@ -487,11 +507,19 @@ Ulke (2000)        \cite{Ulke2000}      & -1/2 & 9.2 & -13.0 & 1 \\
 \end{table}
 \normalsize
 
+\begin{figure}[htbp]\vspace*{0cm}\hspace*{0cm}
+\includegraphics[angle=0,scale=0.5]{Figures/Apx_VarDiff/Kv_ML.png}
+\parbox{15cm}{\caption{\label{FigVarDiff_Kv_MixingLayer}
+Vertical diffusivity in the mixed layer using expressions in Table \ref{VarDiff_Kz_coeffABL}.
+}}
+\end{figure}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Ash3d control file optional module block format}
+\section{Ash3d control file optional module block format}\label{ChapAppendVarDiff_SecContrlBlock}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \footnotesize

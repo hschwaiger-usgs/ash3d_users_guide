@@ -53,14 +53,25 @@ for i=1:n1
   end
 end
 
+% Hong 1996
+for i=1:n1
+  if(Ri(i)<0)
+   % Unstable atmosphere
+   Fc4(i) = (1.0-1.6*Ri(i))^(-0.25); % Eq. 5
+  else
+   % Stable atmosphere
+   Fc4(i) = exp(-8.5*Ri(i)) + 0.15/(Ri(i)+3.0);  % Eq. 13
+  end
+end
+
 % Collins et al (2004)
 for i=1:n1
   if(Ri(i)<0)
    % Unstable atmosphere
-   Fc4(i) = (1-18*Ri(i))^(0.5); % Eq. 4.464
+   Fc5(i) = (1-18*Ri(i))^(0.5); % Eq. 4.464
   else
    % Stable atmosphere
-   Fc4(i) = 1/(1 + 10*Ri(i)+80*Ri(i)*Ri(i));  % Eq. 4.465
+   Fc5(i) = 1/(1 + 10*Ri(i)+80*Ri(i)*Ri(i));  % Eq. 4.465
   end
 end
 
@@ -69,7 +80,9 @@ z(iz)
 plot(Ri(:),Fc1(:,iz),'r-',"linewidth",4);hold on;
 plot(Ri(:),Fc2(:),'g-',"linewidth",4);
 plot(Ri(:),Fc3(:),'b:',"linewidth",4);
-plot(Ri(:),Fc4(:),'k:',"linewidth",4);
+plot(Ri(:),Fc4(:),'m-',"linewidth",4);
+plot(Ri(:),Fc5(:),'k:',"linewidth",4);
+
 hold off;
 xlabel('Ri',"fontweight","bold","fontsize",20)
 ylabel('F',"fontweight","bold","fontsize",20)
@@ -77,7 +90,7 @@ set(gca,"fontsize",20)
 h=get (gcf, "currentaxes");
 set(h,"fontweight","bold","linewidth",2)
 
-h2=legend('Louis (1979)','Stull (1988)','Betts et al (1996)','Collins et al (2004)','location', 'north');
+h2=legend('Louis (1979)','Stull (1988)','Betts et al (1996)','Hong and Pan (1996)','Collins et al (2004)','location', 'northeast');
 set(h2,"fontweight","bold","fontsize",20)
 set(h2,"Box","off")
 
