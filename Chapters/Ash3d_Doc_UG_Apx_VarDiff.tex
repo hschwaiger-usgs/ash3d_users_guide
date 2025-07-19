@@ -115,8 +115,8 @@ which leads to a logarithmic velocity profile.
 \begin{equation}\label{VarDiff_Eq_Ulog}
 u(z) = \frac{u_{*}}{\kappa} \mathrm{ln} \frac{z-d}{z_0} + \psi (\zeta)
 \end{equation}
-where $d$ is the displacement height and $z_0$ is the aerodynamic roughness length. $\psi (\zeta)$ is
-a function that results from integrating $\phi(\zeta)$.
+where $d$ is the displacement height and $z_0$ is the aerodynamic roughness length. $\psi_m(\zeta)$ is
+a function that results from integrating $\phi_m(\zeta)$.
 $u_{*}$ is the friction velocity, which is a measure of the shear stress of the wind on the surface:
 \begin{equation}\label{VarDiff_Eq_Ustar}
 u_{*} = \sqrt{\frac{|\tau|}{\rho}}
@@ -154,7 +154,7 @@ only requires values at discrete levels.
 The virtual potential temperature, $\theta_v$ requires the water mixing ratio, $w_v$,
 through Eq. \ref{VarDiff_Eq_Thetav}. Generally, this is not provided
 in the NWP files, but can be related to the specific humidity, $q$, through the relation
-$w_v=q/(1-q)$
+$w_v=q/(1-q)$.
 
 %If \texttt{useMoisture=.true.} in the Variable Diffusivity input block, then Ash3d will attempt to
 %read liquid water mixing ratios from the provided NWP file.
@@ -170,7 +170,7 @@ and $\theta$ is generally less than 1\%.
 From Eq. \ref{VarDiff_Eq_ScaleHeight}, the Monin-Obukhov length can be expressed as
 a simple function of $z$ and $\mathrm{Ri}$, but empirical studies found that
 the expression for $L$ should be separated into one for unstable and one for stable 
-atmospheric conditions.
+atmospheric conditions \cite[p.141; Eq.6.7.1-2]{Panofsky1984}.
 \begin{eqnarray}\label{VarDiff_Eq_MonL}
 L &=& \left\{ \begin{array} {l@{\quad \quad}l}
  \frac{z}{\mathrm{Ri}}                 &:  \mathrm{if}\,\,\, \mathrm{Ri}<0 \,\,\, \mathrm{unstable} \\
@@ -197,8 +197,7 @@ from the NWP data, Ash3d attempts to read $u$ and $v$ at either then 2 or 10 met
 use in Eq. \ref{VarDiff_Eq_Ustar2}. If these are also not provided, $u$ and $v$ from the largest
 pressure level are used.
 
-
-G%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Atmospheric boundary layer height}
 
 There are many methods to determine or approximate the height of the atmospheric boundary
@@ -234,11 +233,8 @@ h_{ABL} = c_s \sqrt{\frac{u_* L}{|f|}}
 where $c_s=0.4$.
 
 Finally, a third approach uses $\mathrm{Ri}_g$. The ABL height is identified as the
-lowest point where the Richardson number exceeds a threshold value, typically $\mathrm{Ri}_c=$ 0.25 or
+lowest point where the Richardson number exceeds a threshold value, typically $\mathrm{Ri}_c=$ 0.25 to
 0.5.
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Tropopause}
@@ -318,13 +314,13 @@ or in the free-atmosphere above the boundary layer.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Free Atmosphere}
 In the region of the atmosphere above the boundary layer, the formulation of diffusivity
-suggested by Prantl relates $K_z$ to shear stresses using the vertical gradient in
+suggested by Prantl relates $K_v$ to shear stresses using the vertical gradient in
 horizontal velocity through a mixing length, $\ell_m$. % Randerson %Eq.5.23, Monin 5.112,Stull 6.4.4f
 Typically, this is scaled by a non-dimensional stability function of $\mathrm{Ri}$ so as to
 include the effects of buoyancy.
 % Jacobson Eq.8.70
 \begin{equation}\label{VarDiff_Eq_Kz_FreAtmos}
-K_z = \ell_m^2 \frac{\partial \overline{u}}{\partial z}  \mathcal{F}(\mathrm{Ri})
+K_v = \ell_m^2 \frac{\partial \overline{u}}{\partial z}  \mathcal{F}(\mathrm{Ri})
 \end{equation}
 A widely used expression for the mixing length suggensted by Blackadar, $\ell_m$ follows the relation
 \begin{equation}\label{VarDiff_Eq_MixLen}
@@ -379,8 +375,8 @@ One proposed by \cite{Betts1996} and used with the NCEP-NCAR Reanalysis model is
 Hong and Pan \cite{Hong1996} suggested a formulation which is used in the NCEP-GFS model.
 \begin{eqnarray}\label{VarDiff_Eq_F_Hong}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
- \left(1 -1.6 \mathrm{Ri} \right)^{-0.25}                  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
- e^{-8.5 \mathrm{Ri}} + \frac{0.15}{\mathrm{Ri} + 3}       &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
+ \left(1 -1.6 \, \mathrm{Ri} \right)^{-0.25}                  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
+ e^{-8.5 \, \mathrm{Ri}} + \frac{0.15}{\mathrm{Ri} + 3}       &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
 \end{array}
 \right.
 \end{eqnarray}
@@ -410,53 +406,55 @@ Functional forms of $\mathcal{F}(\mathrm{Ri})$ implemented in Ash3d.
 \subsection{Surface Layer}
 
 The Monin-Obukhov similarity description of the surface layer leads to the following
-expression for the vertical diffusivity.
+expression for the vertical diffusivity for momentum.
 \begin{equation}\label{VarDiff_Eq_Kz_Surf}
-K_v = \frac{u_{*} \kappa z}{\phi(\zeta)}
+K_v = \frac{u_{*} \kappa z}{\phi_m(\zeta)}
 \end{equation}
-where the term $\kappa z / \phi(\zeta)$ is effectively the mixing length as a function of height from the
-surface. $\phi(\zeta)$ is the dimensionless velocity gradient 
-function from Eq. \ref{VarDiff_Eq_Ugrad} which is unity for neutral conditions ($\zeta=0$),
-$\phi(\zeta)>1$ for stable conditions ($\zeta>0$) and $\phi(\zeta)<0$ for unstable
-conditions $\phi(\zeta)<0$.
+where the term $\kappa z / \phi_m(\zeta)$ is effectively the mixing length as a function of height from the
+surface.
+$\phi_m(\zeta)$ is the dimensionless velocity gradient 
+function from Eq. \ref{VarDiff_Eq_Ugrad} for momentum exchange which is unity for neutral conditions ($\zeta=0$),
+$\phi_m(\zeta)>1$ for stable conditions ($\zeta>0$) and $\phi_m(\zeta)<0$ for unstable
+conditions $\phi_m(\zeta)<0$.
 Note that this term is essentially $\ell_m$ from Eq. \ref{VarDiff_Eq_MixLen} in the limit of
-$\kappa z << \lambda_m$ for neutral conditions. $\phi(\zeta)$ is strictly positive and
+$\kappa z << \lambda_m$ for neutral conditions. $\phi_m(\zeta)$ is strictly positive and
 has the effect of scaling the growth of the mixing length, either minimizing it in
 stable conditions, or magnifying it in unstable conditions. In neutral conditions, the
 mixing length (and $K_v$) grows proportional to the distance from the surface within the
 surface layer. 
 
-Several expressions for $\phi(\zeta)$ have been suggested by various authors with a
+Several expressions for $\phi_m(\zeta)$ have been suggested by various authors with a
 general form given below.
 
 \begin{eqnarray}\label{VarDiff_Eq_PhiB}
-\phi &=& \left\{ \begin{array} {l@{\quad \quad}l}
- \left[ 1+\gamma \zeta\right]^{\alpha}  &:  \mathrm{if}\,\,\, \zeta < 0 \,\,\, \mathrm{unstable} \\
-1                                       &:  \mathrm{if}\,\,\, \zeta = 0 \,\,\, \mathrm{neutral} \\
-1 + \beta \zeta                         &:  \mathrm{if}\,\,\, \zeta > 0 \,\,\, \mathrm{stable}
+\phi_m(\zeta) &=& \left\{ \begin{array} {l@{\quad \quad}l}
+B \left[ 1+\gamma \zeta\right]^{\alpha}  &:  \mathrm{if}\,\,\, \zeta < 0 \,\,\, \mathrm{unstable} \\
+B  + \beta \zeta                         &:  \mathrm{if}\,\,\, \zeta > 0 \,\,\, \mathrm{stable}
 \end{array}
 \right.
 \end{eqnarray}
 
-Frequently used values are given below.
+For momentum exchange, $B=1$, but there is an analogous expression for heat exhange ($\phi_h$)
+in which $B$ is replaced by the Prandtl number, $\mathrm{Pr}$.
+Frequently used values of coefficients for $\phi_m$ are given below.
 \small
 \begin{table}[htbp]
 \begin{center}
-\begin{tabular}{| c | c | c | c |}
+\begin{tabular}{| c | c | c | c | c |}
 \hline
-Author & $\alpha$ & $\beta$ & $\gamma$\\
+Author & B & $\alpha$ & $\beta$ & $\gamma$\\
 \hline
-Businger-Dyer (1971)     & -1/4 & 5.0 & -16.0 \\
-Carl (1973)              & -1/3 & 5.0 & -15.0 \\
+Businger-Dyer (1971) \cite{Businger1971} & 1.0  & -1/4 & 5.0 & -16.0 \\
+Carl et al. (1973)   \cite{Carl1973}     & 1.0  & -1/3 & 5.0 & -15.0 \\
 \hline
 \end{tabular}
-\caption{\label{Tab_VarDiff_phisurf}Coefficients for $\phi$ in the surface layer}
+\caption{\label{Tab_VarDiff_phisurf}Coefficients for $\phi_m$ in the surface layer \cite[Chap. 6.5.1-2]{Panofsky1984}}
 \end{center}
 \end{table}
 \normalsize
 
 Panofsky reports that an exponent $\alpha=-1/3$ is theoretically preferable
-since $\phi$ follows $(z/L)^{-1/3}$ for large $-z/L$ (free-convection condition) \cite[p.134]{Panofsky1984}.
+since $\phi_m$ follows $(z/L)^{-1/3}$ for large $-z/L$ (free-convection condition) \cite[p.134]{Panofsky1984}.
 $\beta$ should be from 4.7 to 5.2 \cite[p.136]{Panofsky1984}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -470,39 +468,44 @@ height to match the free-atmosphere conditions above the ABL.
 For neutral and stable conditions, one method is the use a decaying exponential scale
 factor.
 \begin{equation}\label{VarDiff_Eq_Kz_Mixed_Exp}
-K_z = \frac{u_{*} \kappa z}{\phi} \exp \left( -\frac{z}{h_{BL}} \right)
+K_v = \frac{u_{*} \kappa z}{\phi_m(\zeta)} \exp \left( -\frac{2 z}{h_{ABL}} \right)
 \end{equation}
 Businger and Arya (1974) propose (\cite[p.872]{Seinfeld2006})
-this formulation using $h_{BL}=\frac{u_*}{2 f}$, essentially
-using an ABL from the Ekman layer (\ref{VarDiff_Eq_ABL2_1} with $c_n=0.5$).
+this formulation using $h_{ABL}=\frac{u_*}{2 f}$, essentially
+using an ABL from the Ekman layer (\ref{VarDiff_Eq_ABL2_1} with $c_n=0.25$).
 This formula can be used for all heights as the exponential
-term ensures that $K_z$ from the surface layer approximation becomes vanishingly
+term ensures that $K_v$ from the surface layer approximation becomes vanishingly
 small above the ABL.
 
 An alternative formulation is to scale Eq. \ref{VarDiff_Eq_PhiB} by a polynomial taper
 up to the ABL.
 \begin{equation}\label{VarDiff_Eq_Kz_Mixed_Poly}
-K_z = \frac{u_{*} \kappa z}{\phi} \left( 1-\frac{z}{h_{BL}} \right)^p
+K_v = \frac{u_{*} \kappa z}{\phi_m(\zeta)} \left( 1-\frac{z}{h_{ABL}} \right)^p
 \end{equation}
 This equation is not valid above the ABL.
 
-In both forms above, the general expression for $\phi(\zeta)$ given in Eq. \ref{VarDiff_Eq_PhiB}
+In both forms above, the general expression for $\phi_m(\zeta)$ given in Eq. \ref{VarDiff_Eq_PhiB}
 can be used, but the coefficients should be modified to account for the deviation in the
 surface layer due to the scaling term.
 
 \small
 \begin{table}[htbp]
 \begin{center}
-\begin{tabular}{| c | c | c | c | c |}
+\begin{tabular}{| l | c | c | c | c | c | c |}
 \hline
-Author & $\alpha$ & $\beta$ & $\gamma$ & p \\
+Author & type & B & $\alpha$ & $\beta$ & $\gamma$ & p \\
 \hline
-Businger-Arya (1974)     & -1/4 & 4.7 & -16.0 & N/A \\
-Troen-Mahrt (1986) \cite{Troen1986}      & -1/3 & 5.0 & -7.0  & 2 \\
-Ulke (2000)        \cite{Ulke2000}      & -1/2 & 9.2 & -13.0 & 1 \\
+Businger-Arya (1974) \cite{Businger1974} & m & 1.0  & -1/4 & 5.0 & -16.0 & $\exp()$ \\
+                                         & h & 0.74 & -1/2 & 4.7 & -9.0 & $\exp()$ \\
+\hline
+Troen-Mahrt (1986)   \cite{Troen1986}    & m & 1.0 & -1/3 & 4.7 & -7.0  & 2 \\
+\textit{heat not given}                  & h &     &      &     &       &   \\
+\hline
+Ulke (2000)          \cite{Ulke2000}     & m & 1.0 & -1/4 & 6.9 & -22.0 & 1 \\
+                                         & h & 1.0 & -1/2 & 9.2 & -13.0 & 1 \\
 \hline
 \end{tabular}
-\caption{\label{tab:VarDiff_Kz_coeffABL}Coefficients for $\phi$ in the mixed layer}
+\caption{\label{tab:VarDiff_Kz_coeffABL}Coefficients for $\phi_{m,h}$ in the mixed layer}
 \end{center}
 \end{table}
 \normalsize
@@ -544,22 +547,21 @@ yes                         # use vertical variable diffusivity
 %#  yes 3 0.2       # 3=Pielke      ; C
 %
 %Line 2: use Kv, if y, then
-%Line 3: #  1 500.0         # BL model 1=const ; value
-%        #  2               #          2=none (Use Free-air throughout)
-%        #  3               #          3=Troen and Mahrt
-%        #  4               #          4=Ulke
-%        #  5               #          5=Shir / Businger,Ayer
+%Line 3: #  0 1.0 -0.25 5.0 -16.0 0  # BL model 0=cust B alpha beta gamma p (use exp if p=0)
+%        #  1 500.0                  #          1=const value
+%        #  2                        #          2=none (Use Free-air throughout)
+%        #  3 [1,2]                  #          3=Troen and Mahrt    [momentum,heat]
+%        #  4 [1,2]                  #          4=Ulke               [momentum,heat]
+%        #  5 [1,2]                  #          5=Shir/Businger,Ayer [momentum,heat]
 %Line 4: #  1 500.0         # Free-Air 1=const ; value
-%        #  2               #          2=no BL, only free-air throughout
-%        #  3               #          3=F(Ri)=Jacobson
-%        #  4               #          4=F(Ri)=Collin
-%        #  5               #          5=F(Ri)=Piedelievre
-%Line 5:
-%0.4                         # vonKarman constant
-%Line 6:
-%#30.0                        # LambdaC (Mixing length)
-%Line 7:
-%#0.25                        # RI_CRIT
+%        #  2               #          2=F(Ri)=Louis 1979
+%        #  3               #          3=F(Ri)=Stull 1988 / Jacobson 2005
+%        #  4               #          4=F(Ri)=Betts 1996
+%        #  5               #          5=F(Ri)=Hong 1996
+%        #  6               #          6=F(Ri,z)=Collins 200
+%Line 5: #  0.4             # vonKarman constant
+%Line 6: # 30.0             # LambdaC (Mixing length)
+%Line 7: #  0.25            # RI_CRIT
 
 
 
