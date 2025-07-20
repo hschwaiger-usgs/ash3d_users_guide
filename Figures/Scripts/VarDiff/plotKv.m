@@ -48,7 +48,6 @@ for i=1:nz
   zeta(i) = Ri(i)/(1-5*Ri(i));
  end
 end
-%zeta = z./L;
 
 % Loop over z and calculate Kv
 for i=1:nz
@@ -67,24 +66,32 @@ for i=1:nz
  if zeta(i)<0 % unstable
   p1=1.0;a1=4;c1=16.0;phisrf_BD(i) = p1*(1-c1*zeta(i))^(-1.0/a1);
   p1=1.0;a1=3;c1=15.0;phisrf_Cl(i) = p1*(1-c1*zeta(i))^(-1.0/a1);
-  p1=1.0;a1=4;c1=16.0;phiml_BA(i)  = p1*(1-c1*zeta(i))^(-1.0/a1);
+  p1=1.0;a1=4;c1=16.0;phiml_BA(i)  = p1*(1-c1*zeta(i))^(-1.0/a1); % momentum
   p1=1.0;a1=3;c1= 7.0;phiml_TM(i)  = p1*(1-c1*zeta(i))^(-1.0/a1);
-  %p1=1.0;a1=2;c1=13.0;phiml_Ul(i)  = p1*(1-c1*zeta(i))^(-1.0/a1); % heat
   p1=1.0;a1=4;c1=22.0;phiml_Ul(i)  = p1*(1-c1*zeta(i))^(-1.0/a1); % momentum
+
+  p1=0.74;a1=2;c1=16.0;phiml_BAh(i)= p1*(1-c1*zeta(i))^(-1.0/a1); % heat
+  p1=1.0 ;a1=2;c1=13.0;phiml_Ulh(i)= p1*(1-c1*zeta(i))^(-1.0/a1); % heat
+
  else % stable
   p1=1.0 ;b1=5.0;phisrf_BD(i) = p1 + b1 * zeta(i);
   p1=1.0 ;b1=5.0;phisrf_Cl(i) = p1 + b1 * zeta(i);
   p1=1.0 ;b1=4.7;phiml_BA(i)  = p1 + b1 * zeta(i);
   p1=1.0 ;b1=5.0;phiml_TM(i)  = p1 + b1 * zeta(i);
-  %p1=1.0 ;b1=9.2;phiml_Ul(i)  = p1 + b1 * zeta(i); % heat
   p1=1.0 ;b1=6.9;phiml_Ul(i)  = p1 + b1 * zeta(i); % momentum
+
+  p1=0.74;b1=4.7;phiml_BAh(i) = p1 + b1 * zeta(i); % heat
+  p1=1.0 ;b1=9.2;phiml_Ulh(i) = p1 + b1 * zeta(i); % heat
  end
  % Diffusivity values
- Kv1(i) = ustr*vk*z(i)/phisrf_BD(i) * sc1(i);
- Kv2(i) = ustr*vk*z(i)/phisrf_Cl(i) * sc2(i);
- Kv3(i) = ustr*vk*z(i)/phiml_BA(i)  * sc3(i);
- Kv4(i) = ustr*vk*z(i)/phiml_TM(i)  * sc4(i);
- Kv5(i) = ustr*vk*z(i)/phiml_Ul(i)  * sc5(i);
+ Kv1(i) = ustr*vk*z(i)/phisrf_BD(i) * sc1(i); % Bus-Dy
+ Kv2(i) = ustr*vk*z(i)/phisrf_Cl(i) * sc2(i); % Carl et al
+ Kv3(i) = ustr*vk*z(i)/phiml_BA(i)  * sc3(i); % Bus-Ayer
+ Kv4(i) = ustr*vk*z(i)/phiml_TM(i)  * sc4(i); % Troen-Mahrt
+ Kv5(i) = ustr*vk*z(i)/phiml_Ul(i)  * sc5(i); % Ulke et al
+
+ Kv6(i) = ustr*vk*z(i)/phiml_BAh(i)  * sc3(i); % Bus-Ayer (heat)
+ Kv7(i) = ustr*vk*z(i)/phiml_Ulh(i)  * sc5(i); % Ulke et al (heat)
 end
 
 figure;
@@ -111,6 +118,8 @@ subplot(1,3,2),plot(Kv4(1:nz),z(1:nz),'m-',"linewidth",4);
 subplot(1,3,2),plot(Kv5(1:nz),z(1:nz),'k-',"linewidth",4);
 subplot(1,3,2),plot(Kv1(1:zs),z(1:zs),'ro',"linewidth",2);
 subplot(1,3,2),plot(Kv2(1:zs),z(1:zs),'g+',"linewidth",2);
+subplot(1,3,2),plot(Kv6(1:nz),z(1:nz),'b--',"linewidth",4);
+subplot(1,3,2),plot(Kv7(1:nz),z(1:nz),'k--',"linewidth",4);
 hold off;
 axis([0 150 0 1.25*H])
 set(gca, 'YTickLabel', {});

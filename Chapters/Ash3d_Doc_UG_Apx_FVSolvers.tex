@@ -193,7 +193,7 @@ cell-centered value.  Therefore, calculating \texttt{fs\_I} at interface $I$ req
 cell-centered velocities at $i-2,i-1,i,i+1,i+2$.  Similarly, some limiters also require
 concentrations on these cells.
 
-Lastly, we loop of the cell index $i$ and build the four components of the update:
+Lastly, we loop over the cell index $i$ and build the four components of the update:
 \begin{itemize}
  \item Rightward fluctuation at left boundary = \texttt{RFluct\_Lbound} = $\mathcal{A}^{+} \Delta Q_I$
  \item Leftward fluctuation at right boundary = \texttt{LFluct\_Rbound} = $\mathcal{A}^{-} \Delta Q_{I+1}$

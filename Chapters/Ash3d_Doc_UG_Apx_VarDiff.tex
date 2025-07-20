@@ -212,7 +212,7 @@ and the temperature difference between the inversion base and top
 is $\Delta \theta > 2 \, \mathrm{K}$.
 
 If there is no capping inversion layer resolved by the NWP data, then this method
-will flag the tropopause as the ABL height.
+will incorrectly flag the tropopause as the ABL height.
 
 An alternative method is to use the thickness of the Ekman layer as the ABL height.
 This method works for neutral or stable atmospheric conditions. The Ekman layer is
@@ -234,7 +234,7 @@ where $c_s=0.4$.
 
 Finally, a third approach uses $\mathrm{Ri}_g$. The ABL height is identified as the
 lowest point where the Richardson number exceeds a threshold value, typically $\mathrm{Ri}_c=$ 0.25 to
-0.5.
+0.5. The value for $\mathrm{Ri}_c=$ is set in the Ash3d control file.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Tropopause}
@@ -244,22 +244,6 @@ Since there are occasional temperature inversion layers in the lower troposphere
 that cap the atmospheric boundary layer,
 the lowest point greater then 5 $\mathrm{km}$ with $\Gamma<0$ is marked as the
 height of the tropopause.
-
-
-
-
-%The basic
-%structure of the block consists of three input lines:
-%\small
-%\begin{verbatim}
-%yes 1                       # use horizontal variable diffusivity; model ID
-%yes                         # use vertical variable diffusivity
-%0.9                         # KH_SmagC
-%0.4                         # vonKarman
-%30.0                        # LambdaC
-%0.25                        # RI_CRIT
-%\end{verbatim}
-%\normalsize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -326,7 +310,8 @@ A widely used expression for the mixing length suggensted by Blackadar, $\ell_m$
 \begin{equation}\label{VarDiff_Eq_MixLen}
 \frac{1}{\ell_m} = \frac{1}{\kappa z} + \frac{1}{\lambda_m}
 \end{equation}
-which reduces $\ell_m$ near the surface from the free-atmosphere mixing length, $\lambda_m$. Typical
+which transitions $\ell_m$ from the near the surface where it is proportional to $z$
+to the free-atmosphere mixing length, $\lambda_m$. Typical
 values for $\lambda_m$ are 30-150 $\mathrm{m}$, which can be specified in the Ash3d control file.
 
 %\begin{equation}
@@ -353,7 +338,8 @@ by Louis \cite{Louis1979} and is given by:
 \end{eqnarray}
 with $b =$ 4.7, $c=7.4 a^2b \left( \frac{z}{z_0} \right)^{1/2}$ and $a=\kappa \left(\ln{\frac{z}{z_0}} \right)^{-1}$.
 
-A simplified form given in \cite{Jacobson2005,Stull1988} which relies on a specified $\mathrm{Ri}_c$, is given by:
+A simplified form given by Stull in \cite{Jacobson2005,Stull1988} which relies on a
+specified $\mathrm{Ri}_c$, is given by:
 \begin{eqnarray}\label{VarDiff_Eq_F_Stull}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
  \left[ 1 -18 \, \mathrm{Ri} \right]^{1/2}           &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
@@ -363,7 +349,7 @@ A simplified form given in \cite{Jacobson2005,Stull1988} which relies on a speci
 \right.
 \end{eqnarray}
 
-One proposed by \cite{Betts1996} and used with the NCEP-NCAR Reanalysis model is given by:
+One proposed by Betts \cite{Betts1996} and used with the NCEP-NCAR Reanalysis model is given by:
 \begin{eqnarray}\label{VarDiff_Eq_F_Betts}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
  1 + 8 \left( \frac{- \mathrm{Ri}}{1+1.286 \, \sqrt{\left| \mathrm{Ri}\right|}} \right)  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
@@ -436,7 +422,7 @@ B  + \beta \zeta                         &:  \mathrm{if}\,\,\, \zeta > 0 \,\,\, 
 
 For momentum exchange, $B=1$, but there is an analogous expression for heat exhange ($\phi_h$)
 in which $B$ is replaced by the Prandtl number, $\mathrm{Pr}$.
-Frequently used values of coefficients for $\phi_m$ are given below.
+Frequently used values of coefficients for $\phi_m$ are given in Table \ref{Tab_VarDiff_phisurf}.
 \small
 \begin{table}[htbp]
 \begin{center}
@@ -486,7 +472,11 @@ This equation is not valid above the ABL.
 
 In both forms above, the general expression for $\phi_m(\zeta)$ given in Eq. \ref{VarDiff_Eq_PhiB}
 can be used, but the coefficients should be modified to account for the deviation in the
-surface layer due to the scaling term.
+surface layer due to the scaling term. Figure \ref{FigVarDiff_Kv_MixingLayer} shows the resulting
+$K_v$ from a hypothetical (but realistic) weakly unstable $\mathrm{Ri}$ profile using the expressions
+given in Table \ref{tab:VarDiff_Kz_coeffABL}. Diffusivities calculated from the heat-exchange 
+function, $\phi_h$, are also given since some studies \ref{Ulke2000} of the diffusion of pollutants
+have found that $\phi_h$ is the more appropriate form.
 
 \small
 \begin{table}[htbp]
@@ -513,7 +503,16 @@ Ulke (2000)          \cite{Ulke2000}     & m & 1.0 & -1/4 & 6.9 & -22.0 & 1 \\
 \begin{figure}[htbp]\vspace*{0cm}\hspace*{0cm}
 \includegraphics[angle=0,scale=0.5]{Figures/Apx_VarDiff/Kv_ML.png}
 \parbox{15cm}{\caption{\label{FigVarDiff_Kv_MixingLayer}
-Vertical diffusivity in the mixed layer using expressions in Table \ref{VarDiff_Kz_coeffABL}.
+Vertical diffusivity in the mixed layer using expressions in Table \ref{tab:VarDiff_Kz_coeffABL} for
+$\phi_m$.
+Surface layer only expressions are plotted using values from Table \ref{Tab_VarDiff_phisurf}. On the left,
+a hypothetical profile of $\mathrm{Ri}$ is plotted for slightly unstable conditions with $u_* = 1.0 \, \mathrm{m/s}$
+and $h_{ABL} = 2000 \, \mathrm{m}$. Also plotted is a profile extracted from unstable conditions near
+Shishaldin Volcano on May 9, 2025. The ABL and the surface layer are marked by thin dotted and dashed lines
+respectively. The middle plot shows the calculated $K_v$ from each of the stability functions tabulated
+in Table \ref{tab:VarDiff_Kz_coeffABL}. Solid lines are for $\phi_m$ and dashed lines are using $\phi_h$.
+The right plot shows the taper functions; exponential for the Businger-Ayer model, linear ($p=1$) taper for
+the Troen-Mahrt model, and a quadratic ($p=2$) for the Ulke et al. model.
 }}
 \end{figure}
 
@@ -524,6 +523,61 @@ Vertical diffusivity in the mixed layer using expressions in Table \ref{VarDiff_
 
 \section{Ash3d control file optional module block format}\label{ChapAppendVarDiff_SecContrlBlock}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The block of the Ash3d control file that specifies the variable diffusivity parameters
+consists of the obligatory \texttt{OPTMOD=VARDIFF} line followed by 7 content lines.
+
+Line 1 includes the specification for horizontal diffusivity. The first 3 characters of Line 1
+indicate if horizontal diffivity is to be used or not and must be either
+\texttt{yes} or \texttt{no}. 
+If \texttt{no}, the horizontal diffusivity is turned off entirely.
+If \texttt{yes}, then two more variables are read from Line 1,
+an integer specifying the horizontal diffusivity model (\texttt{Kh\_model\_ID}),
+followed by a floating-point number defining the model.
+If \texttt{Kh\_model\_ID} is 1, then a the horizontal diffusivity is a constant with the
+constant given as argument 3 of the line.
+If \texttt{Kh\_model\_ID} is 2, then the model of Smagorinsky is used given by Eq. \ref{VarDiff_Eq_Smag}
+with the parameter $C$ given in argument 3.
+If \texttt{Kh\_model\_ID} is 3, then the model of Pielke is used given by Eq. \ref{VarDiff_Eq_Pielke}
+also with the parameter $C$ given in argument 3.
+
+Line 2 indicates whether or not vertical diffusivity is to be used.
+Again, the first 3 characters of Line 2 must be either \texttt{yes} or \texttt{no}.
+If \texttt{no}, the vertical diffusivity is turned off and the remaining lines of the
+block are ignored.
+If \texttt{yes}, then an integer (\texttt{KvBL\_model\_ID}) from Line 3 is read,
+specifying the boundary layer model.
+If \texttt{KvBL\_model\_ID} = 1, then vertical diffusivity is constant throughout the boundary layer,
+with a diffusivity specified in argument 2 of the line.
+If \texttt{KvBL\_model\_ID} = 2, then no boundary-layer model is used and the vertical diffusivity
+calculated from the free-atmosphere model will be used throught the domain.
+If \texttt{KvBL\_model\_ID} = 3, then the Troen and Mahrt model is used.
+If \texttt{KvBL\_model\_ID} = 4, then the model from Ulke et al. is used, defaulting to the
+momentum equations. If this model is selected, then an optional third integer parameter
+is attempted to be read with 1 indicating the momentum form and 2 indicating the heat form.
+If \texttt{KvBL\_model\_ID} = 5, then the model pf Businger-Ayer. is used, also defaulting
+the the momentum form. For this model as well, an additional interger value is attempted
+to be read specifying momentum or heat.
+There are other studies that suggest different paramters for the stability function that
+are not specifically implemented in Ash3d. If your preferred model follows the general
+form of Eq. \ref{VarDiff_Eq_PhiB}, then you can enter \texttt{KvBL\_model\_ID} = 0 on Line 3,
+followed by four floating point values and an integer, specifying:
+$B$,  $\alpha$,  $\beta$ , $\gamma$ of Eq. \ref{VarDiff_Eq_PhiB}, with the final integer indicating
+the $p$ exponent of Eq. \ref{VarDiff_Eq_Kz_Mixed_Poly}. If $p=0$, then an exponential taper is
+used as in \ref{VarDiff_Eq_Kz_Mixed_Exp}.
+
+Line 4 specifies the free-atmosphere model with an integer \texttt{KvFA\_model\_ID}.
+If \texttt{KvFA\_model\_ID} = 1, then a constant $K_v$ is used with a diffusivity specified
+as argument 2 of Line 4. For the remaining models, only the scaling function, $\mathcal{F}$
+is dinstinguished. If \texttt{KvFA\_model\_ID} = 2, the Louis (1979) model is used.
+For \texttt{KvFA\_model\_ID} = 3, the Stull/Jasobson model is used.
+If \texttt{KvFA\_model\_ID} = 4, Betts (1996).
+If \texttt{KvFA\_model\_ID} = 5, Hong (1996). And for \texttt{KvFA\_model\_ID} = 6,  Collins el al (2006).
+
+Lastly, three additional lines are read, setting the von Karman constant $\kappa$ (Line 5), the free-atmosphere
+mixing length, $\lambda_m$ (Line 6), and the critical Richardson number, $\mathrm{Ri}_c$ (Line7).
+
+An example block is given below, where both horizontal and vertical diffusivities are used; horizontal,
+using the Peilke model and vertical using Ulke (heat) in the boundary layer and Betts in the free-atmosphere.
 
 \footnotesize
 \begin{verbatim}
@@ -531,7 +585,7 @@ Vertical diffusivity in the mixed layer using expressions in Table \ref{VarDiff_
 OPTMOD=VARDIFF
 yes 2 0.2                   # use horizontal variable diffusivity
 yes                         # use vertical variable diffusivity
-5                           # boundary layer model
+4 2                         # boundary layer model
 3                           # free-air model
 0.4                         # vonKarman
 150.0                       # LambdaC
@@ -550,7 +604,7 @@ yes                         # use vertical variable diffusivity
 %Line 3: #  0 1.0 -0.25 5.0 -16.0 0  # BL model 0=cust B alpha beta gamma p (use exp if p=0)
 %        #  1 500.0                  #          1=const value
 %        #  2                        #          2=none (Use Free-air throughout)
-%        #  3 [1,2]                  #          3=Troen and Mahrt    [momentum,heat]
+%        #  3                        #          3=Troen and Mahrt
 %        #  4 [1,2]                  #          4=Ulke               [momentum,heat]
 %        #  5 [1,2]                  #          5=Shir/Businger,Ayer [momentum,heat]
 %Line 4: #  1 500.0         # Free-Air 1=const ; value
