@@ -336,7 +336,7 @@ by Louis \cite{Louis1979} and is given by:
 \end{array}
 \right.
 \end{eqnarray}
-with $b =$ 4.7, $c=7.4 a^2b \left( \frac{z}{z_0} \right)^{1/2}$ and $a=\kappa \left(\ln{\frac{z}{z_0}} \right)^{-1}$.
+with $b =$ 9.4, $c=7.4 a^2b \left( \frac{z}{z_0} \right)^{1/2}$ and $a=\kappa \left(\ln{\frac{z}{z_0}} \right)^{-1}$.
 
 A simplified form given by Stull in \cite{Jacobson2005,Stull1988} which relies on a
 specified $\mathrm{Ri}_c$, is given by:
@@ -352,8 +352,8 @@ specified $\mathrm{Ri}_c$, is given by:
 One proposed by Betts \cite{Betts1996} and used with the NCEP-NCAR Reanalysis model is given by:
 \begin{eqnarray}\label{VarDiff_Eq_F_Betts}
 \mathcal{F}(\mathrm{Ri}) &=& \left\{ \begin{array} {l@{\quad \quad}l}
- 1 + 8 \left( \frac{- \mathrm{Ri}}{1+1.286 \, \sqrt{\left| \mathrm{Ri}\right|}} \right)  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
- \left[ 1+ 5 \, \sqrt{\left| \mathrm{Ri}\right|} \right]^{-1}                            &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
+ 1 + 8 \left( \frac{- \mathrm{Ri}}{1+1.746 \, \sqrt{\left| \mathrm{Ri}\right|}} \right)  &: \mathrm{if}\,\,\, \mathrm{Ri} < 0 \,\,\, \mathrm{unstable} \\
+ \left[ 1+ 5 \, \mathrm{Ri} \right]^{-2}                            &: \mathrm{if}\,\,\, \mathrm{Ri} > 0 \,\,\, \mathrm{stable}
 \end{array}
 \right.
 \end{eqnarray}
@@ -612,7 +612,7 @@ yes                         # use vertical variable diffusivity
 %        #  3               #          3=F(Ri)=Stull 1988 / Jacobson 2005
 %        #  4               #          4=F(Ri)=Betts 1996
 %        #  5               #          5=F(Ri)=Hong 1996
-%        #  6               #          6=F(Ri,z)=Collins 200
+%        #  6               #          6=F(Ri,z)=Collins 2004
 %Line 5: #  0.4             # vonKarman constant
 %Line 6: # 30.0             # LambdaC (Mixing length)
 %Line 7: #  0.25            # RI_CRIT
